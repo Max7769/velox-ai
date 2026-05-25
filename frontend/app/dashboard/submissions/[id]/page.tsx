@@ -4,7 +4,7 @@ import { mockSubmissions, mockAudit } from "@/lib/mock-data";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { RiskScore } from "@/components/ui/risk-score";
 import { CheckCircle, XCircle, MessageSquare, Download, AlertTriangle, Shield, Clock, User, ChevronLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import Link from "next/link";
 
@@ -22,6 +22,19 @@ export default function SubmissionDetail() {
       description: `${sub.id} · ${ex?.insured_name}`,
     });
   };
+
+  // Keyboard shortcuts: a = accept, d = decline, ESC = back
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement).tagName;
+      if (tag === "INPUT" || tag === "TEXTAREA") return;
+      if (e.key === "a" && (status === "referred" || status === "pending")) decide("accepted");
+      if (e.key === "d" && (status === "referred" || status === "pending")) decide("declined");
+      if (e.key === "Escape") router.push("/dashboard/submissions");
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [status, router]);
 
   const riskLevel = sub.score !== null
     ? sub.score >= 70 ? { label: "Low risk", color: "text-emerald-400", bg: "rgba(16,185,129,0.08)" }
@@ -180,20 +193,25 @@ export default function SubmissionDetail() {
 
       {/* Actions */}
       {(status === "referred" || status === "pending") && (
-        <div className="flex gap-3">
-          <button onClick={() => decide("accepted")}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-all"
-            style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)" }}>
-            <CheckCircle size={15} className="text-emerald-400" />
-            <span className="text-emerald-300">Accept submission</span>
-          </button>
-          <button onClick={() => decide("declined")}
-            className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all"
-            style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
-            <XCircle size={15} className="text-red-400" />
-            <span className="text-red-300">Decline</span>
-          </button>
-        </div>
+        <>
+          <div className="flex gap-3 mb-2">
+            <button onClick={() => decide("accepted")}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold text-white transition-all"
+              style={{ background: "rgba(16,185,129,0.15)", border: "1px solid rgba(16,185,129,0.3)" }}>
+              <CheckCircle size={15} className="text-emerald-400" />
+              <span className="text-emerald-300">Accept submission</span>
+            </button>
+            <button onClick={() => decide("declined")}
+              className="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-sm font-semibold transition-all"
+              style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.25)" }}>
+              <XCircle size={15} className="text-red-400" />
+              <span className="text-red-300">Decline</span>
+            </button>
+          </div>
+          <p className="text-[11px] text-slate-700 text-center">
+            <kbd className="font-mono">A</kbd> accept · <kbd className="font-mono">D</kbd> decline · <kbd className="font-mono">ESC</kbd> back
+          </p>
+        </>
       )}
     </div>
   );

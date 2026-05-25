@@ -1,7 +1,8 @@
+import React from "react";
 import { cn } from "@/lib/utils";
 
-export function Skeleton({ className }: { className?: string }) {
-  return <div className={cn("animate-pulse rounded-md bg-slate-100", className)} />;
+export function Skeleton({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return <div className={cn("animate-pulse rounded-md bg-slate-100", className)} style={style} />;
 }
 
 export function SubmissionRowSkeleton() {
@@ -9,7 +10,7 @@ export function SubmissionRowSkeleton() {
     <tr className="border-b border-slate-100">
       {[60, 120, 90, 70, 60, 50, 50].map((w, i) => (
         <td key={i} className="px-5 py-4">
-          <Skeleton className={`h-3.5 w-${w > 100 ? "full" : `[${w}px]`}`} style={{ width: w }} />
+          <Skeleton className="h-3.5" style={{ width: `${w}px` }} />
         </td>
       ))}
     </tr>

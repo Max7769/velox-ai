@@ -1,7 +1,10 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Upload, FileText, BarChart2, Settings, Bell, ChevronRight, Zap, ExternalLink } from "lucide-react";
+import { LayoutDashboard, Upload, FileText, BarChart2, Settings, ChevronRight, Zap, ExternalLink, Command } from "lucide-react";
+import { CommandPalette } from "@/components/command-palette";
+import { NotificationCenter } from "@/components/notification-center";
+import { Onboarding } from "@/components/onboarding";
 
 const nav = [
   { label: "Dashboard",     href: "/dashboard",            icon: LayoutDashboard },
@@ -83,20 +86,28 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             ))}
           </nav>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => window.dispatchEvent(new KeyboardEvent("keydown", { key: "k", ctrlKey: true, bubbles: true }))}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs text-slate-500 hover:text-slate-300 transition-colors"
+              style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
+            >
+              <Command size={11} />
+              <span>Search</span>
+              <kbd className="text-[9px] font-mono text-slate-700 ml-1">⌘K</kbd>
+            </button>
             <Link href="/dashboard/upload"
               className="flex items-center gap-1.5 text-xs font-semibold text-white px-3 py-1.5 rounded-lg transition-all"
               style={{ background: "var(--brand)" }}>
               <Upload size={11} /> New submission
             </Link>
-            <button className="relative p-1.5 text-slate-500 hover:text-slate-300 transition-colors rounded-lg hover:bg-white/5">
-              <Bell size={16} />
-              <span className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full" style={{ background: "var(--brand)" }} />
-            </button>
+            <NotificationCenter />
           </div>
         </header>
 
         <main className="flex-1 overflow-y-auto">{children}</main>
       </div>
+      <CommandPalette />
+      <Onboarding />
     </div>
   );
 }

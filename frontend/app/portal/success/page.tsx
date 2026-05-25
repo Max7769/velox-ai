@@ -1,6 +1,7 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle, Clock, Mail, Suspense } from "lucide-react";
+import { CheckCircle, Clock, Mail } from "lucide-react";
+import { Suspense } from "react";
 import Link from "next/link";
 
 function SuccessContent() {
