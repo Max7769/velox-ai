@@ -1,25 +1,40 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.core.config import settings
-from app.api.routes import submissions
+from contextlib import asynccontextmanager
+from app.api.routes import submissions, email_webhook
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Velox AI API starting up")
+    yield
+    print("Velox AI API shutting down")
+
 
 app = FastAPI(
     title="Velox AI API",
-    description="Insurance submission intake API",
-    version="0.1.0",
+    description="AI-powered insurance submission intake for the Lloyd's market",
+    version="0.2.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins.split(","),
+    allow_origins=["http://localhost:3000", "https://velox.ai"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 app.include_router(submissions.router, prefix="/api/v1")
+app.include_router(email_webhook.router, prefix="/api/v1")
 
 
 @app.get("/")
 async def root():
-    return {"service": "velox-ai", "status": "running"}
+    return {"service": "velox-ai", "version": "0.2.0", "status": "running"}
+
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}

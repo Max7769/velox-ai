@@ -1,80 +1,86 @@
+"use client";
 import Link from "next/link";
-import { Search, Filter } from "lucide-react";
+import { useState } from "react";
+import { mockSubmissions } from "@/lib/mock-data";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { RiskScore } from "@/components/ui/risk-score";
+import { Search } from "lucide-react";
+import type { SubmissionStatus } from "@/lib/types";
 
-const submissions = [
-  { id: "VLX-0041", insured: "Harwick Shipping Ltd", type: "Marine Cargo", broker: "Aon UK", status: "accepted", date: "25 May 2026", score: 82 },
-  { id: "VLX-0040", insured: "Nexus Tech Partners", type: "Cyber Liability", broker: "Howden", status: "referred", date: "25 May 2026", score: 61 },
-  { id: "VLX-0039", insured: "Albion Construction Group", type: "Professional Indemnity", broker: "Marsh", status: "processing", date: "25 May 2026", score: null },
-  { id: "VLX-0038", insured: "Fairlane Logistics", type: "Marine Cargo", broker: "WTW", status: "declined", date: "24 May 2026", score: 29 },
-  { id: "VLX-0037", insured: "Summit Healthcare", type: "D&O Liability", broker: "Aon UK", status: "accepted", date: "24 May 2026", score: 78 },
-  { id: "VLX-0036", insured: "Kestrel Energy", type: "Property", broker: "Marsh", status: "accepted", date: "23 May 2026", score: 85 },
-  { id: "VLX-0035", insured: "Nordic Shipping AS", type: "Marine Cargo", broker: "Howden", status: "declined", date: "23 May 2026", score: 31 },
-  { id: "VLX-0034", insured: "Apex Financial Group", type: "Crime", broker: "Aon UK", status: "referred", date: "22 May 2026", score: 55 },
-];
-
-const statusConfig: Record<string, { label: string; className: string }> = {
-  accepted: { label: "Accepted", className: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200" },
-  declined: { label: "Declined", className: "bg-red-50 text-red-700 ring-1 ring-red-200" },
-  referred: { label: "Referred", className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200" },
-  processing: { label: "Processing…", className: "bg-blue-50 text-blue-700 ring-1 ring-blue-200" },
-};
+const statuses: (SubmissionStatus | "all")[] = ["all", "accepted", "referred", "processing", "declined"];
 
 export default function SubmissionsPage() {
+  const [search, setSearch] = useState("");
+  const [filter, setFilter] = useState<SubmissionStatus | "all">("all");
+
+  const filtered = mockSubmissions.filter(s => {
+    const matchStatus = filter === "all" || s.status === filter;
+    const q = search.toLowerCase();
+    const matchSearch = !q ||
+      s.id.toLowerCase().includes(q) ||
+      (s.extracted_data?.insured_name ?? "").toLowerCase().includes(q) ||
+      s.broker_company.toLowerCase().includes(q) ||
+      (s.extracted_data?.coverage_type ?? "").toLowerCase().includes(q);
+    return matchStatus && matchSearch;
+  });
+
   return (
-    <div className="p-6 space-y-5">
+    <div className="p-6 space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-semibold text-slate-900">All submissions</h1>
+        <div>
+          <h1 className="text-lg font-semibold text-white">Submissions</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{mockSubmissions.length} total</p>
+        </div>
+
+        {/* Search + filter */}
         <div className="flex items-center gap-2">
-          <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2">
-            <Search size={14} className="text-slate-400" />
-            <input placeholder="Search…" className="text-sm outline-none w-40 text-slate-700 placeholder:text-slate-400" />
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
+            <Search size={13} className="text-slate-500" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search submissions…"
+              className="bg-transparent text-sm text-slate-300 placeholder:text-slate-600 outline-none w-44" />
           </div>
-          <button className="flex items-center gap-1.5 bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-50 transition-colors">
-            <Filter size={14} />
-            Filter
-          </button>
+          <div className="flex items-center gap-1 p-1 rounded-lg" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
+            {statuses.map(s => (
+              <button key={s} onClick={() => setFilter(s)}
+                className={`px-3 py-1 rounded-md text-xs font-medium capitalize transition-all ${
+                  filter === s ? "text-white" : "text-slate-500 hover:text-slate-300"
+                }`}
+                style={filter === s ? { background: "var(--brand)" } : undefined}>
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200">
+      <div className="card overflow-hidden">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-100">
-              {["ID", "Insured", "Coverage type", "Broker", "Date", "Risk score", "Status"].map((h) => (
-                <th key={h} className="px-5 py-3.5 text-left text-xs font-medium text-slate-400">{h}</th>
+            <tr style={{ borderBottom: "1px solid var(--border)" }}>
+              {["ID", "Insured", "Coverage type", "Broker", "Date", "Risk score", "Status"].map(h => (
+                <th key={h} className="th">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {submissions.map((s, i) => (
-              <tr key={s.id} className={`hover:bg-slate-50 transition-colors cursor-pointer ${i !== submissions.length - 1 ? "border-b border-slate-100" : ""}`}>
-                <td className="px-5 py-4">
-                  <Link href={`/dashboard/submissions/${s.id}`} className="text-xs font-mono text-brand-500 hover:text-brand-600 font-medium">
+            {filtered.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="text-center py-16 text-slate-600 text-sm">No submissions match your search.</td>
+              </tr>
+            ) : filtered.map((s, i) => (
+              <tr key={s.id} className="hover:bg-white/[0.02] transition-colors cursor-pointer"
+                style={i !== filtered.length - 1 ? { borderBottom: "1px solid var(--border)" } : undefined}>
+                <td className="td">
+                  <Link href={`/dashboard/submissions/${s.id}`} className="font-mono text-xs font-medium" style={{ color: "var(--brand)" }}>
                     {s.id}
                   </Link>
                 </td>
-                <td className="px-5 py-4 text-sm text-slate-900 font-medium">{s.insured}</td>
-                <td className="px-5 py-4 text-sm text-slate-500">{s.type}</td>
-                <td className="px-5 py-4 text-sm text-slate-500">{s.broker}</td>
-                <td className="px-5 py-4 text-xs text-slate-400">{s.date}</td>
-                <td className="px-5 py-4">
-                  {s.score !== null ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${s.score >= 70 ? "bg-emerald-500" : s.score >= 50 ? "bg-amber-500" : "bg-red-500"}`}
-                          style={{ width: `${s.score}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-slate-600 font-medium">{s.score}</span>
-                    </div>
-                  ) : <span className="text-xs text-slate-300">—</span>}
-                </td>
-                <td className="px-5 py-4">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${statusConfig[s.status].className}`}>
-                    {statusConfig[s.status].label}
-                  </span>
-                </td>
+                <td className="td font-medium text-slate-200">{s.extracted_data?.insured_name ?? "—"}</td>
+                <td className="td text-slate-400">{s.extracted_data?.coverage_type ?? "—"}</td>
+                <td className="td text-slate-400">{s.broker_company}</td>
+                <td className="td text-slate-500 text-xs">{new Date(s.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}</td>
+                <td className="td"><RiskScore score={s.score} /></td>
+                <td className="td"><StatusBadge status={s.status} /></td>
               </tr>
             ))}
           </tbody>

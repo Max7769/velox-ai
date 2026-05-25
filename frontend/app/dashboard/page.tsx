@@ -1,113 +1,125 @@
 import Link from "next/link";
-import { Upload, Clock, CheckCircle, TrendingUp, ArrowUpRight } from "lucide-react";
+import { mockSubmissions } from "@/lib/mock-data";
+import { StatusBadge } from "@/components/ui/status-badge";
+import { RiskScore } from "@/components/ui/risk-score";
+import { Upload, Clock, CheckCircle, TrendingUp, ArrowUpRight, FileText } from "lucide-react";
+
+const accepted = mockSubmissions.filter(s => s.status === "accepted").length;
+const referred  = mockSubmissions.filter(s => s.status === "referred").length;
+const total     = mockSubmissions.filter(s => s.status !== "processing").length;
+const bindRate  = Math.round((accepted / total) * 100);
 
 const metrics = [
-  { label: "Submissions today", value: "24", change: "+12%", icon: Upload, color: "text-brand-500" },
-  { label: "Avg processing time", value: "8 min", change: "-23%", icon: Clock, color: "text-emerald-500" },
-  { label: "Acceptance rate", value: "67%", change: "+4%", icon: CheckCircle, color: "text-emerald-500" },
-  { label: "Monthly volume", value: "312", change: "+18%", icon: TrendingUp, color: "text-brand-500" },
+  { label: "Submissions today", value: "24", delta: "+12%", positive: true, icon: FileText },
+  { label: "Avg processing time", value: "8.4 min", delta: "−23%", positive: true, icon: Clock },
+  { label: "Bind rate", value: `${bindRate}%`, delta: "+4pp", positive: true, icon: CheckCircle },
+  { label: "Monthly volume", value: "312", delta: "+18%", positive: true, icon: TrendingUp },
 ];
-
-const recentSubmissions = [
-  { id: "VLX-0041", insured: "Harwick Shipping Ltd", type: "Marine Cargo", broker: "Aon UK", status: "accepted", time: "2 min ago", score: 82 },
-  { id: "VLX-0040", insured: "Nexus Tech Partners", type: "Cyber Liability", broker: "Howden", status: "referred", time: "18 min ago", score: 61 },
-  { id: "VLX-0039", insured: "Albion Construction Group", type: "Professional Indemnity", broker: "Marsh", status: "processing", time: "34 min ago", score: null },
-  { id: "VLX-0038", insured: "Fairlane Logistics", type: "Marine Cargo", broker: "WTW", status: "declined", time: "1 hr ago", score: 29 },
-  { id: "VLX-0037", insured: "Summit Healthcare", type: "D&O Liability", broker: "Aon UK", status: "accepted", time: "2 hr ago", score: 78 },
-];
-
-const statusConfig: Record<string, { label: string; className: string }> = {
-  accepted: { label: "Accepted", className: "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200" },
-  declined: { label: "Declined", className: "bg-red-50 text-red-700 ring-1 ring-red-200" },
-  referred: { label: "Referred", className: "bg-amber-50 text-amber-700 ring-1 ring-amber-200" },
-  processing: { label: "Processing…", className: "bg-blue-50 text-blue-700 ring-1 ring-blue-200" },
-};
 
 export default function Dashboard() {
+  const recent = mockSubmissions.slice(0, 6);
+
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-5">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-semibold text-slate-900">Good morning, Max</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Here&apos;s what&apos;s happening in your queue today.</p>
+          <h1 className="text-lg font-semibold text-white">Good morning, Max</h1>
+          <p className="text-sm text-slate-500 mt-0.5">
+            {referred > 0 ? `${referred} submission${referred > 1 ? "s" : ""} awaiting your decision.` : "Your queue is clear."}
+          </p>
         </div>
-        <Link
-          href="/dashboard/upload"
-          className="flex items-center gap-2 bg-brand-500 hover:bg-brand-600 text-white px-4 py-2.5 rounded-lg text-sm font-medium transition-colors"
-        >
-          <Upload size={15} />
-          New submission
+        <Link href="/dashboard/upload"
+          className="flex items-center gap-1.5 text-sm font-semibold text-white px-4 py-2 rounded-lg transition-all"
+          style={{ background: "var(--brand)" }}>
+          <Upload size={14} /> New submission
         </Link>
       </div>
 
       {/* Metrics */}
-      <div className="grid grid-cols-4 gap-4">
-        {metrics.map((m) => (
-          <div key={m.label} className="bg-white rounded-xl border border-slate-200 p-5">
+      <div className="grid grid-cols-4 gap-3">
+        {metrics.map(m => (
+          <div key={m.label} className="card p-4">
             <div className="flex items-center justify-between mb-3">
               <span className="text-xs text-slate-500 font-medium">{m.label}</span>
-              <m.icon size={16} className={m.color} />
+              <m.icon size={14} className="text-slate-600" />
             </div>
-            <div className="flex items-end gap-2">
-              <span className="text-2xl font-bold text-slate-900">{m.value}</span>
-              <span className="text-xs text-emerald-600 font-medium pb-0.5">{m.change}</span>
-            </div>
+            <p className="text-2xl font-bold text-white mb-0.5">{m.value}</p>
+            <span className={`text-xs font-medium ${m.positive ? "text-emerald-500" : "text-red-400"}`}>{m.delta}</span>
+            <span className="text-xs text-slate-600 ml-1">vs last month</span>
           </div>
         ))}
       </div>
 
-      {/* Submissions table */}
-      <div className="bg-white rounded-xl border border-slate-200">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-          <h2 className="text-sm font-semibold text-slate-900">Recent submissions</h2>
-          <Link href="/dashboard/submissions" className="flex items-center gap-1 text-xs text-brand-500 hover:text-brand-600 font-medium transition-colors">
-            View all <ArrowUpRight size={12} />
+      {/* Referred — needs decision */}
+      {referred > 0 && (
+        <div className="card overflow-hidden">
+          <div className="flex items-center gap-2.5 px-5 py-3.5" style={{ borderBottom: "1px solid var(--border)", background: "rgba(245,158,11,0.05)" }}>
+            <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+            <span className="text-sm font-semibold text-amber-400">Needs your decision ({referred})</span>
+          </div>
+          <table className="w-full">
+            <thead>
+              <tr style={{ borderBottom: "1px solid var(--border)" }}>
+                {["ID", "Insured", "Type", "Broker", "Score", "Submitted"].map(h => (
+                  <th key={h} className="th">{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {mockSubmissions.filter(s => s.status === "referred").map((s, i, arr) => (
+                <tr key={s.id} className="hover:bg-white/[0.02] transition-colors"
+                  style={i !== arr.length - 1 ? { borderBottom: "1px solid var(--border)" } : undefined}>
+                  <td className="td">
+                    <Link href={`/dashboard/submissions/${s.id}`} className="font-mono text-xs font-medium" style={{ color: "var(--brand)" }}>
+                      {s.id}
+                    </Link>
+                  </td>
+                  <td className="td font-medium text-white">{s.extracted_data?.insured_name}</td>
+                  <td className="td text-slate-400">{s.extracted_data?.coverage_type}</td>
+                  <td className="td text-slate-400">{s.broker_company}</td>
+                  <td className="td"><RiskScore score={s.score} /></td>
+                  <td className="td text-slate-500 text-xs">{new Date(s.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Recent submissions */}
+      <div className="card overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: "1px solid var(--border)" }}>
+          <span className="text-sm font-semibold text-white">Recent submissions</span>
+          <Link href="/dashboard/submissions" className="flex items-center gap-1 text-xs font-medium transition-colors" style={{ color: "var(--brand)" }}>
+            View all <ArrowUpRight size={11} />
           </Link>
         </div>
-
         <table className="w-full">
           <thead>
-            <tr className="border-b border-slate-100">
-              {["ID", "Insured", "Coverage type", "Broker", "Risk score", "Status", "Time"].map((h) => (
-                <th key={h} className="px-5 py-3 text-left text-xs font-medium text-slate-400">
-                  {h}
-                </th>
+            <tr style={{ borderBottom: "1px solid var(--border)" }}>
+              {["ID", "Insured", "Coverage type", "Broker", "Risk score", "Status", "Time"].map(h => (
+                <th key={h} className="th">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {recentSubmissions.map((s, i) => (
-              <tr key={s.id} className={`hover:bg-slate-50 transition-colors ${i !== recentSubmissions.length - 1 ? "border-b border-slate-100" : ""}`}>
-                <td className="px-5 py-3.5">
-                  <Link href={`/dashboard/submissions/${s.id}`} className="text-xs font-mono text-brand-500 hover:text-brand-600 font-medium">
+            {recent.map((s, i) => (
+              <tr key={s.id} className="hover:bg-white/[0.02] transition-colors"
+                style={i !== recent.length - 1 ? { borderBottom: "1px solid var(--border)" } : undefined}>
+                <td className="td">
+                  <Link href={`/dashboard/submissions/${s.id}`} className="font-mono text-xs font-medium" style={{ color: "var(--brand)" }}>
                     {s.id}
                   </Link>
                 </td>
-                <td className="px-5 py-3.5 text-sm text-slate-900 font-medium">{s.insured}</td>
-                <td className="px-5 py-3.5 text-sm text-slate-500">{s.type}</td>
-                <td className="px-5 py-3.5 text-sm text-slate-500">{s.broker}</td>
-                <td className="px-5 py-3.5">
-                  {s.score !== null ? (
-                    <div className="flex items-center gap-2">
-                      <div className="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                        <div
-                          className={`h-full rounded-full ${s.score >= 70 ? "bg-emerald-500" : s.score >= 50 ? "bg-amber-500" : "bg-red-500"}`}
-                          style={{ width: `${s.score}%` }}
-                        />
-                      </div>
-                      <span className="text-xs text-slate-600 font-medium">{s.score}</span>
-                    </div>
-                  ) : (
-                    <span className="text-xs text-slate-300">—</span>
-                  )}
+                <td className="td font-medium text-slate-200">{s.extracted_data?.insured_name ?? "—"}</td>
+                <td className="td text-slate-400">{s.extracted_data?.coverage_type ?? "—"}</td>
+                <td className="td text-slate-400">{s.broker_company}</td>
+                <td className="td"><RiskScore score={s.score} /></td>
+                <td className="td"><StatusBadge status={s.status} /></td>
+                <td className="td text-slate-500 text-xs">
+                  {new Date(s.created_at).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
                 </td>
-                <td className="px-5 py-3.5">
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ${statusConfig[s.status].className}`}>
-                    {statusConfig[s.status].label}
-                  </span>
-                </td>
-                <td className="px-5 py-3.5 text-xs text-slate-400">{s.time}</td>
               </tr>
             ))}
           </tbody>
