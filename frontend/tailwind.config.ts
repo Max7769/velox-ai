@@ -10,16 +10,13 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          50: "#f0f4ff",
-          100: "#e0e9ff",
+          50:  "#eef2ff",
+          100: "#e0e7ff",
+          400: "#818cf8",
           500: "#3b5bdb",
           600: "#2f4ac7",
           700: "#2340b0",
-          900: "#1a2f7a",
         },
-      },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
       },
     },
   },
