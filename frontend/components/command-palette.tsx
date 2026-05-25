@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { mockSubmissions } from "@/lib/mock-data";
 import {
   LayoutDashboard, Upload, FileText, BarChart2, Settings,
-  Search, ArrowRight, ChevronRight, Zap, Hash, User
+  Search, ArrowRight, ChevronRight, Zap, Hash, User, Globe
 } from "lucide-react";
 
 type Item = {
@@ -23,7 +23,8 @@ const pages: Item[] = [
   { id: "upload",   type: "page", label: "New Submission",  sub: "Upload a document",       icon: Upload,          href: "/dashboard/upload" },
   { id: "subs",     type: "page", label: "Submissions",     sub: "All submissions",         icon: FileText,        href: "/dashboard/submissions" },
   { id: "analytics",type: "page", label: "Analytics",       sub: "30-day performance",      icon: BarChart2,       href: "/dashboard/analytics" },
-  { id: "settings", type: "page", label: "Settings",        sub: "Team, appetite, integrations", icon: Settings,  href: "/dashboard/settings" },
+  { id: "exposure", type: "page", label: "Exposure",        sub: "Portfolio & aggregate limits", icon: Globe,       href: "/dashboard/exposure" },
+  { id: "settings", type: "page", label: "Settings",        sub: "Team, appetite, integrations, API", icon: Settings, href: "/dashboard/settings" },
   { id: "portal",   type: "page", label: "Broker Portal",   sub: "External submission form", icon: Zap,            href: "/portal" },
 ];
 

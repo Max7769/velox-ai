@@ -1,5 +1,20 @@
 export type SubmissionStatus = "pending" | "processing" | "accepted" | "declined" | "referred";
 
+export interface ScoreFactor {
+  label: string;
+  impact: number;   // -30 to +30
+  detail: string;
+}
+
+export interface PremiumModel {
+  base: number;
+  low: number;
+  mid: number;
+  high: number;
+  currency: "GBP" | "USD" | "EUR";
+  basis: string;
+}
+
 export interface ExtractedData {
   insured_name: string | null;
   coverage_type: string | null;
@@ -10,6 +25,12 @@ export interface ExtractedData {
   loss_history: string | null;
   risk_factors: string[];
   confidence_score: number;
+  score_factors?: ScoreFactor[];
+  premium_model?: PremiumModel;
+  jurisdiction?: string;
+  naics_code?: string;
+  employees?: string;
+  revenue?: string;
 }
 
 export interface Submission {
@@ -62,4 +83,16 @@ export interface AnalyticsData {
   accepted: number;
   declined: number;
   referred: number;
+  gwp: number;
+}
+
+export interface BrokerStat {
+  company: string;
+  submissions: number;
+  accepted: number;
+  declined: number;
+  referred: number;
+  gwp: number;
+  avgScore: number;
+  bindRate: number;
 }

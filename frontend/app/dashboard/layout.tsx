@@ -1,16 +1,19 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Upload, FileText, BarChart2, Settings, ChevronRight, Zap, ExternalLink, Command } from "lucide-react";
+import { LayoutDashboard, Upload, FileText, BarChart2, Settings, ChevronRight, Zap, ExternalLink, Command, Globe } from "lucide-react";
 import { CommandPalette } from "@/components/command-palette";
 import { NotificationCenter } from "@/components/notification-center";
 import { Onboarding } from "@/components/onboarding";
+import { LiveFeed } from "@/components/live-feed";
+import { KeyboardHelp } from "@/components/keyboard-help";
 
 const nav = [
   { label: "Dashboard",     href: "/dashboard",            icon: LayoutDashboard },
   { label: "New Submission",href: "/dashboard/upload",      icon: Upload },
   { label: "Submissions",   href: "/dashboard/submissions", icon: FileText },
   { label: "Analytics",     href: "/dashboard/analytics",   icon: BarChart2 },
+  { label: "Exposure",      href: "/dashboard/exposure",    icon: Globe },
   { label: "Settings",      href: "/dashboard/settings",    icon: Settings },
 ];
 
@@ -100,6 +103,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               style={{ background: "var(--brand)" }}>
               <Upload size={11} /> New submission
             </Link>
+            <KeyboardHelp />
+            <LiveFeed />
             <NotificationCenter />
           </div>
         </header>
