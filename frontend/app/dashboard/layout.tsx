@@ -7,18 +7,21 @@ import { NotificationCenter } from "@/components/notification-center";
 import { Onboarding } from "@/components/onboarding";
 import { LiveFeed } from "@/components/live-feed";
 import { KeyboardHelp } from "@/components/keyboard-help";
-
-const nav = [
-  { label: "Dashboard",     href: "/dashboard",            icon: LayoutDashboard },
-  { label: "New Submission",href: "/dashboard/upload",      icon: Upload },
-  { label: "Submissions",   href: "/dashboard/submissions", icon: FileText },
-  { label: "Analytics",     href: "/dashboard/analytics",   icon: BarChart2 },
-  { label: "Exposure",      href: "/dashboard/exposure",    icon: Globe },
-  { label: "Settings",      href: "/dashboard/settings",    icon: Settings },
-];
+import { LanguageSwitcher } from "@/components/language-switcher";
+import { useTranslation } from "@/lib/i18n";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const { t } = useTranslation();
+
+  const nav = [
+    { labelKey: "nav.dashboard",     href: "/dashboard",            icon: LayoutDashboard },
+    { labelKey: "nav.newSubmission", href: "/dashboard/upload",     icon: Upload },
+    { labelKey: "nav.submissions",   href: "/dashboard/submissions",icon: FileText },
+    { labelKey: "nav.analytics",     href: "/dashboard/analytics",  icon: BarChart2 },
+    { labelKey: "nav.exposure",      href: "/dashboard/exposure",   icon: Globe },
+    { labelKey: "nav.settings",      href: "/dashboard/settings",   icon: Settings },
+  ] as const;
 
   return (
     <div className="flex h-screen overflow-hidden" style={{ background: "var(--bg-base)" }}>
@@ -37,7 +40,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
         {/* Nav */}
         <nav className="flex-1 px-2 py-3 space-y-0.5">
-          {nav.map(({ label, href, icon: Icon }) => {
+          {nav.map(({ labelKey, href, icon: Icon }) => {
             const active = pathname === href || (href !== "/dashboard" && pathname.startsWith(href));
             return (
               <Link key={href} href={href}
@@ -49,7 +52,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 style={active ? { background: "rgba(79,110,247,0.15)", color: "#818cf8" } : undefined}
               >
                 <Icon size={15} />
-                {label}
+                {t(labelKey)}
               </Link>
             );
           })}
@@ -62,7 +65,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             style={{ background: "rgba(255,255,255,0.02)" }}>
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              Broker portal
+              {t("nav.brokerPortal")}
             </span>
             <ExternalLink size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>
@@ -70,7 +73,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0" style={{ background: "var(--brand)" }}>M</div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-white font-medium truncate">Max Uzarek</p>
-              <p className="text-[10px] text-slate-600 truncate">Administrator</p>
+              <p className="text-[10px] text-slate-600 truncate">{t("nav.administrator")}</p>
             </div>
           </div>
         </div>
@@ -95,14 +98,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
             >
               <Command size={11} />
-              <span>Search</span>
+              <span>{t("common.search")}</span>
               <kbd className="text-[9px] font-mono text-slate-700 ml-1">⌘K</kbd>
             </button>
             <Link href="/dashboard/upload"
               className="flex items-center gap-1.5 text-xs font-semibold text-white px-3 py-1.5 rounded-lg transition-all"
               style={{ background: "var(--brand)" }}>
-              <Upload size={11} /> New submission
+              <Upload size={11} /> {t("common.newSub")}
             </Link>
+            <LanguageSwitcher />
             <KeyboardHelp />
             <LiveFeed />
             <NotificationCenter />

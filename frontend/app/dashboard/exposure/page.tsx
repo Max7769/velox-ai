@@ -1,87 +1,124 @@
 "use client";
-import { mockSubmissions } from "@/lib/mock-data";
+import { useState, useEffect, useMemo } from "react";
+import { getSubmissions } from "@/lib/db";
 import {
   RadarChart, Radar, PolarGrid, PolarAngleAxis,
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  ScatterChart, Scatter, ZAxis
+  ScatterChart, Scatter, ZAxis,
 } from "recharts";
-import { Globe, Shield, AlertTriangle, TrendingUp, DollarSign } from "lucide-react";
+import { Globe, Shield, AlertTriangle, TrendingUp, DollarSign, RefreshCw } from "lucide-react";
+import type { Submission } from "@/lib/types";
+import { useTranslation } from "@/lib/i18n";
 
 const tooltipStyle = { background: "#0d1526", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8, fontSize: 12, color: "#94a3b8" };
 
-/* ── derived data ─────────────────────────────────────────────────── */
-// Aggregate limit by class
-const limitByClass = mockSubmissions.reduce<Record<string, { limit: number; count: number; gwp: number }>>((acc, s) => {
-  if (!s.extracted_data) return acc;
-  const cls = s.extracted_data.coverage_type ?? "Unknown";
-  if (!acc[cls]) acc[cls] = { limit: 0, count: 0, gwp: 0 };
-  acc[cls].count++;
-  const limitStr = (s.extracted_data.coverage_limit ?? "").replace(/[£$€,]/g, "").replace("M", "000000").replace("K", "000");
-  acc[cls].limit += parseFloat(limitStr) || 0;
-  acc[cls].gwp   += s.extracted_data.premium_model?.mid ?? 0;
-  return acc;
-}, {});
-
-const limitData = Object.entries(limitByClass)
-  .map(([name, v]) => ({
-    name: name.split(" ").slice(0, 2).join(" "),
-    limitM: parseFloat((v.limit / 1_000_000).toFixed(1)),
-    count: v.count,
-    gwp: Math.round(v.gwp / 1000),
-  }))
-  .sort((a, b) => b.limitM - a.limitM);
-
-// Geographic exposure
-const geoExposure: { region: string; count: number; limitM: number; color: string }[] = [
-  { region: "England & Wales", count: 5, limitM: 57, color: "#4f6ef7" },
-  { region: "Scotland",        count: 1, limitM:  2, color: "#6366f1" },
-  { region: "Norway",          count: 1, limitM:  8, color: "#8b5cf6" },
-  { region: "Continental EU",  count: 0, limitM:  0, color: "#a78bfa" },
-  { region: "North America",   count: 0, limitM:  0, color: "#c4b5fd" },
-];
-
-// Risk score scatter
-const scatterData = mockSubmissions
-  .filter(s => s.score !== null && s.extracted_data?.premium_model)
-  .map(s => ({
-    x: s.score!,
-    y: s.extracted_data!.premium_model!.mid / 1000,
-    z: parseFloat((s.extracted_data!.coverage_limit ?? "0").replace(/[£$€,M]/g, "")) || 5,
-    name: s.extracted_data?.insured_name,
-    status: s.status,
-  }));
-
-// Radar — risk profile by class
+// Static reference data (Lloyd's appetite model — not derived from submissions)
 const radarData = [
-  { subject: "Marine",    risk: 62, appetite: 70 },
-  { subject: "Cyber",     risk: 55, appetite: 65 },
-  { subject: "D&O",       risk: 78, appetite: 75 },
-  { subject: "Property",  risk: 85, appetite: 80 },
-  { subject: "Crime",     risk: 58, appetite: 60 },
-  { subject: "PI",        risk: 70, appetite: 72 },
+  { subject: "Marine",   risk: 62, appetite: 70 },
+  { subject: "Cyber",    risk: 55, appetite: 65 },
+  { subject: "D&O",      risk: 78, appetite: 75 },
+  { subject: "Property", risk: 85, appetite: 80 },
+  { subject: "Crime",    risk: 58, appetite: 60 },
+  { subject: "PI",       risk: 70, appetite: 72 },
 ];
 
-// Aggregate totals
-const totalLimitM = limitData.reduce((a, d) => a + d.limitM, 0);
-const totalGWPK   = limitData.reduce((a, d) => a + d.gwp, 0);
-const maxRiskClass = limitData.sort((a, b) => b.limitM - a.limitM)[0]?.name ?? "—";
-const avgRisk     = Math.round(mockSubmissions.filter(s => s.score).reduce((a, s) => a + (s.score ?? 0), 0) / mockSubmissions.filter(s => s.score).length);
+const geoExposure = [
+  { region: "England & Wales", limitM: 57, color: "#4f6ef7" },
+  { region: "Scotland",        limitM:  2, color: "#6366f1" },
+  { region: "Norway",          limitM:  8, color: "#8b5cf6" },
+  { region: "Continental EU",  limitM:  0, color: "#a78bfa" },
+  { region: "North America",   limitM:  0, color: "#c4b5fd" },
+];
+
+function parseLimitM(limitStr: string | null | undefined): number {
+  if (!limitStr) return 0;
+  const s = limitStr.replace(/[£$€,]/g, "").trim();
+  if (s.endsWith("M")) return parseFloat(s) || 0;
+  if (s.endsWith("K")) return (parseFloat(s) || 0) / 1000;
+  return (parseFloat(s) || 0) / 1_000_000;
+}
 
 export default function ExposurePage() {
+  const { t } = useTranslation();
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [loading,     setLoading]     = useState(true);
+
+  useEffect(() => {
+    getSubmissions()
+      .then(setSubmissions)
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, []);
+
+  // ── derived data ──────────────────────────────────────────────────────────────
+  const limitByClass = useMemo(() =>
+    submissions.reduce<Record<string, { limit: number; count: number; gwp: number; scores: number[] }>>((acc, s) => {
+      if (!s.extracted_data) return acc;
+      const cls = s.extracted_data.coverage_type ?? "Unknown";
+      if (!acc[cls]) acc[cls] = { limit: 0, count: 0, gwp: 0, scores: [] };
+      acc[cls].count++;
+      acc[cls].limit += parseLimitM(s.extracted_data.coverage_limit) * 1_000_000;
+      acc[cls].gwp   += s.extracted_data.premium_model?.mid ?? 0;
+      if (s.score !== null) acc[cls].scores.push(s.score!);
+      return acc;
+    }, {})
+  , [submissions]);
+
+  const limitData = useMemo(() =>
+    Object.entries(limitByClass)
+      .map(([name, v]) => ({
+        name: name.split(" ").slice(0, 2).join(" "),
+        limitM:   parseFloat((v.limit / 1_000_000).toFixed(1)),
+        count:    v.count,
+        gwp:      Math.round(v.gwp / 1000),
+        avgScore: v.scores.length > 0 ? Math.round(v.scores.reduce((a, b) => a + b, 0) / v.scores.length) : 0,
+      }))
+      .sort((a, b) => b.limitM - a.limitM)
+  , [limitByClass]);
+
+  const scatterData = useMemo(() =>
+    submissions
+      .filter(s => s.score !== null && s.extracted_data?.premium_model)
+      .map(s => ({
+        x:      s.score!,
+        y:      s.extracted_data!.premium_model!.mid / 1000,
+        z:      parseLimitM(s.extracted_data!.coverage_limit) || 5,
+        name:   s.extracted_data?.insured_name,
+        status: s.status,
+      }))
+  , [submissions]);
+
+  const totalLimitM  = limitData.reduce((a, d) => a + d.limitM, 0);
+  const totalGWPK    = limitData.reduce((a, d) => a + d.gwp, 0);
+  const maxRiskClass = limitData[0]?.name ?? "—";
+  const scoredSubs   = submissions.filter(s => s.score !== null);
+  const avgRisk      = scoredSubs.length > 0
+    ? Math.round(scoredSubs.reduce((a, s) => a + (s.score ?? 0), 0) / scoredSubs.length)
+    : 0;
+
+  if (loading) {
+    return (
+      <div className="p-6 flex items-center justify-center gap-2 text-slate-600" style={{ minHeight: "60vh" }}>
+        <RefreshCw size={14} className="animate-spin" />
+        <span className="text-sm">{t("common.loading")}…</span>
+      </div>
+    );
+  }
+
   return (
     <div className="p-6 space-y-5">
       <div>
-        <h1 className="text-lg font-semibold text-white">Portfolio Exposure</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Aggregate limit, geographic spread, and risk concentration.</p>
+        <h1 className="text-lg font-semibold text-white">{t("exp.title")}</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{t("exp.subtitle")}</p>
       </div>
 
       {/* Summary KPIs */}
       <div className="grid grid-cols-4 gap-3">
         {[
-          { label: "Total aggregate limit",  value: `£${totalLimitM.toFixed(0)}M`,  icon: Shield,    color: "#4f6ef7", sub: "Across all bound risks" },
-          { label: "Total GWP",             value: `£${totalGWPK}K`,               icon: DollarSign, color: "#10b981", sub: "Mid-point estimates"    },
-          { label: "Largest concentration",  value: maxRiskClass,                   icon: AlertTriangle, color: "#f59e0b", sub: "By aggregate limit"  },
-          { label: "Portfolio avg score",    value: String(avgRisk),                icon: TrendingUp, color: "#6366f1", sub: "Risk quality index"     },
+          { label: "Total aggregate limit", value: `£${totalLimitM.toFixed(0)}M`, icon: Shield,        color: "#4f6ef7", sub: "Across all bound risks" },
+          { label: "Total GWP",             value: `£${totalGWPK}K`,              icon: DollarSign,    color: "#10b981", sub: "Mid-point estimates"   },
+          { label: "Largest concentration", value: maxRiskClass,                   icon: AlertTriangle, color: "#f59e0b", sub: "By aggregate limit"    },
+          { label: "Portfolio avg score",   value: String(avgRisk || "—"),         icon: TrendingUp,    color: "#6366f1", sub: "Risk quality index"    },
         ].map(m => (
           <div key={m.label} className="card p-4">
             <div className="flex items-center justify-between mb-3">
@@ -97,30 +134,26 @@ export default function ExposurePage() {
       <div className="grid grid-cols-2 gap-4">
         {/* Aggregate limit by class */}
         <div className="card p-5">
-          <h2 className="text-sm font-semibold text-white mb-4">Aggregate limit by class (£M)</h2>
+          <h2 className="text-sm font-semibold text-white mb-4">{t("exp.limitClass")}</h2>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={limitData} layout="vertical" margin={{ top: 0, right: 20, left: 50, bottom: 0 }} barSize={14}>
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" horizontal={false} />
               <XAxis type="number" tick={{ fontSize: 9, fill: "#475569" }} tickLine={false} axisLine={false} tickFormatter={v => `£${v}M`} />
               <YAxis type="category" dataKey="name" tick={{ fontSize: 9, fill: "#94a3b8" }} tickLine={false} axisLine={false} width={55} />
               <Tooltip contentStyle={tooltipStyle} formatter={(v) => [`£${v}M`, "Aggregate limit"]} />
-              <Bar dataKey="limitM" radius={[0, 4, 4, 0]}>
-                {limitData.map((_, i) => (
-                  <rect key={i} fill={`hsl(${220 + i * 20}, 70%, ${55 - i * 5}%)`} />
-                ))}
-              </Bar>
+              <Bar dataKey="limitM" fill="#4f6ef7" fillOpacity={0.8} radius={[0, 4, 4, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
-        {/* Risk profile radar */}
+        {/* Risk radar */}
         <div className="card p-5">
-          <h2 className="text-sm font-semibold text-white mb-4">Risk quality vs. appetite</h2>
+          <h2 className="text-sm font-semibold text-white mb-4">{t("exp.riskQuality")}</h2>
           <ResponsiveContainer width="100%" height={200}>
             <RadarChart data={radarData} margin={{ top: 10, right: 20, bottom: 10, left: 20 }}>
               <PolarGrid stroke="rgba(255,255,255,0.06)" />
               <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10, fill: "#64748b" }} />
-              <Radar name="Portfolio risk" dataKey="risk"    stroke="#4f6ef7" fill="#4f6ef7" fillOpacity={0.15} strokeWidth={2} />
+              <Radar name="Portfolio risk" dataKey="risk"     stroke="#4f6ef7" fill="#4f6ef7" fillOpacity={0.15} strokeWidth={2} />
               <Radar name="Appetite"       dataKey="appetite" stroke="#10b981" fill="#10b981" fillOpacity={0.08} strokeWidth={1.5} strokeDasharray="4 4" />
               <Tooltip contentStyle={tooltipStyle} />
             </RadarChart>
@@ -136,7 +169,7 @@ export default function ExposurePage() {
       <div className="card p-5">
         <div className="flex items-center gap-2 mb-4">
           <Globe size={13} className="text-slate-500" />
-          <h2 className="text-sm font-semibold text-white">Geographic exposure</h2>
+          <h2 className="text-sm font-semibold text-white">{t("exp.geographic")}</h2>
         </div>
         <div className="space-y-3">
           {geoExposure.map(g => {
@@ -149,7 +182,6 @@ export default function ExposurePage() {
                     <span className="text-sm text-slate-300">{g.region}</span>
                   </div>
                   <div className="flex items-center gap-4 text-xs text-slate-500">
-                    <span>{g.count} risk{g.count !== 1 ? "s" : ""}</span>
                     <span className="font-semibold text-slate-300 w-12 text-right">£{g.limitM}M</span>
                     <span className="w-10 text-right">{pct.toFixed(0)}%</span>
                   </div>
@@ -163,15 +195,19 @@ export default function ExposurePage() {
         </div>
       </div>
 
-      {/* Risk / Premium scatter */}
+      {/* Scatter */}
       <div className="card p-5">
-        <h2 className="text-sm font-semibold text-white mb-1">Risk score vs. premium (£K)</h2>
+        <h2 className="text-sm font-semibold text-white mb-1">{t("exp.scatter")}</h2>
         <p className="text-xs text-slate-600 mb-4">Bubble size = coverage limit. Accepted risks in green, declined in red.</p>
         <ResponsiveContainer width="100%" height={200}>
           <ScatterChart margin={{ top: 10, right: 20, bottom: 10, left: -10 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-            <XAxis type="number" dataKey="x" name="Risk score" domain={[0, 100]} tick={{ fontSize: 9, fill: "#475569" }} tickLine={false} axisLine={false} label={{ value: "Risk score", position: "insideBottom", offset: -5, fontSize: 10, fill: "#475569" }} />
-            <YAxis type="number" dataKey="y" name="Premium (£K)" tick={{ fontSize: 9, fill: "#475569" }} tickLine={false} axisLine={false} tickFormatter={v => `£${v}K`} />
+            <XAxis type="number" dataKey="x" name="Risk score" domain={[0, 100]}
+              tick={{ fontSize: 9, fill: "#475569" }} tickLine={false} axisLine={false}
+              label={{ value: "Risk score", position: "insideBottom", offset: -5, fontSize: 10, fill: "#475569" }} />
+            <YAxis type="number" dataKey="y" name="Premium (£K)"
+              tick={{ fontSize: 9, fill: "#475569" }} tickLine={false} axisLine={false}
+              tickFormatter={v => `£${v}K`} />
             <ZAxis type="number" dataKey="z" range={[40, 200]} />
             <Tooltip contentStyle={tooltipStyle} cursor={{ strokeDasharray: "3 3" }}
               content={({ payload }) => {
@@ -192,28 +228,22 @@ export default function ExposurePage() {
         </ResponsiveContainer>
       </div>
 
-      {/* Limit table */}
+      {/* Exposure table */}
       <div className="card overflow-hidden">
         <div className="px-5 py-3.5" style={{ borderBottom: "1px solid var(--border)" }}>
-          <h2 className="text-sm font-semibold text-white">Exposure table — by class</h2>
+          <h2 className="text-sm font-semibold text-white">{t("exp.table")}</h2>
         </div>
         <table className="w-full">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)" }}>
-              {["Class of business", "Risks", "Agg. limit (£M)", "GWP (£K)", "% of portfolio", "Avg risk score"].map(h => (
+              {[t("exp.class"), t("exp.count"), t("exp.limitM"), t("exp.gwp"), "% portfolio", t("table.score")].map(h => (
                 <th key={h} className="th">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {limitData.map((row, i) => {
-              const pct = (row.limitM / totalLimitM * 100).toFixed(1);
-              const avgScore = Math.round(
-                mockSubmissions
-                  .filter(s => s.extracted_data?.coverage_type?.startsWith(row.name.split(" ")[0]) && s.score)
-                  .reduce((a, s) => a + (s.score ?? 0), 0) /
-                Math.max(1, mockSubmissions.filter(s => s.extracted_data?.coverage_type?.startsWith(row.name.split(" ")[0]) && s.score).length)
-              );
+              const pct = totalLimitM > 0 ? (row.limitM / totalLimitM * 100).toFixed(1) : "0.0";
               return (
                 <tr key={row.name} className="hover:bg-white/[0.02] transition-colors"
                   style={i !== limitData.length - 1 ? { borderBottom: "1px solid var(--border)" } : undefined}>
@@ -230,8 +260,9 @@ export default function ExposurePage() {
                     </div>
                   </td>
                   <td className="td">
-                    <span className="text-xs font-semibold" style={{ color: avgScore >= 70 ? "#10b981" : avgScore >= 50 ? "#f59e0b" : "#ef4444" }}>
-                      {avgScore || "—"}
+                    <span className="text-xs font-semibold"
+                      style={{ color: row.avgScore >= 70 ? "#10b981" : row.avgScore >= 50 ? "#f59e0b" : "#ef4444" }}>
+                      {row.avgScore || "—"}
                     </span>
                   </td>
                 </tr>
