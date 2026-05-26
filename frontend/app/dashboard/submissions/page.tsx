@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { getSubmissions, subscribeToSubmissions, dbMode } from "@/lib/db";
+import { getSubmissions, dbMode } from "@/lib/db";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { RiskScore } from "@/components/ui/risk-score";
 import { Search, CheckSquare, Square, Minus, CheckCircle, XCircle, ArrowRight, X, RefreshCw, Database } from "lucide-react";
@@ -10,6 +10,7 @@ import type { Submission, SubmissionStatus } from "@/lib/types";
 import { toast } from "sonner";
 import { decideAction } from "@/lib/actions";
 import { useTranslation } from "@/lib/i18n";
+import { useRealtimeSubmissions } from "@/lib/realtime";
 
 const statusKeys: (SubmissionStatus | "all")[] = ["all", "accepted", "referred", "processing", "declined"];
 
@@ -47,24 +48,19 @@ export default function SubmissionsPage() {
     }
   }, []);
 
-  useEffect(() => {
-    load();
-    // Supabase Realtime subscription
-    const unsub = subscribeToSubmissions(({ new: record, eventType }) => {
-      setSubmissions(prev => {
-        const idx = prev.findIndex(s => s.id === record.id);
-        if (idx >= 0) {
-          const next = [...prev];
-          next[idx] = record;
-          return next;
-        }
-        return [record, ...prev];
-      });
-      setIsLive(true);
-      setTimeout(() => setIsLive(false), 3000);
+  useEffect(() => { load(); }, [load]);
+
+  // Supabase realtime (+ demo-mode simulator via hook)
+  useRealtimeSubmissions(submissions, ({ eventType, record }) => {
+    setSubmissions(prev => {
+      const idx = prev.findIndex(s => s.id === record.id);
+      if (eventType === "DELETE") return prev.filter(s => s.id !== record.id);
+      if (idx >= 0) { const next = [...prev]; next[idx] = record; return next; }
+      return [record, ...prev];
     });
-    return unsub;
-  }, [load]);
+    setIsLive(true);
+    setTimeout(() => setIsLive(false), 4000);
+  });
 
   // Auto-refresh every 30s
   useEffect(() => {

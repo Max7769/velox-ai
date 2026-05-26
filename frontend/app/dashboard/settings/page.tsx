@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import type { TeamMember, AppetiteRule } from "@/lib/types";
-import { deleteRuleAction, inviteTeamAction } from "@/lib/actions";
+import { deleteRuleAction, inviteTeamAction, createRuleAction } from "@/lib/actions";
 
 const tabs = [
   { id: "company",      label: "Company",      icon: Building2 },
@@ -100,9 +100,7 @@ export default function SettingsPage() {
     if (!ruleForm.value.trim()) { toast.error("Enter a value for the rule condition"); return; }
     setSavingRule(true);
     try {
-      // Generate a local ID for demo (real impl would persist to Supabase)
-      const newRule: AppetiteRule = {
-        id:            `rule-${Date.now()}`,
+      const newRule = await createRuleAction({
         coverage_type: ruleForm.coverage_type,
         field:         ruleForm.field,
         operator:      ruleForm.operator,
@@ -110,7 +108,7 @@ export default function SettingsPage() {
         action:        ruleForm.action,
         priority:      ruleForm.priority,
         active:        true,
-      };
+      });
       setRules(r => [...r, newRule].sort((a, b) => a.priority - b.priority));
       setShowModal(false);
       setRuleForm(BLANK_FORM);

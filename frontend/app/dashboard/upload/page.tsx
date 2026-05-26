@@ -3,6 +3,7 @@ import { useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, FileText, X, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import { persistSubmissionAction } from "@/lib/actions";
 
 type Stage = "idle" | "uploading" | "extracting" | "done" | "error";
 
@@ -41,9 +42,11 @@ export default function UploadPage() {
       const res = await fetch("/api/extract", { method: "POST", body: fd });
       if (!res.ok) { const d = await res.json(); throw new Error(d.error || "Extraction failed"); }
       const data = await res.json();
+      // Persist extracted data to DB (or mock store in demo mode)
+      const saved = await persistSubmissionAction(data, file.name);
       setStage("done");
       toast.success("Submission processed", { description: `${data.insured_name ?? "Document"} extracted successfully` });
-      setTimeout(() => router.push(`/dashboard/submissions/${data.id}`), 1000);
+      setTimeout(() => router.push(`/dashboard/submissions/${saved.id}`), 1000);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setStage("error");

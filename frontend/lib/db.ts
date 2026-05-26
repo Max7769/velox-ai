@@ -78,6 +78,33 @@ export async function getSubmission(id: string): Promise<Submission | null> {
   }
 }
 
+export async function createSubmission(
+  submission: Omit<Submission, "updated_at">,
+): Promise<Submission> {
+  const client = getClient();
+
+  if (!client) {
+    // Demo mode: prepend to in-memory mock array so listing works in-session
+    mockSubmissions.unshift(submission as Submission);
+    return submission as Submission;
+  }
+
+  try {
+    const { data, error } = await client
+      .from("submissions")
+      .insert(submission)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as Submission;
+  } catch (e) {
+    console.warn("[db] createSubmission error — falling back to mock prepend:", e);
+    mockSubmissions.unshift(submission as Submission);
+    return submission as Submission;
+  }
+}
+
 export async function updateSubmission(
   id: string,
   updates: Partial<Pick<Submission, "status" | "notes" | "decision_by" | "decision_at">>,
@@ -196,6 +223,31 @@ export async function getRules(): Promise<AppetiteRule[]> {
   } catch (e) {
     console.warn("[db] getRules fell back to mock:", e);
     return mockRules;
+  }
+}
+
+export async function createRule(rule: Omit<AppetiteRule, "id">): Promise<AppetiteRule> {
+  const client = getClient();
+  const newRule: AppetiteRule = { ...rule, id: `rule-${Date.now()}` };
+
+  if (!client) {
+    mockRules.push(newRule);
+    return newRule;
+  }
+
+  try {
+    const { data, error } = await client
+      .from("appetite_rules")
+      .insert({ ...rule, id: newRule.id })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data as AppetiteRule;
+  } catch (e) {
+    console.warn("[db] createRule error:", e);
+    mockRules.push(newRule);
+    return newRule;
   }
 }
 

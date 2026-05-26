@@ -3,18 +3,19 @@ import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { getSubmissions } from "@/lib/db";
 import { RiskScore } from "@/components/ui/risk-score";
-import { RefreshCw, ArrowRight } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import type { Submission } from "@/lib/types";
 import { formatDistanceToNow, parseISO } from "date-fns";
+import { useTranslation } from "@/lib/i18n";
 
-const COLUMNS = [
-  { key: "processing", label: "Processing",   color: "#3b82f6", bg: "rgba(59,130,246,0.08)" },
-  { key: "referred",   label: "Referred",     color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
-  { key: "accepted",   label: "Accepted",     color: "#10b981", bg: "rgba(16,185,129,0.08)" },
-  { key: "declined",   label: "Declined",     color: "#ef4444", bg: "rgba(239,68,68,0.08)"  },
+const COLUMN_DEFS = [
+  { key: "processing", color: "#3b82f6", bg: "rgba(59,130,246,0.08)" },
+  { key: "referred",   color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
+  { key: "accepted",   color: "#10b981", bg: "rgba(16,185,129,0.08)" },
+  { key: "declined",   color: "#ef4444", bg: "rgba(239,68,68,0.08)"  },
 ] as const;
 
-function SubmissionCard({ s }: { s: Submission }) {
+function SubmissionCard({ s, premiumLabel }: { s: Submission; premiumLabel: string }) {
   return (
     <Link href={`/dashboard/submissions/${s.id}`}
       className="block rounded-xl p-4 mb-2.5 transition-all hover:translate-y-[-1px]"
@@ -36,7 +37,7 @@ function SubmissionCard({ s }: { s: Submission }) {
       {s.extracted_data?.premium_model && (
         <div className="mt-2.5 pt-2.5" style={{ borderTop: "1px solid var(--border)" }}>
           <span className="text-[10px] text-slate-500">
-            Premium: <span className="text-slate-300 font-medium">
+            {premiumLabel}: <span className="text-slate-300 font-medium">
               £{s.extracted_data.premium_model.mid.toLocaleString("en-GB")}
             </span>
           </span>
@@ -47,8 +48,16 @@ function SubmissionCard({ s }: { s: Submission }) {
 }
 
 export default function PipelinePage() {
-  const [submissions, setSubmissions] = useState<Submission[]>([]);
-  const [loading, setLoading]         = useState(true);
+  const { t }                          = useTranslation();
+  const [submissions, setSubmissions]  = useState<Submission[]>([]);
+  const [loading, setLoading]          = useState(true);
+
+  const COLUMNS = [
+    { key: "processing", label: t("pipe.processing"), color: "#3b82f6", bg: "rgba(59,130,246,0.08)" },
+    { key: "referred",   label: t("pipe.referred"),   color: "#f59e0b", bg: "rgba(245,158,11,0.08)" },
+    { key: "accepted",   label: t("pipe.accepted"),   color: "#10b981", bg: "rgba(16,185,129,0.08)" },
+    { key: "declined",   label: t("pipe.declined"),   color: "#ef4444", bg: "rgba(239,68,68,0.08)"  },
+  ] as const;
 
   const load = useCallback(async () => {
     try {
@@ -62,7 +71,6 @@ export default function PipelinePage() {
 
   const byStatus = (key: string) => submissions.filter(s => s.status === key);
 
-  // GWP for accepted column
   const acceptedGWP = submissions
     .filter(s => s.status === "accepted")
     .reduce((a, s) => a + (s.extracted_data?.premium_model?.mid ?? 0), 0);
@@ -71,19 +79,18 @@ export default function PipelinePage() {
     return (
       <div className="p-6 flex items-center justify-center gap-2 text-slate-600" style={{ minHeight: "60vh" }}>
         <RefreshCw size={14} className="animate-spin" />
-        <span className="text-sm">Loading pipeline…</span>
+        <span className="text-sm">{t("common.loading")}</span>
       </div>
     );
   }
 
   return (
     <div className="p-6 h-full flex flex-col">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6 flex-shrink-0">
         <div>
-          <h1 className="text-lg font-semibold text-white">Pipeline</h1>
+          <h1 className="text-lg font-semibold text-white">{t("pipe.title")}</h1>
           <p className="text-sm text-slate-500 mt-0.5">
-            {submissions.length} submissions · £{(acceptedGWP / 1000).toFixed(0)}K GWP bound
+            {submissions.length} {t("common.total")} · £{(acceptedGWP / 1000).toFixed(0)}K {t("pipe.gwp")}
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -96,13 +103,13 @@ export default function PipelinePage() {
             ))}
           </div>
           <button onClick={load}
-            className="p-1.5 text-slate-600 hover:text-slate-400 transition-colors rounded-lg hover:bg-white/5">
+            className="p-1.5 text-slate-600 hover:text-slate-400 transition-colors rounded-lg hover:bg-white/5"
+            title={t("common.refresh")}>
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           </button>
         </div>
       </div>
 
-      {/* Kanban board */}
       <div className="flex gap-4 flex-1 overflow-x-auto pb-2 min-h-0">
         {COLUMNS.map(col => {
           const cards = byStatus(col.key);
@@ -111,33 +118,31 @@ export default function PipelinePage() {
           return (
             <div key={col.key} className="flex-shrink-0 w-72 flex flex-col rounded-2xl overflow-hidden"
               style={{ background: col.bg, border: `1px solid ${col.color}20` }}>
-              {/* Column header */}
               <div className="px-4 py-3 flex-shrink-0" style={{ borderBottom: `1px solid ${col.color}20` }}>
                 <div className="flex items-center justify-between mb-1">
                   <div className="flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: col.color }} />
                     <span className="text-sm font-semibold text-white">{col.label}</span>
                   </div>
-                  <span className="text-xs font-bold px-2 py-0.5 rounded-full text-white"
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full"
                     style={{ background: col.color + "30", color: col.color }}>
                     {cards.length}
                   </span>
                 </div>
                 {colGWP > 0 && (
                   <p className="text-[10px] text-slate-600 ml-4">
-                    £{(colGWP / 1000).toFixed(0)}K premium
+                    £{(colGWP / 1000).toFixed(0)}K {t("pipe.premium")}
                   </p>
                 )}
               </div>
 
-              {/* Cards */}
               <div className="flex-1 overflow-y-auto p-3 space-y-0">
                 {cards.length === 0 ? (
                   <div className="flex items-center justify-center py-12 text-xs text-slate-700">
-                    No submissions
+                    {t("pipe.empty")}
                   </div>
                 ) : (
-                  cards.map(s => <SubmissionCard key={s.id} s={s} />)
+                  cards.map(s => <SubmissionCard key={s.id} s={s} premiumLabel={t("pipe.premium")} />)
                 )}
               </div>
             </div>

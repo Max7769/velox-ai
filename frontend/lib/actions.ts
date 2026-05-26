@@ -12,7 +12,8 @@
  */
 
 import { revalidatePath } from "next/cache";
-import { updateSubmission, addAuditEntry, inviteTeamMember, deleteRule } from "./db";
+import { updateSubmission, addAuditEntry, inviteTeamMember, deleteRule, createRule, createSubmission } from "./db";
+import type { Submission, AppetiteRule } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
@@ -76,9 +77,53 @@ export async function inviteTeamAction(email: string) {
 
 // ── rules ─────────────────────────────────────────────────────────────────────
 
+export async function createRuleAction(rule: Omit<AppetiteRule, "id">): Promise<AppetiteRule> {
+  const created = await createRule(rule);
+  revalidatePath("/dashboard/settings");
+  return created;
+}
+
 export async function deleteRuleAction(id: string) {
   await deleteRule(id);
   revalidatePath("/dashboard/settings");
+}
+
+// ── submission create ─────────────────────────────────────────────────────────
+
+export async function persistSubmissionAction(
+  data: Record<string, unknown>,
+  fileName: string,
+) {
+  const now = new Date().toISOString();
+
+  const score: number    = typeof data.score === "number" ? data.score : 50;
+  const rawStatus        = typeof data.status === "string" ? data.status : "referred";
+  const status           = (["accepted", "declined", "referred", "processing"] as const)
+    .includes(rawStatus as "accepted") ? rawStatus as Submission["status"] : "referred";
+
+  const submission: Omit<Submission, "updated_at"> = {
+    id:            typeof data.id === "string" ? data.id : `VLX-${Date.now().toString().slice(-4)}`,
+    status,
+    score,
+    file_name:     fileName,
+    broker_name:   "Self-uploaded",
+    broker_email:  "",
+    broker_company: "Direct upload",
+    created_at:    now,
+    processed_at:  now,
+    decision_at:   status !== "referred" ? now : null,
+    decision_by:   status !== "referred" ? "AI" : null,
+    notes:         null,
+    extracted_data: data as unknown as Submission["extracted_data"],
+  };
+
+  await createSubmission(submission);
+  await addAuditEntry(submission.id, "created", "AI", `Document uploaded: ${fileName}`);
+
+  revalidatePath("/dashboard/submissions");
+  revalidatePath("/dashboard");
+
+  return submission;
 }
 
 // ── document ingestion ────────────────────────────────────────────────────────

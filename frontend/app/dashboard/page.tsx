@@ -12,6 +12,7 @@ import { formatDistanceToNow, parseISO } from "date-fns";
 import type { Submission, AuditEntry } from "@/lib/types";
 import { useTranslation } from "@/lib/i18n";
 import { SkeletonStat, SkeletonTable, SkeletonCard } from "@/components/ui/skeleton";
+import { OnboardingWidget } from "@/components/onboarding-widget";
 
 function Greeting() {
   const { t } = useTranslation();
@@ -130,6 +131,9 @@ export default function Dashboard() {
           </Link>
         </div>
       </div>
+
+      {/* Onboarding */}
+      <OnboardingWidget submissionCount={submissions.length} />
 
       {/* Metrics */}
       <div className="grid grid-cols-4 gap-3">

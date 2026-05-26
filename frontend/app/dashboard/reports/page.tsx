@@ -5,20 +5,14 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { RiskScore } from "@/components/ui/risk-score";
 import {
   Download, FileText, Shield, BarChart2, RefreshCw,
-  Calendar, CheckCircle, Filter, ChevronDown,
+  Calendar, CheckCircle, Filter,
 } from "lucide-react";
 import { format, parseISO, subDays, isAfter } from "date-fns";
 import type { Submission, AnalyticsData } from "@/lib/types";
 import { toast } from "sonner";
+import { useTranslation } from "@/lib/i18n";
 
 type ReportType = "submissions" | "compliance" | "performance" | "audit";
-
-const REPORT_TYPES: { id: ReportType; label: string; icon: typeof FileText; desc: string }[] = [
-  { id: "submissions",  label: "Submissions export",     icon: FileText,  desc: "Full list of all submissions with extracted data" },
-  { id: "compliance",   label: "Compliance report",      icon: Shield,    desc: "GDPR audit log, EU AI Act classification summary" },
-  { id: "performance",  label: "Performance report",     icon: BarChart2, desc: "GWP, bind rate, processing time, broker breakdown" },
-  { id: "audit",        label: "Audit trail",            icon: CheckCircle, desc: "Every decision and action with timestamp and actor" },
-];
 
 function exportCSV(filename: string, headers: string[], rows: string[][]) {
   const csv = [headers, ...rows].map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(",")).join("\n");
@@ -32,6 +26,15 @@ function exportCSV(filename: string, headers: string[], rows: string[][]) {
 }
 
 export default function ReportsPage() {
+  const { t } = useTranslation();
+
+  const REPORT_TYPES: { id: ReportType; label: string; icon: typeof FileText; desc: string }[] = [
+    { id: "submissions",  label: t("rep.submissions"),  icon: FileText,    desc: t("rep.subtitle") },
+    { id: "compliance",   label: t("rep.compliance"),   icon: Shield,      desc: "GDPR audit log, EU AI Act classification summary" },
+    { id: "performance",  label: t("rep.performance"),  icon: BarChart2,   desc: "GWP, bind rate, processing time, broker breakdown" },
+    { id: "audit",        label: t("rep.audit"),        icon: CheckCircle, desc: "Every decision and action with timestamp and actor" },
+  ];
+
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [analytics,   setAnalytics]   = useState<AnalyticsData[]>([]);
   const [loading,     setLoading]     = useState(true);
@@ -70,17 +73,15 @@ export default function ReportsPage() {
     });
   }, [submissions, statusFilter, dateRange, search]);
 
-  // Summary stats
-  const totalGWP     = analytics.reduce((a, d) => a + d.gwp, 0);
-  const accepted     = filtered.filter(s => s.status === "accepted").length;
-  const declined     = filtered.filter(s => s.status === "declined").length;
-  const referred     = filtered.filter(s => s.status === "referred").length;
-  const processing   = filtered.filter(s => s.status === "processing").length;
-  const bindRate     = filtered.length > 0 ? Math.round((accepted / filtered.length) * 100) : 0;
+  const totalGWP   = analytics.reduce((a, d) => a + d.gwp, 0);
+  const accepted   = filtered.filter(s => s.status === "accepted").length;
+  const declined   = filtered.filter(s => s.status === "declined").length;
+  const referred   = filtered.filter(s => s.status === "referred").length;
+  const bindRate   = filtered.length > 0 ? Math.round((accepted / filtered.length) * 100) : 0;
 
   const handleDownload = async (type: ReportType) => {
     setGenerating(type);
-    await new Promise(r => setTimeout(r, 600)); // brief generation delay
+    await new Promise(r => setTimeout(r, 600));
 
     try {
       const ts = format(new Date(), "yyyy-MM-dd");
@@ -90,8 +91,7 @@ export default function ReportsPage() {
           "ID", "Status", "Insured", "Coverage type", "Broker", "Score",
           "Premium (£)", "Jurisdiction", "Date",
         ], filtered.map(s => [
-          s.id,
-          s.status,
+          s.id, s.status,
           s.extracted_data?.insured_name ?? "",
           s.extracted_data?.coverage_type ?? "",
           s.broker_company,
@@ -100,7 +100,7 @@ export default function ReportsPage() {
           s.extracted_data?.jurisdiction ?? "",
           format(parseISO(s.created_at), "dd/MM/yyyy"),
         ]));
-        toast.success("Submissions export downloaded");
+        toast.success(t("rep.submissions") + " downloaded");
       }
 
       if (type === "performance") {
@@ -110,13 +110,11 @@ export default function ReportsPage() {
           d.date, String(d.total), String(d.accepted), String(d.declined),
           String(d.referred), String(d.gwp),
         ]));
-        toast.success("Performance report downloaded");
+        toast.success(t("rep.performance") + " downloaded");
       }
 
       if (type === "compliance") {
-        exportCSV(`velox-compliance-${ts}.csv`, [
-          "Field", "Value",
-        ], [
+        exportCSV(`velox-compliance-${ts}.csv`, ["Field", "Value"], [
           ["Report date",                format(new Date(), "dd/MM/yyyy")],
           ["GDPR retention policy",      "7 years (Lloyd's minimum)"],
           ["EU AI Act classification",   "High-risk — Article 6(2)"],
@@ -129,7 +127,7 @@ export default function ReportsPage() {
           ["Referred for review",        String(submissions.filter(s => s.status === "referred").length)],
           ["Automated decision rate",    `${Math.round(((accepted + declined) / Math.max(submissions.length, 1)) * 100)}%`],
         ]);
-        toast.success("Compliance report downloaded");
+        toast.success(t("rep.compliance") + " downloaded");
       }
 
       if (type === "audit") {
@@ -143,7 +141,7 @@ export default function ReportsPage() {
           s.broker_company,
           format(parseISO(s.created_at), "dd/MM/yyyy HH:mm"),
         ]));
-        toast.success("Audit trail downloaded");
+        toast.success(t("rep.audit") + " downloaded");
       }
     } finally {
       setGenerating(null);
@@ -154,35 +152,42 @@ export default function ReportsPage() {
     return (
       <div className="p-6 flex items-center justify-center gap-2 text-slate-600" style={{ minHeight: "60vh" }}>
         <RefreshCw size={14} className="animate-spin" />
-        <span className="text-sm">Loading reports…</span>
+        <span className="text-sm">{t("common.loading")}</span>
       </div>
     );
   }
+
+  const dateLabels: Record<"all" | "7d" | "30d" | "90d", string> = {
+    all: t("rep.allTime"),
+    "7d": t("rep.last7"),
+    "30d": t("rep.last30"),
+    "90d": t("rep.last90"),
+  };
 
   return (
     <div className="p-6 space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-semibold text-white">Reports &amp; Exports</h1>
-          <p className="text-sm text-slate-500 mt-0.5">Download compliance reports and submission data</p>
+          <h1 className="text-lg font-semibold text-white">{t("rep.title")}</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{t("rep.subtitle")}</p>
         </div>
         <div className="flex items-center gap-2 text-xs text-slate-600">
           <Calendar size={12} />
-          Generated {format(new Date(), "dd MMM yyyy, HH:mm")}
+          {format(new Date(), "dd MMM yyyy, HH:mm")}
         </div>
       </div>
 
       {/* Summary KPIs */}
       <div className="grid grid-cols-5 gap-3">
         {[
-          { label: "Total",      value: filtered.length,   color: "#64748b" },
-          { label: "Accepted",   value: accepted,           color: "#10b981" },
-          { label: "Declined",   value: declined,           color: "#ef4444" },
-          { label: "Referred",   value: referred,           color: "#f59e0b" },
-          { label: "Bind rate",  value: `${bindRate}%`,     color: "#4f6ef7" },
+          { label: t("common.total"),      value: filtered.length,  color: "#64748b" },
+          { label: t("status.accepted"),   value: accepted,          color: "#10b981" },
+          { label: t("status.declined"),   value: declined,          color: "#ef4444" },
+          { label: t("status.referred"),   value: referred,          color: "#f59e0b" },
+          { label: "Bind rate",            value: `${bindRate}%`,    color: "#4f6ef7" },
         ].map(m => (
           <div key={m.label} className="card p-4 text-center">
-            <p className="text-2xl font-bold text-white mb-0.5" style={{ color: m.color }}>{m.value}</p>
+            <p className="text-2xl font-bold mb-0.5" style={{ color: m.color }}>{m.value}</p>
             <p className="text-xs text-slate-500">{m.label}</p>
           </div>
         ))}
@@ -209,7 +214,7 @@ export default function ReportsPage() {
               style={{ background: "var(--brand)" }}>
               {generating === r.id
                 ? <><RefreshCw size={11} className="animate-spin" /> Generating…</>
-                : <><Download size={11} /> Export CSV</>
+                : <><Download size={11} /> {t("rep.export")}</>
               }
             </button>
           </div>
@@ -221,39 +226,36 @@ export default function ReportsPage() {
         <div className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: "1px solid var(--border)" }}>
           <div className="flex items-center gap-2">
             <Filter size={13} className="text-slate-500" />
-            <span className="text-sm font-semibold text-white">Submission data</span>
-            <span className="text-xs text-slate-600">({filtered.length} records)</span>
+            <span className="text-sm font-semibold text-white">{t("nav.submissions")}</span>
+            <span className="text-xs text-slate-600">({filtered.length} {t("common.total").toLowerCase()})</span>
           </div>
           <div className="flex items-center gap-2">
-            {/* Date range */}
             <div className="flex items-center gap-1 p-1 rounded-lg" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)" }}>
               {(["all", "7d", "30d", "90d"] as const).map(d => (
                 <button key={d} onClick={() => setDateRange(d)}
                   className="px-2 py-0.5 rounded text-[11px] font-medium transition-all"
                   style={dateRange === d ? { background: "var(--brand)", color: "#fff" } : { color: "#64748b" }}>
-                  {d === "all" ? "All time" : d}
+                  {dateLabels[d]}
                 </button>
               ))}
             </div>
-            {/* Status filter */}
             <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
               className="text-xs rounded-lg px-2 py-1.5 outline-none"
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)", color: "#94a3b8" }}>
-              <option value="all">All statuses</option>
-              <option value="accepted">Accepted</option>
-              <option value="referred">Referred</option>
-              <option value="declined">Declined</option>
-              <option value="processing">Processing</option>
+              <option value="all">{t("status.all")}</option>
+              <option value="accepted">{t("status.accepted")}</option>
+              <option value="referred">{t("status.referred")}</option>
+              <option value="declined">{t("status.declined")}</option>
+              <option value="processing">{t("status.processing")}</option>
             </select>
-            {/* Search */}
             <input value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Search…"
+              placeholder={t("sub.placeholder")}
               className="text-xs rounded-lg px-2 py-1.5 outline-none w-36"
               style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)", color: "#94a3b8" }} />
             <button onClick={() => handleDownload("submissions")} disabled={generating !== null}
               className="flex items-center gap-1.5 text-xs font-semibold text-white px-3 py-1.5 rounded-lg hover:opacity-90 disabled:opacity-50"
               style={{ background: "var(--brand)" }}>
-              <Download size={11} /> Export filtered
+              <Download size={11} /> {t("rep.export")}
             </button>
           </div>
         </div>
@@ -261,14 +263,14 @@ export default function ReportsPage() {
         <table className="w-full">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)" }}>
-              {["ID", "Insured", "Coverage", "Broker", "Score", "Status", "Date", "Premium"].map(h => (
+              {[t("table.id"), t("table.insured"), t("table.coverage"), t("table.broker"), t("table.score"), t("table.status"), t("table.date"), "Premium"].map(h => (
                 <th key={h} className="th">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
-              <tr><td colSpan={8} className="td text-center py-12 text-slate-600 text-sm">No records match your filter.</td></tr>
+              <tr><td colSpan={8} className="td text-center py-12 text-slate-600 text-sm">{t("rep.noData")}</td></tr>
             ) : filtered.map((s, i) => (
               <tr key={s.id} className="hover:bg-white/[0.02] transition-colors"
                 style={i !== filtered.length - 1 ? { borderBottom: "1px solid var(--border)" } : undefined}>
@@ -293,8 +295,8 @@ export default function ReportsPage() {
 
         {filtered.length > 0 && (
           <div className="px-5 py-3 text-xs text-slate-600" style={{ borderTop: "1px solid var(--border)" }}>
-            Showing {filtered.length} of {submissions.length} submissions ·{" "}
-            Total GWP in view: £{filtered.reduce((a, s) => a + (s.extracted_data?.premium_model?.mid ?? 0), 0).toLocaleString("en-GB")}
+            {t("common.shown")}: {filtered.length} / {submissions.length} ·{" "}
+            {t("rep.totalGwp")}: £{filtered.reduce((a, s) => a + (s.extracted_data?.premium_model?.mid ?? 0), 0).toLocaleString("en-GB")}
           </div>
         )}
       </div>
