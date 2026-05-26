@@ -11,6 +11,7 @@ import {
 import { formatDistanceToNow, parseISO } from "date-fns";
 import type { Submission, AuditEntry } from "@/lib/types";
 import { useTranslation } from "@/lib/i18n";
+import { SkeletonStat, SkeletonTable, SkeletonCard } from "@/components/ui/skeleton";
 
 function Greeting() {
   const { t } = useTranslation();
@@ -80,9 +81,22 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="p-6 flex items-center justify-center gap-2 text-slate-600" style={{ minHeight: "60vh" }}>
-        <RefreshCw size={14} className="animate-spin" />
-        <span className="text-sm">{t("common.loading")}…</span>
+      <div className="p-6 space-y-5">
+        <div className="flex items-center justify-between">
+          <div className="space-y-2">
+            <div className="h-5 w-48 rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.08)" }} />
+            <div className="h-3.5 w-64 rounded-lg animate-pulse" style={{ background: "rgba(255,255,255,0.04)" }} />
+          </div>
+        </div>
+        <div className="grid grid-cols-4 gap-3">
+          {Array.from({ length: 4 }).map((_, i) => <SkeletonStat key={i} />)}
+        </div>
+        <SkeletonTable rows={5} cols={5} />
+        <div className="grid grid-cols-3 gap-4">
+          <SkeletonCard rows={4} />
+          <SkeletonCard rows={4} />
+          <SkeletonCard rows={3} />
+        </div>
       </div>
     );
   }

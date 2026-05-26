@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException, Body, Query
 from app.services.document_parser import extract_text
 from app.services.ai_extractor import extract_submission_data
-from app.services.scoring import compute_risk_score, apply_appetite
+from app.services.scoring import compute_risk_score, apply_appetite, generate_score_analysis
 from app.services import database as db
 from app.models.submission import ExtractedData
 from pydantic import BaseModel
@@ -62,12 +62,19 @@ async def ingest_submission(
     # 2. Audit: received
     await db.add_audit_entry(sub_id, "submitted", broker_name, f"Document '{file.filename}' uploaded via API")
 
-    # 3. AI extraction
+    # 3. AI extraction + scoring + factor analysis
     try:
         extracted = await extract_submission_data(text)
         score = compute_risk_score(extracted)
         rules = await db.get_rules()
         decision = apply_appetite(score, extracted, rules if rules else None)
+
+        # Generate detailed score factors and premium model (non-blocking if fails)
+        score_factors, premium_model = await generate_score_analysis(extracted, score)
+        if score_factors:
+            extracted.score_factors = score_factors
+        if premium_model:
+            extracted.premium_model = premium_model
     except Exception as e:
         await db.update_submission(sub_id, {"status": "referred", "notes": f"Extraction error: {e}"})
         raise HTTPException(status_code=500, detail=f"AI extraction failed: {e}")

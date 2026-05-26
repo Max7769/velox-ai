@@ -210,10 +210,10 @@ export default function Home() {
               style={{ background: "var(--brand)" }}>
               Open platform <ArrowRight size={16} />
             </Link>
-            <Link href="/portal"
+            <Link href="/demo"
               className="flex items-center gap-2 text-base font-medium text-slate-300 px-8 py-4 rounded-xl transition-all hover:text-white"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-              <Play size={14} /> Broker portal
+              <Play size={14} /> Watch demo
             </Link>
           </div>
 
@@ -441,10 +441,10 @@ export default function Home() {
                 style={{ background: "var(--brand)" }}>
                 Open platform <ArrowRight size={14} />
               </Link>
-              <Link href="/portal"
+              <Link href="/demo"
                 className="flex items-center gap-2 text-sm font-medium text-slate-300 px-8 py-3.5 rounded-xl transition-all hover:text-white w-full sm:w-auto justify-center"
                 style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-                Broker portal
+                <Play size={13} /> Watch demo
               </Link>
             </div>
           </div>

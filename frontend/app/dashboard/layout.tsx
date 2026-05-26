@@ -63,11 +63,20 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         {/* Bottom */}
         <div className="px-2 py-3" style={{ borderTop: "1px solid var(--border)" }}>
           <Link href="/portal" target="_blank"
-            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs text-slate-500 hover:text-slate-300 transition-colors group mb-2"
+            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs text-slate-500 hover:text-slate-300 transition-colors group mb-1"
             style={{ background: "rgba(255,255,255,0.02)" }}>
             <span className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
               {t("nav.brokerPortal")}
+            </span>
+            <ExternalLink size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
+          </Link>
+          <Link href="/demo" target="_blank"
+            className="flex items-center justify-between px-3 py-2 rounded-lg text-xs text-slate-500 hover:text-slate-300 transition-colors group mb-2"
+            style={{ background: "rgba(255,255,255,0.02)" }}>
+            <span className="flex items-center gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-400" />
+              Investor demo
             </span>
             <ExternalLink size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>

@@ -38,8 +38,12 @@ function SuccessContent() {
           ))}
         </div>
 
-        <Link href="/portal" className="block w-full py-3 rounded-lg text-sm font-semibold text-white transition-all"
+        <Link href={`/portal/status?ref=${ref}`}
+          className="block w-full py-3 rounded-lg text-sm font-semibold text-white transition-all mb-3"
           style={{ background: "var(--brand)" }}>
+          Track this submission
+        </Link>
+        <Link href="/portal" className="block w-full py-3 rounded-lg text-sm font-medium text-slate-400 hover:text-slate-300 transition-colors text-center">
           Submit another risk
         </Link>
       </div>
