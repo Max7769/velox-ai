@@ -75,6 +75,7 @@ export interface AppetiteRule {
   value: string;
   action: "accept" | "decline" | "refer";
   priority: number;
+  active?: boolean;
 }
 
 export interface AnalyticsData {

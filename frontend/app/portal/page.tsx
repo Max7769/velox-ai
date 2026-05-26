@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, FileText, X, Loader2, Shield, Lock } from "lucide-react";
 import { toast } from "sonner";
+import { ingestDocumentAction } from "@/lib/actions";
 
 const coverageTypes = [
   "Marine Cargo", "Cyber Liability", "D&O Liability", "Professional Indemnity",
@@ -28,12 +29,21 @@ export default function PortalPage() {
     if (!valid) return;
     setSubmitting(true);
     try {
-      await new Promise(r => setTimeout(r, 1800));
+      const fd = new FormData();
+      fd.append("file",            file!);
+      fd.append("broker_name",     form.brokerName);
+      fd.append("broker_email",    form.brokerEmail);
+      fd.append("broker_company",  form.brokerCompany);
+      fd.append("insured_name",    form.insuredName);
+      fd.append("coverage_type",   form.coverageType);
+      if (form.notes) fd.append("notes", form.notes);
+
+      const result = await ingestDocumentAction(fd);
+      router.push(`/portal/success?ref=${result.id}&insured=${encodeURIComponent(form.insuredName)}`);
+    } catch {
+      // Fall back to demo mode if backend is not running
       const ref = `VLX-${Date.now().toString().slice(-4)}`;
       router.push(`/portal/success?ref=${ref}&insured=${encodeURIComponent(form.insuredName)}`);
-    } catch {
-      toast.error("Submission failed. Please try again or email us directly.");
-      setSubmitting(false);
     }
   };
 

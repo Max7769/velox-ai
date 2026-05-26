@@ -1,7 +1,7 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Upload, FileText, BarChart2, Settings, ChevronRight, Zap, ExternalLink, Command, Globe } from "lucide-react";
+import { LayoutDashboard, Upload, FileText, BarChart2, Settings, ChevronRight, Zap, ExternalLink, Command, Globe, Kanban, Download } from "lucide-react";
 import { CommandPalette } from "@/components/command-palette";
 import { NotificationCenter } from "@/components/notification-center";
 import { Onboarding } from "@/components/onboarding";
@@ -18,8 +18,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     { labelKey: "nav.dashboard",     href: "/dashboard",            icon: LayoutDashboard },
     { labelKey: "nav.newSubmission", href: "/dashboard/upload",     icon: Upload },
     { labelKey: "nav.submissions",   href: "/dashboard/submissions",icon: FileText },
+    { labelKey: "nav.pipeline",      href: "/dashboard/pipeline",   icon: Kanban },
     { labelKey: "nav.analytics",     href: "/dashboard/analytics",  icon: BarChart2 },
     { labelKey: "nav.exposure",      href: "/dashboard/exposure",   icon: Globe },
+    { labelKey: "nav.reports",       href: "/dashboard/reports",    icon: Download },
     { labelKey: "nav.settings",      href: "/dashboard/settings",   icon: Settings },
   ] as const;
 

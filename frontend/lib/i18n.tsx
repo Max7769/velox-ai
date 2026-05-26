@@ -15,6 +15,8 @@ const T = {
     "nav.settings":       "Settings",
     "nav.brokerPortal":   "Broker portal",
     "nav.administrator":  "Administrator",
+    "nav.pipeline":       "Pipeline",
+    "nav.reports":        "Reports",
 
     // Common actions / labels
     "common.search":      "Search",
@@ -149,6 +151,8 @@ const T = {
     "nav.settings":       "Ustawienia",
     "nav.brokerPortal":   "Portal brokera",
     "nav.administrator":  "Administrator",
+    "nav.pipeline":       "Pipeline",
+    "nav.reports":        "Raporty",
 
     // Common
     "common.search":      "Szukaj",
