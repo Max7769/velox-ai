@@ -8,6 +8,7 @@ import { Onboarding } from "@/components/onboarding";
 import { LiveFeed } from "@/components/live-feed";
 import { KeyboardHelp } from "@/components/keyboard-help";
 import { LanguageSwitcher } from "@/components/language-switcher";
+import { UserButton } from "@/components/user-button";
 import { useTranslation } from "@/lib/i18n";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
@@ -81,7 +82,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             <ExternalLink size={11} className="opacity-0 group-hover:opacity-100 transition-opacity" />
           </Link>
           <div className="flex items-center gap-2.5 px-3 py-2">
-            <div className="w-6 h-6 rounded-full flex items-center justify-center text-white text-[10px] font-bold flex-shrink-0" style={{ background: "var(--brand)" }}>M</div>
+            <UserButton name="Max Uzarek" email="uzarek.maksymilian@gmail.com" />
             <div className="flex-1 min-w-0">
               <p className="text-xs text-white font-medium truncate">Max Uzarek</p>
               <p className="text-[10px] text-slate-600 truncate">{t("nav.administrator")}</p>

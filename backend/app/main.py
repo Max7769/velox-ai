@@ -18,9 +18,15 @@ app = FastAPI(
     lifespan=lifespan,
 )
 
+try:
+    from app.core.config import settings
+    _origins = [o.strip() for o in settings.cors_origins.split(",") if o.strip()]
+except Exception:
+    _origins = ["http://localhost:3000"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "https://velox.ai"],
+    allow_origins=_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

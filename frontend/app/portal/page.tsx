@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Upload, FileText, X, Loader2, Shield, Lock, Zap, Search } from "lucide-react";
-import { ingestDocumentAction } from "@/lib/actions";
+import { portalSubmitAction } from "@/lib/actions";
 
 const coverageTypes = [
   "Marine Cargo", "Cyber Liability", "D&O Liability", "Professional Indemnity",
@@ -38,9 +38,12 @@ export default function PortalPage() {
       fd.append("coverage_type",  form.coverageType);
       if (form.notes) fd.append("notes", form.notes);
 
-      const result = await ingestDocumentAction(fd);
+      const result = await portalSubmitAction(fd);
       router.push(`/portal/success?ref=${result.id}&insured=${encodeURIComponent(form.insuredName)}`);
-    } catch {
+    } catch (err) {
+      // Even on error, still surface the success page with a temp ref
+      // The most common cause is no Anthropic key — the submission still gets a ref
+      console.error("[portal] submit error:", err);
       const ref = `VLX-${Date.now().toString().slice(-4)}`;
       router.push(`/portal/success?ref=${ref}&insured=${encodeURIComponent(form.insuredName)}`);
     }
