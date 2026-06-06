@@ -109,7 +109,7 @@ const SLIDES = [
 ] as const;
 type Slide = typeof SLIDES[number];
 
-const SLIDE_DURATION = 8500; // ms per slide in auto-play
+const SLIDE_DURATION = 8500;
 
 /* ══════════════════════════════════════════════════════════════════
    Main Demo component
@@ -127,7 +127,6 @@ export default function DemoPage() {
     setSlide(next);
   }, [idx]);
 
-  // auto-advance
   useEffect(() => {
     if (!autoPlay || !entered) return;
     timerRef.current = setTimeout(() => {
@@ -137,7 +136,6 @@ export default function DemoPage() {
     return () => { if (timerRef.current) clearTimeout(timerRef.current); };
   }, [slide, autoPlay, entered, go, idx]);
 
-  // keyboard nav
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === " ") go(1);
@@ -156,17 +154,17 @@ export default function DemoPage() {
             <Zap size={28} className="text-white" fill="white" />
           </div>
           <h1 className="text-4xl font-bold text-white mb-3 tracking-tight">Velox AI</h1>
-          <p className="text-slate-400 mb-2">Interactive investor demo</p>
-          <p className="text-sm text-slate-600 mb-10">7 slides · ~60 seconds · keyboard navigable</p>
+          <p className="text-slate-400 mb-2">Interaktywna prezentacja dla klientów</p>
+          <p className="text-sm text-slate-600 mb-10">7 slajdów · ~60 sekund · nawigacja klawiaturą</p>
           <button
             onClick={() => setEntered(true)}
             className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-xl text-sm font-semibold text-white transition-all hover:scale-105"
             style={{ background: "var(--brand)" }}
           >
-            <Play size={16} /> Start demo
+            <Play size={16} /> Rozpocznij demo
           </button>
           <div className="mt-6">
-            <Link href="/dashboard" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">← Back to dashboard</Link>
+            <Link href="/dashboard" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">← Wróć do panelu</Link>
           </div>
         </div>
       </div>
@@ -182,7 +180,7 @@ export default function DemoPage() {
             <Zap size={11} className="text-white" fill="white" />
           </div>
           <span className="text-sm font-semibold text-white">Velox AI</span>
-          <span className="text-xs text-slate-600 ml-1">· Investor Demo</span>
+          <span className="text-xs text-slate-600 ml-1">· Prezentacja dla klientów</span>
         </div>
 
         {/* Progress dots */}
@@ -205,26 +203,26 @@ export default function DemoPage() {
             style={{ background: "rgba(255,255,255,0.04)" }}
           >
             {autoPlay ? <Pause size={11} /> : <Play size={11} />}
-            {autoPlay ? "Pause" : "Auto-play"}
+            {autoPlay ? "Pauza" : "Auto-odtwarzanie"}
           </button>
           <Link href="/dashboard"
             className="flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs text-slate-500 hover:text-slate-300 transition-colors"
             style={{ background: "rgba(255,255,255,0.04)" }}
           >
-            <X size={11} /> Exit
+            <X size={11} /> Wyjdź
           </Link>
         </div>
       </header>
 
       {/* Slide area */}
       <main className="flex-1 flex flex-col items-center justify-center px-8 py-12">
-        {slide === "problem"  && <SlideProblem />}
-        {slide === "solution" && <SlideSolution />}
+        {slide === "problem"    && <SlideProblem />}
+        {slide === "solution"   && <SlideSolution />}
         {slide === "extraction" && <SlideExtraction />}
-        {slide === "scoring"  && <SlideScoring />}
-        {slide === "platform" && <SlidePlatform />}
-        {slide === "economics" && <SlideEconomics />}
-        {slide === "cta"      && <SlideCTA />}
+        {slide === "scoring"    && <SlideScoring />}
+        {slide === "platform"   && <SlidePlatform />}
+        {slide === "economics"  && <SlideEconomics />}
+        {slide === "cta"        && <SlideCTA />}
       </main>
 
       {/* Bottom nav */}
@@ -232,29 +230,29 @@ export default function DemoPage() {
         <button onClick={() => go(-1)} disabled={idx === 0}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm text-slate-500 hover:text-slate-300 disabled:opacity-20 transition-all"
           style={{ background: "rgba(255,255,255,0.04)" }}>
-          <ChevronLeft size={15} /> Previous
+          <ChevronLeft size={15} /> Poprzedni
         </button>
         <span className="text-xs text-slate-700">{idx + 1} / {SLIDES.length}</span>
         <button onClick={() => go(1)} disabled={idx === SLIDES.length - 1}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white disabled:opacity-20 transition-all"
           style={{ background: "var(--brand)" }}>
-          Next <ChevronRight size={15} />
+          Następny <ChevronRight size={15} />
         </button>
       </footer>
     </div>
   );
 }
 
-/* ── Slide 1: Problem ──────────────────────────────────────────── */
+/* ── Slajd 1: Problem ──────────────────────────────────────────── */
 function SlideProblem() {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), 100); return () => clearTimeout(t); }, []);
 
   const pains = [
-    { icon: Clock, label: "3–5 day average turnaround", sub: "Brokers expect an answer within hours" },
-    { icon: FileText, label: "Manual PDF triage", sub: "Underwriters spend 60% of time on data entry" },
-    { icon: AlertCircle, label: "Inconsistent decisions", sub: "No audit trail, no reproducibility" },
-    { icon: Users, label: "Talent bottleneck", sub: "Senior underwriters as a scaling constraint" },
+    { icon: Clock,        label: "3–5 dni średniego czasu realizacji",       sub: "Brokerzy oczekują odpowiedzi w ciągu kilku godzin" },
+    { icon: FileText,     label: "Ręczna selekcja dokumentów PDF",           sub: "Underwriterzy poświęcają 60% czasu na wprowadzanie danych" },
+    { icon: AlertCircle,  label: "Niespójne decyzje",                        sub: "Brak ścieżki audytu i powtarzalności" },
+    { icon: Users,        label: "Wąskie gardło ludzkich zasobów",           sub: "Doświadczeni underwriterzy jako ogranicznik wzrostu" },
   ];
 
   return (
@@ -262,13 +260,13 @@ function SlideProblem() {
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
           style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "#f87171" }}>
-          The Problem
+          Problem
         </div>
         <h2 className="text-4xl font-bold text-white tracking-tight mb-3">
-          Insurance underwriting is stuck<br />
-          <span style={{ color: "#f87171" }}>in the 1980s</span>
+          Gwarantowanie ubezpieczeń utknęło<br />
+          <span style={{ color: "#f87171" }}>w latach 80.</span>
         </h2>
-        <p className="text-slate-400 text-lg">Lloyd's alone processes £46B in premiums annually — almost entirely manually.</p>
+        <p className="text-slate-400 text-lg">Lloyd's sam przetwarza £46 mld składek rocznie — niemal wyłącznie ręcznie.</p>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -296,23 +294,23 @@ function SlideProblem() {
 
       <div className="mt-8 text-center">
         <p className="text-sm text-slate-600">
-          The average Lloyd's MGA turns away <span className="text-white font-semibold">23% of viable business</span> due to processing capacity constraints.
+          Przeciętna MGA Lloyd&apos;s odrzuca <span className="text-white font-semibold">23% opłacalnych zgłoszeń</span> z powodu ograniczonej zdolności przetwarzania.
         </p>
       </div>
     </div>
   );
 }
 
-/* ── Slide 2: Solution ─────────────────────────────────────────── */
+/* ── Slajd 2: Rozwiązanie ──────────────────────────────────────── */
 function SlideSolution() {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), 100); return () => clearTimeout(t); }, []);
 
   const features = [
-    { icon: Brain, label: "AI Extraction", desc: "Claude reads every submission in seconds", color: "#818cf8" },
-    { icon: Shield, label: "Risk Scoring", desc: "Consistent 0–100 score with full reasoning", color: "#34d399" },
-    { icon: BarChart2, label: "Analytics", desc: "Portfolio-level exposure and performance", color: "#f59e0b" },
-    { icon: Globe, label: "Broker Portal", desc: "Self-serve submission with real-time status", color: "#60a5fa" },
+    { icon: Brain,    label: "Ekstrakcja AI",      desc: "Claude czyta każde zgłoszenie w sekundy",                  color: "#818cf8" },
+    { icon: Shield,   label: "Ocena ryzyka",        desc: "Spójna ocena 0–100 z pełnym uzasadnieniem",              color: "#34d399" },
+    { icon: BarChart2,label: "Analityka",           desc: "Ekspozycja portfela i wydajność na poziomie zbiorczym",   color: "#f59e0b" },
+    { icon: Globe,    label: "Portal brokera",      desc: "Samoobsługowe składanie z aktualizacjami w czasie rzeczywistym", color: "#60a5fa" },
   ];
 
   return (
@@ -320,13 +318,13 @@ function SlideSolution() {
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
           style={{ background: "rgba(79,110,247,0.1)", border: "1px solid rgba(79,110,247,0.2)", color: "#818cf8" }}>
-          <Sparkles size={11} /> The Solution
+          <Sparkles size={11} /> Rozwiązanie
         </div>
         <h2 className="text-4xl font-bold text-white tracking-tight mb-3">
-          AI-native underwriting.<br />
-          <span style={{ color: "var(--brand)" }}>8 minutes, not 8 days.</span>
+          Gwarantowanie oparte na AI.<br />
+          <span style={{ color: "var(--brand)" }}>8 minut, nie 8 dni.</span>
         </h2>
-        <p className="text-slate-400 text-lg">Velox AI automates the full intake-to-decision workflow for MGAs.</p>
+        <p className="text-slate-400 text-lg">Velox AI automatyzuje cały przepływ pracy od przyjęcia do decyzji dla MGA.</p>
       </div>
 
       <div className="grid grid-cols-4 gap-4 mb-10">
@@ -352,9 +350,14 @@ function SlideSolution() {
       {/* Before/After */}
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-2xl p-5" style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.1)" }}>
-          <p className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-3">Before Velox</p>
+          <p className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-3">Bez Velox</p>
           <div className="space-y-2">
-            {["Email PDF to underwriter", "Manual data extraction (2–4h)", "Spreadsheet risk scoring", "3–5 day response to broker"].map(s => (
+            {[
+              "E-mail z PDF do underwritera",
+              "Ręczna ekstrakcja danych (2–4h)",
+              "Ocena ryzyka w arkuszu kalkulacyjnym",
+              "Odpowiedź do brokera po 3–5 dniach",
+            ].map(s => (
               <div key={s} className="flex items-center gap-2 text-sm text-slate-500">
                 <X size={13} className="text-red-500 flex-shrink-0" /> {s}
               </div>
@@ -362,9 +365,14 @@ function SlideSolution() {
           </div>
         </div>
         <div className="rounded-2xl p-5" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.1)" }}>
-          <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-3">With Velox</p>
+          <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-3">Z Velox</p>
           <div className="space-y-2">
-            {["Broker uploads to self-serve portal", "AI extracts all fields in 45 seconds", "Consistent risk score + full reasoning", "Decision in under 8 minutes"].map(s => (
+            {[
+              "Broker przesyła do samoobsługowego portalu",
+              "AI wyciąga wszystkie pola w 45 sekund",
+              "Spójna ocena ryzyka + pełne uzasadnienie",
+              "Decyzja w poniżej 8 minut",
+            ].map(s => (
               <div key={s} className="flex items-center gap-2 text-sm text-slate-300">
                 <CheckCircle size={13} className="text-emerald-500 flex-shrink-0" /> {s}
               </div>
@@ -376,19 +384,19 @@ function SlideSolution() {
   );
 }
 
-/* ── Slide 3: AI Extraction ────────────────────────────────────── */
+/* ── Slajd 3: Ekstrakcja AI ────────────────────────────────────── */
 function SlideExtraction() {
   const [step, setStep] = useState(0);
   const fields = [
-    { label: "Insured name",    value: "Harwick Shipping Ltd",      delay: 400 },
-    { label: "Coverage type",   value: "Marine Cargo",               delay: 900 },
-    { label: "Coverage limit",  value: "£5,000,000",                 delay: 1400 },
-    { label: "Effective date",  value: "01 Jun 2026",                delay: 1900 },
-    { label: "Jurisdiction",    value: "England & Wales",            delay: 2400 },
-    { label: "Employees",       value: "340",                        delay: 2900 },
-    { label: "Revenue",         value: "£28,000,000",                delay: 3400 },
-    { label: "Loss history",    value: "No claims in 5 years ✓",     delay: 3900 },
-    { label: "Confidence",      value: "94%",                        delay: 4400 },
+    { label: "Ubezpieczony",         value: "Harwick Shipping Ltd",    delay: 400  },
+    { label: "Rodzaj ubezpieczenia", value: "Marine Cargo",            delay: 900  },
+    { label: "Limit ubezpieczenia",  value: "£5 000 000",              delay: 1400 },
+    { label: "Data wejścia w życie", value: "01 cze 2026",             delay: 1900 },
+    { label: "Jurysdykcja",          value: "Anglia i Walia",          delay: 2400 },
+    { label: "Pracownicy",           value: "340",                     delay: 2900 },
+    { label: "Przychód",             value: "£28 000 000",             delay: 3400 },
+    { label: "Historia szkód",       value: "Brak szkód przez 5 lat ✓", delay: 3900 },
+    { label: "Pewność AI",           value: "94%",                     delay: 4400 },
   ];
 
   useEffect(() => {
@@ -403,10 +411,10 @@ function SlideExtraction() {
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
           style={{ background: "rgba(129,140,248,0.1)", border: "1px solid rgba(129,140,248,0.2)", color: "#818cf8" }}>
-          <Brain size={11} /> AI Extraction Engine
+          <Brain size={11} /> Silnik ekstrakcji AI
         </div>
-        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">From PDF to structured data in 45 seconds</h2>
-        <p className="text-slate-400">Powered by Claude claude-sonnet-4-6 with domain-tuned insurance prompting</p>
+        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Od PDF do danych strukturalnych w 45 sekund</h2>
+        <p className="text-slate-400">Zasilany modelem Claude claude-sonnet-4-6 z dopasowanymi do ubezpieczeń promptami</p>
       </div>
 
       <div className="grid grid-cols-2 gap-6">
@@ -415,7 +423,7 @@ function SlideExtraction() {
           <div className="flex items-center gap-2 mb-4">
             <FileText size={16} style={{ color: "var(--brand)" }} />
             <span className="text-sm font-medium text-slate-300">harwick-shipping-submission.pdf</span>
-            {step > 0 && <span className="ml-auto text-xs text-emerald-400 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />Reading…</span>}
+            {step > 0 && <span className="ml-auto text-xs text-emerald-400 flex items-center gap-1"><span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />Czytanie…</span>}
           </div>
           <div className="space-y-2 font-mono text-[11px] text-slate-600 leading-relaxed">
             {[
@@ -434,11 +442,10 @@ function SlideExtraction() {
               "ISO 9001 certified",
             ].map((line, i) => (
               <div key={i} className={`transition-colors duration-300 ${step > 0 && i < step * 1.5 ? "text-slate-400" : ""}`}>
-                {line || " "}
+                {line || " "}
               </div>
             ))}
           </div>
-          {/* scanning line */}
           {step > 0 && step < fields.length && (
             <div className="absolute left-0 right-0 h-px" style={{
               background: "linear-gradient(90deg, transparent, var(--brand), transparent)",
@@ -452,10 +459,10 @@ function SlideExtraction() {
         <div className="rounded-2xl p-5" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
           <div className="flex items-center gap-2 mb-4">
             <Brain size={16} style={{ color: "#818cf8" }} />
-            <span className="text-sm font-medium text-slate-300">Extracted fields</span>
+            <span className="text-sm font-medium text-slate-300">Wyciągnięte pola</span>
             {step >= fields.length && (
               <span className="ml-auto text-xs text-emerald-400 flex items-center gap-1">
-                <CheckCircle size={11} /> Complete
+                <CheckCircle size={11} /> Ukończono
               </span>
             )}
           </div>
@@ -475,17 +482,17 @@ function SlideExtraction() {
   );
 }
 
-/* ── Slide 4: Risk Scoring ─────────────────────────────────────── */
+/* ── Slajd 4: Ocena ryzyka ─────────────────────────────────────── */
 function SlideScoring() {
   const [active, setActive] = useState(false);
   useEffect(() => { const t = setTimeout(() => setActive(true), 300); return () => clearTimeout(t); }, []);
 
   const factors = [
-    { label: "Loss history",        impact: +22, pct: 73, color: "#10b981" },
-    { label: "Management quality",  impact: +12, pct: 40, color: "#34d399" },
-    { label: "Industry profile",    impact: +14, pct: 47, color: "#34d399" },
-    { label: "Route concentration", impact: -9,  pct: 30, color: "#f87171" },
-    { label: "Cargo perishability", impact: -6,  pct: 20, color: "#fb923c" },
+    { label: "Historia szkód",          impact: +22, pct: 73, color: "#10b981" },
+    { label: "Jakość zarządzania",      impact: +12, pct: 40, color: "#34d399" },
+    { label: "Profil branżowy",         impact: +14, pct: 47, color: "#34d399" },
+    { label: "Koncentracja tras",       impact: -9,  pct: 30, color: "#f87171" },
+    { label: "Nietrwałość ładunku",     impact: -6,  pct: 20, color: "#fb923c" },
   ];
 
   return (
@@ -493,10 +500,10 @@ function SlideScoring() {
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
           style={{ background: "rgba(16,185,129,0.1)", border: "1px solid rgba(16,185,129,0.2)", color: "#34d399" }}>
-          <Shield size={11} /> Intelligent Risk Scoring
+          <Shield size={11} /> Inteligentna ocena ryzyka
         </div>
-        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Consistent, explainable decisions every time</h2>
-        <p className="text-slate-400">Every score includes full factor breakdown and audit trail</p>
+        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Spójne, wyjaśnialne decyzje za każdym razem</h2>
+        <p className="text-slate-400">Każda ocena zawiera pełny rozkład czynników i ścieżkę audytu</p>
       </div>
 
       <div className="grid grid-cols-2 gap-8 items-center">
@@ -506,15 +513,15 @@ function SlideScoring() {
           <div className="mt-4 text-center">
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold"
               style={{ background: "rgba(16,185,129,0.1)", color: "#10b981", border: "1px solid rgba(16,185,129,0.2)" }}>
-              <CheckCircle size={14} /> ACCEPT — within appetite
+              <CheckCircle size={14} /> AKCEPTACJA — w zakresie apetytu
             </div>
-            <p className="text-xs text-slate-600 mt-2">Processed in 7m 42s · Confidence: 94%</p>
+            <p className="text-xs text-slate-600 mt-2">Przetworzono w 7 min 42 sek · Pewność: 94%</p>
           </div>
         </div>
 
         {/* Factors */}
         <div className="space-y-4">
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Score factors</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Czynniki oceny</p>
           {factors.map((f, i) => (
             <div key={f.label}>
               <div className="flex items-center justify-between mb-1">
@@ -531,21 +538,21 @@ function SlideScoring() {
 
       {/* Premium model */}
       <div className="mt-8 rounded-2xl p-5" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
-        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">AI Premium Model</p>
+        <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Model składki AI</p>
         <div className="flex items-center gap-4">
           <div className="flex-1">
             <div className="flex items-center justify-between text-xs text-slate-600 mb-1.5">
-              <span>£38,000</span><span>£43,500</span><span>£51,000</span>
+              <span>£38 000</span><span>£43 500</span><span>£51 000</span>
             </div>
             <div className="relative h-2 rounded-full" style={{ background: "rgba(255,255,255,0.06)" }}>
               <div className="absolute h-full rounded-full" style={{ left: "20%", right: "30%", background: "linear-gradient(90deg, #4f6ef7, #818cf8)" }} />
               <div className="absolute w-3 h-3 rounded-full border-2 border-white top-1/2 -translate-y-1/2" style={{ left: "calc(40% - 6px)", background: "var(--brand)" }} />
             </div>
-            <p className="text-[10px] text-slate-600 mt-1.5">Annual flat rate on declared value</p>
+            <p className="text-[10px] text-slate-600 mt-1.5">Roczna stawka ryczałtowa od zadeklarowanej wartości</p>
           </div>
           <div className="text-right">
-            <p className="text-2xl font-bold text-white">£43,500</p>
-            <p className="text-xs text-slate-500">Recommended mid</p>
+            <p className="text-2xl font-bold text-white">£43 500</p>
+            <p className="text-xs text-slate-500">Rekomendowana składka</p>
           </div>
         </div>
       </div>
@@ -553,16 +560,16 @@ function SlideScoring() {
   );
 }
 
-/* ── Slide 5: Platform ─────────────────────────────────────────── */
+/* ── Slajd 5: Platforma ────────────────────────────────────────── */
 function SlidePlatform() {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), 200); return () => clearTimeout(t); }, []);
 
   const cols = [
-    { title: "Processing", count: 2, color: "#f59e0b", subs: ["VLX-0039 · Marine Cargo", "VLX-0037 · Cyber Liability"] },
-    { title: "Referred",   count: 3, color: "#818cf8", subs: ["VLX-0040 · Cyber · Score 61", "VLX-0036 · D&O · Score 54"] },
-    { title: "Accepted",   count: 8, color: "#10b981", subs: ["VLX-0041 · Marine · £43.5K", "VLX-0035 · Property · £28K"] },
-    { title: "Declined",   count: 4, color: "#ef4444", subs: ["VLX-0038 · Marine · Score 29", "VLX-0034 · Crime · Score 22"] },
+    { title: "Przetwarzane", count: 2, color: "#f59e0b", subs: ["VLX-0039 · Marine Cargo", "VLX-0037 · Cyber Liability"] },
+    { title: "Do weryfikacji", count: 3, color: "#818cf8", subs: ["VLX-0040 · Cyber · Ocena 61", "VLX-0036 · D&O · Ocena 54"] },
+    { title: "Zaakceptowane", count: 8, color: "#10b981", subs: ["VLX-0041 · Marine · £43,5K", "VLX-0035 · Property · £28K"] },
+    { title: "Odrzucone",     count: 4, color: "#ef4444", subs: ["VLX-0038 · Marine · Ocena 29", "VLX-0034 · Crime · Ocena 22"] },
   ];
 
   return (
@@ -570,10 +577,10 @@ function SlidePlatform() {
       <div className="text-center mb-8">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
           style={{ background: "rgba(79,110,247,0.1)", border: "1px solid rgba(79,110,247,0.2)", color: "#818cf8" }}>
-          Platform Overview
+          Przegląd platformy
         </div>
-        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Full underwriting pipeline in one view</h2>
-        <p className="text-slate-400">Kanban pipeline · Analytics · Broker portal · Team management</p>
+        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Pełny pipeline underwritingu w jednym widoku</h2>
+        <p className="text-slate-400">Pipeline Kanban · Analityka · Portal brokera · Zarządzanie zespołem</p>
       </div>
 
       {/* Kanban preview */}
@@ -600,7 +607,7 @@ function SlidePlatform() {
               ))}
               <div className="rounded-lg px-2.5 py-1.5 text-[10px] text-slate-700"
                 style={{ background: "rgba(255,255,255,0.01)", border: "1px dashed rgba(255,255,255,0.04)" }}>
-                +{col.count - 2} more
+                +{col.count - 2} więcej
               </div>
             </div>
           </div>
@@ -610,9 +617,9 @@ function SlidePlatform() {
       {/* Feature highlights */}
       <div className="grid grid-cols-3 gap-3">
         {[
-          { icon: Brain, label: "AI Engine", sub: "Claude claude-sonnet-4-6 · temperature 0", color: "#818cf8" },
-          { icon: BarChart2, label: "Analytics Suite", sub: "GWP, bind rate, loss ratio, broker matrix", color: "#f59e0b" },
-          { icon: Globe, label: "Broker Portal", sub: "Self-serve intake, real-time status tracking", color: "#60a5fa" },
+          { icon: Brain,    label: "Silnik AI",        sub: "Claude claude-sonnet-4-6 · temperature 0",               color: "#818cf8" },
+          { icon: BarChart2,label: "Pakiet analityczny",sub: "Składka, wskaźnik akceptacji, szkodowość, macierz brokerów", color: "#f59e0b" },
+          { icon: Globe,    label: "Portal brokera",   sub: "Samoobsługowe przyjęcie, śledzenie statusu w czasie rzeczywistym", color: "#60a5fa" },
         ].map(({ icon: Icon, label, sub, color }) => (
           <div key={label} className="rounded-xl p-4 flex gap-3" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
             <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: `${color}18` }}>
@@ -629,7 +636,7 @@ function SlidePlatform() {
   );
 }
 
-/* ── Slide 6: Economics ────────────────────────────────────────── */
+/* ── Slajd 6: Ekonomika i rynek ────────────────────────────────── */
 function SlideEconomics() {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), 100); return () => clearTimeout(t); }, []);
@@ -639,18 +646,18 @@ function SlideEconomics() {
       <div className="text-center mb-10">
         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4"
           style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)", color: "#f59e0b" }}>
-          <TrendingUp size={11} /> Business Case
+          <TrendingUp size={11} /> Uzasadnienie biznesowe
         </div>
-        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Targeting a massive, underserved market</h2>
-        <p className="text-slate-400">Insurance technology — the last sector yet to be fully digitised</p>
+        <h2 className="text-3xl font-bold text-white tracking-tight mb-2">Ogromny, niedostatecznie obsługiwany rynek</h2>
+        <p className="text-slate-400">Technologia ubezpieczeniowa — ostatni sektor, który nie został w pełni zdigitalizowany</p>
       </div>
 
       {/* Market */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         {[
-          { label: "TAM", value: "$800B", sub: "Global commercial insurance premiums", color: "#818cf8" },
-          { label: "SAM", value: "$46B",  sub: "Lloyd's of London annual GWP", color: "#60a5fa" },
-          { label: "SOM", value: "$2.3B", sub: "MGA/coverholder software market", color: "#34d399" },
+          { label: "TAM", value: "$800 mld", sub: "Globalny rynek ubezpieczeń komercyjnych",          color: "#818cf8" },
+          { label: "SAM", value: "$46 mld",  sub: "Roczna składka Lloyd's of London",                 color: "#60a5fa" },
+          { label: "SOM", value: "$2,3 mld", sub: "Rynek oprogramowania MGA/coverholder",             color: "#34d399" },
         ].map(({ label, value, sub, color }) => (
           <div key={label} className="rounded-2xl p-5 text-center" style={{ background: "var(--bg-card)", border: `1px solid ${color}22` }}>
             <p className="text-xs font-semibold mb-2" style={{ color }}>{label}</p>
@@ -663,13 +670,13 @@ function SlideEconomics() {
       {/* Unit economics */}
       <div className="grid grid-cols-2 gap-4">
         <div className="rounded-2xl p-5" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Unit economics (per MGA)</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Ekonomia jednostkowa (na MGA)</p>
           <div className="space-y-3">
             {[
-              { label: "ACV",  value: "£42,000", desc: "Annual contract value · Growth tier" },
-              { label: "LTV",  value: "£168,000", desc: "4-year average contract length" },
-              { label: "CAC",  value: "£8,400",   desc: "6-month payback period" },
-              { label: "LTV:CAC", value: "20×",   desc: "Best-in-class SaaS ratio", highlight: true },
+              { label: "ACV",     value: "£42 000",  desc: "Roczna wartość kontraktu · plan Growth" },
+              { label: "LTV",     value: "£168 000", desc: "Średni czas trwania kontraktu 4 lata" },
+              { label: "CAC",     value: "£8 400",   desc: "Okres zwrotu kosztu pozyskania 6 miesięcy" },
+              { label: "LTV:CAC", value: "20×",      desc: "Wskaźnik SaaS najwyższej klasy", highlight: true },
             ].map(({ label, value, desc, highlight }) => (
               <div key={label} className="flex items-center justify-between">
                 <div>
@@ -682,13 +689,13 @@ function SlideEconomics() {
           </div>
         </div>
         <div className="rounded-2xl p-5" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
-          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Growth trajectory</p>
+          <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">Trajektoria wzrostu</p>
           <div className="space-y-3">
             {[
-              { year: "Year 1", arr: "£420K",  customers: "10 MGAs", bar: 8 },
-              { year: "Year 2", arr: "£2.1M",  customers: "50 MGAs", bar: 30 },
-              { year: "Year 3", arr: "£8.4M",  customers: "200 MGAs", bar: 65 },
-              { year: "Year 4", arr: "£25M",   customers: "600 MGAs", bar: 100 },
+              { year: "Rok 1", arr: "£420K",  customers: "10 MGA",  bar: 8   },
+              { year: "Rok 2", arr: "£2,1M",  customers: "50 MGA",  bar: 30  },
+              { year: "Rok 3", arr: "£8,4M",  customers: "200 MGA", bar: 65  },
+              { year: "Rok 4", arr: "£25M",   customers: "600 MGA", bar: 100 },
             ].map(({ year, arr, customers, bar }, i) => (
               <div key={year}>
                 <div className="flex items-center justify-between mb-1">
@@ -706,45 +713,93 @@ function SlideEconomics() {
   );
 }
 
-/* ── Slide 7: CTA ──────────────────────────────────────────────── */
+/* ── Slajd 7: Oszczędności i cennik ────────────────────────────── */
 function SlideCTA() {
   const [visible, setVisible] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVisible(true), 100); return () => clearTimeout(t); }, []);
 
   return (
-    <div className={`max-w-2xl w-full text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
+    <div className={`max-w-3xl w-full text-center transition-all duration-700 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
       <div className="w-20 h-20 rounded-3xl flex items-center justify-center mx-auto mb-8"
         style={{ background: "var(--brand)", boxShadow: "0 0 80px rgba(79,110,247,0.4)" }}>
         <Zap size={36} className="text-white" fill="white" />
       </div>
       <h2 className="text-4xl font-bold text-white tracking-tight mb-3">
-        Ready to transform<br />your MGA?
+        Ile możesz zaoszczędzić<br />z Velox AI?
       </h2>
       <p className="text-slate-400 text-lg mb-2">
-        Velox AI is production-ready and processing real submissions.
-      </p>
-      <p className="text-slate-600 text-sm mb-10">
-        We&apos;re raising a £1.5M pre-seed round to accelerate GTM and hire senior engineers.
+        Porównaj koszty ręcznego przetwarzania z naszą platformą.
       </p>
 
-      <div className="flex items-center justify-center gap-4 mb-10">
+      {/* Savings comparison */}
+      <div className="grid grid-cols-2 gap-4 mb-8 text-left">
+        <div className="rounded-2xl p-5" style={{ background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.15)" }}>
+          <p className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-4">Bez Velox (ręcznie)</p>
+          <div className="space-y-3">
+            {[
+              { label: "Underwriter (£80K/rok)",   value: "£80 000/rok" },
+              { label: "Asystent UW (£40K/rok)",   value: "£40 000/rok" },
+              { label: "Błędy i reworki (~15%)",    value: "£18 000/rok" },
+              { label: "Utracone zgłoszenia (23%)", value: "~£92 000/rok" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex justify-between text-xs">
+                <span className="text-slate-500">{label}</span>
+                <span className="text-red-400 font-semibold">{value}</span>
+              </div>
+            ))}
+            <div className="flex justify-between text-sm font-bold pt-2" style={{ borderTop: "1px solid rgba(239,68,68,0.2)" }}>
+              <span className="text-red-300">Łączny koszt</span>
+              <span className="text-red-300">~£230 000/rok</span>
+            </div>
+          </div>
+        </div>
+        <div className="rounded-2xl p-5" style={{ background: "rgba(16,185,129,0.05)", border: "1px solid rgba(16,185,129,0.15)" }}>
+          <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-4">Z Velox (Growth)</p>
+          <div className="space-y-3">
+            {[
+              { label: "Subskrypcja Velox",          value: "£42 000/rok" },
+              { label: "1 underwriter (weryfikacja)", value: "£80 000/rok" },
+              { label: "Błędy → praktycznie zero",   value: "£0" },
+              { label: "Utracone zgłoszenia",         value: "£0" },
+            ].map(({ label, value }) => (
+              <div key={label} className="flex justify-between text-xs">
+                <span className="text-slate-500">{label}</span>
+                <span className="text-emerald-400 font-semibold">{value}</span>
+              </div>
+            ))}
+            <div className="flex justify-between text-sm font-bold pt-2" style={{ borderTop: "1px solid rgba(16,185,129,0.2)" }}>
+              <span className="text-emerald-300">Łączny koszt</span>
+              <span className="text-emerald-300">~£122 000/rok</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-2xl p-5 mb-8" style={{ background: "rgba(79,110,247,0.08)", border: "1px solid rgba(79,110,247,0.2)" }}>
+        <p className="text-2xl font-bold text-white mb-1">
+          Oszczędzasz <span style={{ color: "var(--brand)" }}>~£108 000 rocznie</span> — przy 3× większej przepustowości
+        </p>
+        <p className="text-sm text-slate-400">ROI z Velox zwraca się już po 3 miesiącach. Wzrost mocy przerobowej bez dodatkowych etatów.</p>
+      </div>
+
+      <div className="flex items-center justify-center gap-4 mb-8">
         <Link href="/portal"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-white transition-all hover:scale-105"
           style={{ background: "var(--brand)" }}>
-          Try the platform <ArrowRight size={15} />
+          Wypróbuj platformę <ArrowRight size={15} />
         </Link>
-        <a href="mailto:max@velox-ai.io"
+        <a href="mailto:uzarek.maksymilian@gmail.com"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-semibold text-slate-300 transition-all hover:text-white"
           style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}>
-          <DollarSign size={15} /> Investor enquiries
+          <DollarSign size={15} /> Kontakt handlowy
         </a>
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         {[
-          { value: "8 min", label: "Avg processing time" },
-          { value: "94%", label: "AI confidence score" },
-          { value: "£0", label: "Setup fee" },
+          { value: "8 min",  label: "Śr. czas przetwarzania" },
+          { value: "94%",    label: "Pewność AI" },
+          { value: "£0",     label: "Opłata za wdrożenie" },
         ].map(({ value, label }) => (
           <div key={label} className="rounded-2xl p-4" style={{ background: "var(--bg-card)", border: "1px solid var(--border)" }}>
             <p className="text-2xl font-bold text-white">{value}</p>
@@ -754,7 +809,7 @@ function SlideCTA() {
       </div>
 
       <p className="text-xs text-slate-700 mt-6">
-        uzarek.maksymilian@gmail.com · velox-ai.io · Lloyd&apos;s MGA compliant
+        uzarek.maksymilian@gmail.com · velox-ai.io · Zgodność z Lloyd&apos;s MGA
       </p>
     </div>
   );

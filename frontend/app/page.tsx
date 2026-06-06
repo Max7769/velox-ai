@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { startCheckout } from "@/lib/stripe";
+import { useTranslation } from "@/lib/i18n";
 import {
   Zap, ArrowRight, Shield, Clock, TrendingUp, CheckCircle,
   FileText, BarChart2, Globe, ChevronRight, ChevronDown,
@@ -24,15 +25,15 @@ function useInView(threshold = 0.15) {
 }
 
 /* ── live ticker ─────────────────────────────────────────────────── */
-const TICKER = [
-  { label: "Cyber Liability · Techflow Ltd",        score: 78, action: "Accepted", color: "#10b981" },
-  { label: "Marine Cargo · Nordic Freight AS",       score: 62, action: "Referred", color: "#f59e0b" },
-  { label: "D&O Liability · Axiom Capital",          score: 85, action: "Accepted", color: "#10b981" },
-  { label: "Property · EuroRetail Group",            score: 31, action: "Declined", color: "#ef4444" },
-  { label: "Professional Indemnity · LexGroup",      score: 71, action: "Accepted", color: "#10b981" },
-];
-
 function LiveTicker() {
+  const { t } = useTranslation();
+  const TICKER = [
+    { label: "Cyber Liability · Techflow Ltd",        score: 78, action: t("status.accepted"), color: "#10b981" },
+    { label: "Marine Cargo · Nordic Freight AS",       score: 62, action: t("status.referred"), color: "#f59e0b" },
+    { label: "D&O Liability · Axiom Capital",          score: 85, action: t("status.accepted"), color: "#10b981" },
+    { label: "Property · EuroRetail Group",            score: 31, action: t("status.declined"), color: "#ef4444" },
+    { label: "Professional Indemnity · LexGroup",      score: 71, action: t("status.accepted"), color: "#10b981" },
+  ];
   const [idx, setIdx] = useState(0);
   const [visible, setVisible] = useState(true);
   useEffect(() => {
@@ -51,22 +52,23 @@ function LiveTicker() {
       <span className="text-slate-700">·</span>
       <span className="text-slate-500">Score {ev.score}</span>
       <span className="font-semibold" style={{ color: ev.color }}>{ev.action}</span>
-      <span className="text-slate-700">· just now</span>
+      <span className="text-slate-700">· {t("lp.ticker.now")}</span>
     </div>
   );
 }
 
 /* ── mini dashboard mockup ──────────────────────────────────────── */
 function DashboardPreview() {
+  const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
-  useEffect(() => { const t = setTimeout(() => setMounted(true), 600); return () => clearTimeout(t); }, []);
+  useEffect(() => { const tm = setTimeout(() => setMounted(true), 600); return () => clearTimeout(tm); }, []);
 
   const rows = [
-    { id: "VLX-0041", name: "Harwick Shipping Ltd",  type: "Marine Cargo",        score: 82, status: "Accepted",   sColor: "#10b981" },
-    { id: "VLX-0040", name: "Nexus Tech Partners",   type: "Cyber Liability",     score: 61, status: "Referred",   sColor: "#f59e0b" },
-    { id: "VLX-0039", name: "Albion Professional",   type: "Prof. Indemnity",     score: null, status: "Processing", sColor: "#60a5fa" },
-    { id: "VLX-0038", name: "Fairlane Logistics",    type: "Marine Cargo",        score: 29, status: "Declined",   sColor: "#ef4444" },
-    { id: "VLX-0037", name: "Meridian Energy Corp",  type: "Energy",              score: 74, status: "Accepted",   sColor: "#10b981" },
+    { id: "VLX-0041", name: "Harwick Shipping Ltd",  type: "Marine Cargo",    score: 82,   status: t("status.accepted"),   sColor: "#10b981" },
+    { id: "VLX-0040", name: "Nexus Tech Partners",   type: "Cyber Liability", score: 61,   status: t("status.referred"),   sColor: "#f59e0b" },
+    { id: "VLX-0039", name: "Albion Professional",   type: "Prof. Indemnity", score: null, status: t("status.processing"), sColor: "#60a5fa" },
+    { id: "VLX-0038", name: "Fairlane Logistics",    type: "Marine Cargo",    score: 29,   status: t("status.declined"),   sColor: "#ef4444" },
+    { id: "VLX-0037", name: "Meridian Energy Corp",  type: "Energy",          score: 74,   status: t("status.accepted"),   sColor: "#10b981" },
   ];
 
   return (
@@ -86,10 +88,10 @@ function DashboardPreview() {
       {/* KPI row */}
       <div className="grid grid-cols-4 gap-px" style={{ background: "rgba(255,255,255,0.04)" }}>
         {[
-          { label: "Today", value: "24", delta: "+12%" },
-          { label: "Avg time", value: "8.4m", delta: "−23%" },
-          { label: "Bind rate", value: "68%", delta: "+4pp" },
-          { label: "GWP (MTD)", value: "£2.4M", delta: "+18%" },
+          { label: t("metrics.today"),    value: "24",    delta: "+12%" },
+          { label: t("metrics.avgTime"),  value: "8.4m",  delta: "−23%" },
+          { label: t("metrics.bindRate"), value: "68%",   delta: "+4pp" },
+          { label: "GWP (MTD)",           value: "£2.4M", delta: "+18%" },
         ].map(({ label, value, delta }) => (
           <div key={label} className="px-4 py-3" style={{ background: "var(--bg-card)" }}>
             <p className="text-[10px] text-slate-600 mb-1">{label}</p>
@@ -104,7 +106,7 @@ function DashboardPreview() {
         <table className="w-full text-xs">
           <thead>
             <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-              {["ID", "Insured", "Coverage", "Score", "Status"].map(h => (
+              {[t("table.id"), t("table.insured"), t("table.coverage"), t("table.score"), t("table.status")].map(h => (
                 <th key={h} className="text-left pb-2 px-2 text-[10px] font-semibold text-slate-600 uppercase tracking-wider">{h}</th>
               ))}
             </tr>
@@ -146,47 +148,45 @@ function DashboardPreview() {
   );
 }
 
-/* ── FAQ accordion ──────────────────────────────────────────────── */
-const FAQS = [
-  {
-    q: "How long does setup take?",
-    a: "Under an hour. Connect your Supabase database, add your Anthropic API key, and you're live. Our team handles onboarding calls for Growth and Enterprise customers.",
-  },
-  {
-    q: "What document formats does Velox support?",
-    a: "PDF, Word (.docx), plain text, and structured email bodies. Scanned PDFs are processed via OCR. We also support ACORD XML and CSV bulk uploads via the API.",
-  },
-  {
-    q: "Can I customise the appetite rules?",
-    a: "Yes — fully. From the Settings page you can define rules by coverage type, score threshold, loss history keywords, jurisdiction, limit size, and more. Rules are evaluated in priority order and can trigger accept, decline, or refer.",
-  },
-  {
-    q: "Is Velox compliant with Lloyd's Blueprint Two?",
-    a: "Yes. Velox auto-generates Core Data Records (CDR) in the required format on every bind. We keep these records for 7 years in encrypted storage to meet GDPR and Lloyd's mandated retention requirements.",
-  },
-  {
-    q: "How accurate is the AI extraction?",
-    a: "94% field accuracy across our test corpus of 5,000+ Lloyd's submissions. Confidence scores are generated per-extraction so underwriters can see exactly how certain the AI is about each field.",
-  },
-  {
-    q: "Can we white-label the broker portal?",
-    a: "Yes — Growth and Enterprise plans include custom domain, logo, and colour scheme for the broker portal. Brokers see your branding, not Velox's.",
-  },
-  {
-    q: "What happens if the AI makes a mistake?",
-    a: "Every AI decision is reviewable before it's actioned. Underwriters can override any extraction field or decision with a full audit trail. The AI handles triage; humans retain final authority.",
-  },
-];
+/* ── Language switcher ───────────────────────────────────────────── */
+function LangSwitch() {
+  const { lang, setLang } = useTranslation();
+  return (
+    <div className="flex items-center gap-0.5 p-0.5 rounded-lg"
+      style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
+      {(["pl", "en"] as const).map(l => (
+        <button key={l} onClick={() => setLang(l)}
+          className="px-2.5 py-1 rounded-md text-xs font-bold uppercase transition-all"
+          style={lang === l
+            ? { background: "var(--brand)", color: "#fff" }
+            : { color: "#475569" }}>
+          {l}
+        </button>
+      ))}
+    </div>
+  );
+}
 
+/* ── FAQ accordion ──────────────────────────────────────────────── */
 function FAQ() {
+  const { t } = useTranslation();
+  const FAQS = [
+    { q: t("lp.faq.q1"), a: t("lp.faq.a1") },
+    { q: t("lp.faq.q2"), a: t("lp.faq.a2") },
+    { q: t("lp.faq.q3"), a: t("lp.faq.a3") },
+    { q: t("lp.faq.q4"), a: t("lp.faq.a4") },
+    { q: t("lp.faq.q5"), a: t("lp.faq.a5") },
+    { q: t("lp.faq.q6"), a: t("lp.faq.a6") },
+    { q: t("lp.faq.q7"), a: t("lp.faq.a7") },
+  ];
   const [open, setOpen] = useState<number | null>(null);
   const { ref, inView } = useInView();
   return (
     <section ref={ref} id="faq" className="py-24 px-6">
       <div className="max-w-3xl mx-auto">
         <div className={`text-center mb-12 transition-all duration-700 ${inView ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}>
-          <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">FAQ</p>
-          <h2 className="text-3xl font-bold text-white">Common questions</h2>
+          <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.faq.tag")}</p>
+          <h2 className="text-3xl font-bold text-white">{t("lp.faq.h2")}</h2>
         </div>
         <div className="space-y-2">
           {FAQS.map((faq, i) => (
@@ -232,149 +232,8 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
 }
 
 /* ── data ───────────────────────────────────────────────────────── */
-const features = [
-  {
-    icon: Brain,
-    title: "AI extraction in 45 seconds",
-    desc: "Claude claude-sonnet-4-6 reads every submission document the moment it arrives — PDF, Word, or email body. 30+ risk fields extracted with 94% accuracy.",
-    tag: "Core",
-    color: "#818cf8",
-  },
-  {
-    icon: Shield,
-    title: "Appetite scoring engine",
-    desc: "Configure rules by coverage type, score threshold, jurisdiction, loss history. AI scores every submission and routes it automatically — no human in the loop.",
-    tag: "Rules",
-    color: "#10b981",
-  },
-  {
-    icon: Globe,
-    title: "Lloyd's Blueprint Two ready",
-    desc: "Auto-generates Core Data Records on every bind. ACORD 28 compliant. Pass the CDR mandate without any additional engineering work.",
-    tag: "Compliance",
-    color: "#f59e0b",
-  },
-  {
-    icon: FileText,
-    title: "Branded broker portal",
-    desc: "A clean self-serve portal for brokers. No email attachments. Real-time status updates. White-label with your logo and domain on Growth+.",
-    tag: "Portal",
-    color: "#60a5fa",
-  },
-  {
-    icon: Database,
-    title: "Immutable audit trail",
-    desc: "Every decision, note, and field change is logged with actor, timestamp, and reason. SOC 2 Type II. GDPR-compliant 7-year encrypted retention.",
-    tag: "Audit",
-    color: "#a78bfa",
-  },
-  {
-    icon: BarChart2,
-    title: "Portfolio analytics",
-    desc: "Live GWP, bind rate, loss ratio tracker, broker performance matrix, and exposure heatmaps. Export compliance reports in one click.",
-    tag: "Analytics",
-    color: "#fb923c",
-  },
-];
-
-const steps = [
-  {
-    n: "01",
-    title: "Broker submits",
-    desc: "Via the branded portal, email, or REST API. PDF, Word, or plain text — any format accepted.",
-    icon: FileText,
-  },
-  {
-    n: "02",
-    title: "AI extracts & scores",
-    desc: "Claude reads the document, extracts 30+ risk fields, generates a 0–100 score with full factor breakdown and premium model.",
-    icon: Brain,
-  },
-  {
-    n: "03",
-    title: "Automated routing",
-    desc: "Clean risks accepted, clear declines declined, edge cases referred — all within 8 minutes. Underwriters review only what matters.",
-    icon: Zap,
-  },
-];
-
-const pricing = [
-  {
-    name: "Starter",
-    monthly: 1200,
-    annual: 960,
-    desc: "For small MGAs and coverholders just getting started.",
-    features: [
-      "Up to 200 submissions/month",
-      "AI extraction & scoring",
-      "Broker portal",
-      "5 appetite rules",
-      "Email support",
-      "Standard API access",
-    ],
-    cta: "Start free trial",
-    highlight: false,
-  },
-  {
-    name: "Growth",
-    monthly: 3500,
-    annual: 2800,
-    desc: "For growing teams processing 500+ submissions a month.",
-    features: [
-      "Up to 1,000 submissions/month",
-      "Everything in Starter",
-      "Full analytics suite",
-      "Unlimited appetite rules",
-      "Webhook integrations",
-      "White-label broker portal",
-      "Priority support (4h SLA)",
-      "Lloyd's CDR auto-filing",
-    ],
-    cta: "Book a demo",
-    highlight: true,
-  },
-  {
-    name: "Enterprise",
-    monthly: null,
-    annual: null,
-    desc: "For syndicates and large MGAs with complex needs.",
-    features: [
-      "Unlimited submissions",
-      "Everything in Growth",
-      "Custom AI model fine-tuning",
-      "Dedicated infrastructure",
-      "SSO / SAML",
-      "99.9% SLA guarantee",
-      "Dedicated onboarding & CSM",
-    ],
-    cta: "Contact sales",
-    highlight: false,
-  },
-];
-
-const testimonials = [
-  {
-    quote: "Velox cut our average processing time from four hours to eight minutes. Our underwriters now spend time on risks that need human judgement — not data entry.",
-    author: "Sarah Mitchell",
-    role: "Head of Underwriting, Syndicate 2041",
-    initials: "SM",
-    color: "#818cf8",
-  },
-  {
-    quote: "The broker portal alone was worth it. Our intermediaries stopped sending email attachments and our inbox has never been cleaner. Data quality improved overnight.",
-    author: "James Okafor",
-    role: "Operations Director, Nexus MGA",
-    initials: "JO",
-    color: "#10b981",
-  },
-  {
-    quote: "We passed the Blueprint Two CDR audit without any additional engineering work. Velox just handles it. That kind of compliance win makes you look very good in front of Lloyd's.",
-    author: "Clara Hofmann",
-    role: "CTO, Continental Risk Partners",
-    initials: "CH",
-    color: "#f59e0b",
-  },
-];
+// Feature tags — untranslated (short labels used as visual chips)
+const FEAT_TAGS = ["Core", "Rules", "Compliance", "Portal", "Audit", "Analytics"];
 
 const brokers = ["Aon UK", "Marsh", "Howden", "WTW", "Nexus Group", "Canopius", "Beazley"];
 
@@ -382,6 +241,7 @@ const brokers = ["Aon UK", "Marsh", "Howden", "WTW", "Nexus Group", "Canopius", 
    Landing page
 ═══════════════════════════════════════════════════════════════════ */
 export default function Home() {
+  const { t } = useTranslation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
   const [email, setEmail] = useState("");
@@ -398,13 +258,65 @@ export default function Home() {
     e.preventDefault();
     if (!email.includes("@")) return;
     setEmailSent(true);
-    // Fire and forget — don't block the success state on network
     fetch("/api/waitlist", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email }),
     }).catch(() => {});
   }, [email]);
+
+  const navLinks = [
+    [t("lp.nav.product"),  "#product"],
+    [t("lp.nav.workflow"), "#workflow"],
+    [t("lp.nav.pricing"),  "#pricing"],
+    [t("lp.nav.security"), "#security"],
+    [t("lp.nav.faq"),      "#faq"],
+  ];
+
+  const features = [
+    { icon: Brain,    title: t("lp.feat.f1t"), desc: t("lp.feat.f1d"), tag: FEAT_TAGS[0], color: "#818cf8" },
+    { icon: Shield,   title: t("lp.feat.f2t"), desc: t("lp.feat.f2d"), tag: FEAT_TAGS[1], color: "#10b981" },
+    { icon: Globe,    title: t("lp.feat.f3t"), desc: t("lp.feat.f3d"), tag: FEAT_TAGS[2], color: "#f59e0b" },
+    { icon: FileText, title: t("lp.feat.f4t"), desc: t("lp.feat.f4d"), tag: FEAT_TAGS[3], color: "#60a5fa" },
+    { icon: Database, title: t("lp.feat.f5t"), desc: t("lp.feat.f5d"), tag: FEAT_TAGS[4], color: "#a78bfa" },
+    { icon: BarChart2,title: t("lp.feat.f6t"), desc: t("lp.feat.f6d"), tag: FEAT_TAGS[5], color: "#fb923c" },
+  ];
+
+  const steps = [
+    { n: "01", title: t("lp.how.s1t"), desc: t("lp.how.s1d"), icon: FileText },
+    { n: "02", title: t("lp.how.s2t"), desc: t("lp.how.s2d"), icon: Brain },
+    { n: "03", title: t("lp.how.s3t"), desc: t("lp.how.s3d"), icon: Zap },
+  ];
+
+  const pricing = [
+    {
+      name: t("lp.price.s.name"),
+      monthly: 1200, annual: 960,
+      desc: t("lp.price.s.desc"),
+      features: [t("lp.price.s.f1"), t("lp.price.s.f2"), t("lp.price.s.f3"), t("lp.price.s.f4"), t("lp.price.s.f5"), t("lp.price.s.f6")],
+      cta: t("lp.price.s.cta"), highlight: false,
+    },
+    {
+      name: t("lp.price.g.name"),
+      monthly: 3500, annual: 2800,
+      desc: t("lp.price.g.desc"),
+      features: [t("lp.price.g.f1"), t("lp.price.g.f2"), t("lp.price.g.f3"), t("lp.price.g.f4"), t("lp.price.g.f5"), t("lp.price.g.f6"), t("lp.price.g.f7"), t("lp.price.g.f8")],
+      cta: t("lp.price.g.cta"), highlight: true,
+    },
+    {
+      name: t("lp.price.e.name"),
+      monthly: null, annual: null,
+      desc: t("lp.price.e.desc"),
+      features: [t("lp.price.e.f1"), t("lp.price.e.f2"), t("lp.price.e.f3"), t("lp.price.e.f4"), t("lp.price.e.f5"), t("lp.price.e.f6"), t("lp.price.e.f7")],
+      cta: t("lp.price.e.cta"), highlight: false,
+    },
+  ];
+
+  const testimonials = [
+    { quote: t("lp.testi.t1.q"), author: t("lp.testi.t1.author"), role: t("lp.testi.t1.role"), initials: "SM", color: "#818cf8" },
+    { quote: t("lp.testi.t2.q"), author: t("lp.testi.t2.author"), role: t("lp.testi.t2.role"), initials: "JO", color: "#10b981" },
+    { quote: t("lp.testi.t3.q"), author: t("lp.testi.t3.author"), role: t("lp.testi.t3.role"), initials: "CH", color: "#f59e0b" },
+  ];
 
   return (
     <main className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-base)" }}>
@@ -425,22 +337,23 @@ export default function Home() {
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
-          {[["Product", "#product"], ["Workflow", "#workflow"], ["Pricing", "#pricing"], ["Security", "#security"], ["FAQ", "#faq"]].map(([l, h]) => (
-            <a key={l} href={h} className="text-sm text-slate-400 hover:text-white transition-colors">{l}</a>
+          {navLinks.map(([l, h]) => (
+            <a key={h} href={h} className="text-sm text-slate-400 hover:text-white transition-colors">{l}</a>
           ))}
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <Link href="/sign-in" className="text-sm text-slate-400 hover:text-white transition-colors">Sign in</Link>
+          <LangSwitch />
+          <Link href="/sign-in" className="text-sm text-slate-400 hover:text-white transition-colors">{t("lp.nav.signIn")}</Link>
           <Link href="/demo"
             className="flex items-center gap-1.5 text-sm font-medium text-slate-300 px-3.5 py-2 rounded-lg transition-all hover:text-white"
             style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)" }}>
-            <Play size={11} /> Demo
+            <Play size={11} /> {t("lp.nav.demo")}
           </Link>
           <Link href="/dashboard"
             className="flex items-center gap-1.5 text-sm font-semibold text-white px-4 py-2 rounded-lg transition-all hover:opacity-90"
             style={{ background: "var(--brand)" }}>
-            Open platform <ArrowRight size={13} />
+            {t("lp.nav.open")} <ArrowRight size={13} />
           </Link>
         </div>
 
@@ -455,18 +368,19 @@ export default function Home() {
         <div className="fixed inset-0 z-40 pt-16 px-6 pb-8 flex flex-col"
           style={{ background: "rgba(8,13,24,0.98)", backdropFilter: "blur(20px)" }}>
           <div className="flex-1 space-y-1 mt-4">
-            {[["Product", "#product"], ["Workflow", "#workflow"], ["Pricing", "#pricing"], ["Security", "#security"], ["FAQ", "#faq"]].map(([l, h]) => (
-              <a key={l} href={h} onClick={() => setMobileOpen(false)}
+            {navLinks.map(([l, h]) => (
+              <a key={h} href={h} onClick={() => setMobileOpen(false)}
                 className="block px-4 py-3 rounded-xl text-base text-slate-300 hover:text-white hover:bg-white/5 transition-colors">
                 {l}
               </a>
             ))}
+            <div className="px-4 py-3"><LangSwitch /></div>
           </div>
           <div className="space-y-3 pt-4" style={{ borderTop: "1px solid var(--border)" }}>
             <Link href="/dashboard" onClick={() => setMobileOpen(false)}
               className="flex items-center justify-center gap-2 py-3.5 rounded-xl text-sm font-semibold text-white"
               style={{ background: "var(--brand)" }}>
-              Open platform <ArrowRight size={14} />
+              {t("lp.nav.open")} <ArrowRight size={14} />
             </Link>
             <Link href="/sign-in" onClick={() => setMobileOpen(false)}
               className="flex items-center justify-center py-3.5 rounded-xl text-sm text-slate-400 hover:text-white transition-colors"
@@ -496,36 +410,36 @@ export default function Home() {
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-medium mb-7"
             style={{ background: "rgba(79,110,247,0.12)", border: "1px solid rgba(79,110,247,0.3)", color: "#818cf8" }}>
             <Sparkles size={11} />
-            Built for Lloyd&apos;s of London coverholders &amp; MGAs
+            {t("lp.hero.badge")}
             <ChevronRight size={11} />
           </div>
 
           <h1 className="text-5xl md:text-[72px] font-bold text-white mb-6 leading-[1.04] tracking-tight">
-            Insurance underwriting<br />
+            {t("lp.hero.h1a")}<br />
             <span style={{
               background: "linear-gradient(135deg, #6366f1 0%, #818cf8 45%, #a78bfa 100%)",
               WebkitBackgroundClip: "text",
               WebkitTextFillColor: "transparent",
               backgroundClip: "text",
             }}>
-              at the speed of AI
+              {t("lp.hero.h1b")}
             </span>
           </h1>
 
           <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Velox reads every submission the moment it arrives — extracts all risk data, scores against your appetite, and routes automatically. Under 10 minutes, every time.
+            {t("lp.hero.sub")}
           </p>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 justify-center mb-14">
             <Link href="/dashboard"
               className="flex items-center gap-2 text-base font-semibold text-white px-8 py-4 rounded-xl transition-all hover:scale-[1.02] hover:shadow-xl"
               style={{ background: "var(--brand)", boxShadow: "0 0 40px rgba(79,110,247,0.3)" }}>
-              Start free trial <ArrowRight size={16} />
+              {t("lp.hero.cta")} <ArrowRight size={16} />
             </Link>
             <Link href="/demo"
               className="flex items-center gap-2 text-base font-medium text-slate-300 px-8 py-4 rounded-xl transition-all hover:text-white"
               style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.1)" }}>
-              <Play size={14} /> Watch demo <span className="text-slate-600 text-sm">· 60 sec</span>
+              <Play size={14} /> {t("lp.hero.demo")} <span className="text-slate-600 text-sm">{t("lp.hero.demoSub")}</span>
             </Link>
           </div>
 
@@ -534,13 +448,13 @@ export default function Home() {
           {/* Social proof */}
           <div className="flex items-center justify-center gap-2 mt-6 text-xs text-slate-600">
             <CheckCircle size={11} className="text-emerald-600" />
-            No credit card required
+            {t("lp.hero.proof1")}
             <span className="mx-2">·</span>
             <CheckCircle size={11} className="text-emerald-600" />
-            14-day free trial
+            {t("lp.hero.proof2")}
             <span className="mx-2">·</span>
             <CheckCircle size={11} className="text-emerald-600" />
-            SOC 2 Type II certified
+            {t("lp.hero.proof3")}
           </div>
         </div>
 
@@ -557,10 +471,10 @@ export default function Home() {
       <section style={{ borderTop: "1px solid var(--border)", borderBottom: "1px solid var(--border)", background: "var(--bg-card)" }}>
         <div className="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4">
           {[
-            { value: "< 10 min",  label: "Avg processing time",  sub: "vs 4 hours manual" },
-            { value: "94%",        label: "AI extraction accuracy", sub: "Across all doc types" },
-            { value: "10×",        label: "Faster than manual",     sub: "Proven Lloyd's market" },
-            { value: "£46B",       label: "Lloyd's GWP addressed",  sub: "Total addressable market" },
+            { value: t("lp.stat1v"), label: t("lp.stat1l"), sub: t("lp.stat1s") },
+            { value: t("lp.stat2v"), label: t("lp.stat2l"), sub: t("lp.stat2s") },
+            { value: t("lp.stat3v"), label: t("lp.stat3l"), sub: t("lp.stat3s") },
+            { value: t("lp.stat4v"), label: t("lp.stat4l"), sub: t("lp.stat4s") },
           ].map(({ value, label, sub }) => (
             <div key={label} className="py-8 px-6 text-center" style={{ borderRight: "1px solid var(--border)" }}>
               <p className="text-3xl md:text-4xl font-bold text-white mb-1">{value}</p>
@@ -575,7 +489,7 @@ export default function Home() {
       <section className="py-14 px-6" style={{ borderBottom: "1px solid var(--border)" }}>
         <div className="max-w-5xl mx-auto">
           <p className="text-center text-xs text-slate-700 uppercase tracking-widest mb-8">
-            Trusted by underwriting teams across the Lloyd&apos;s market
+            {t("lp.brokers")}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-10 md:gap-14">
             {brokers.map(b => (
@@ -590,13 +504,11 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-xs text-red-400 font-semibold uppercase tracking-widest mb-3">The problem</p>
+              <p className="text-xs text-red-400 font-semibold uppercase tracking-widest mb-3">{t("lp.prob.tag")}</p>
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Insurance underwriting is stuck<br />in the 1980s
+                {t("lp.prob.h2")}
               </h2>
-              <p className="text-slate-400 max-w-2xl mx-auto">
-                Lloyd's alone processes £46B in premiums annually — almost entirely through email attachments, spreadsheets, and manual triage.
-              </p>
+              <p className="text-slate-400 max-w-2xl mx-auto">{t("lp.prob.sub")}</p>
             </div>
           </FadeIn>
 
@@ -604,13 +516,13 @@ export default function Home() {
             {/* Pain points */}
             <FadeIn delay={100}>
               <div className="card p-6 h-full" style={{ border: "1px solid rgba(239,68,68,0.15)", background: "rgba(239,68,68,0.03)" }}>
-                <p className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-5">Without Velox</p>
+                <p className="text-xs font-semibold text-red-400 uppercase tracking-wider mb-5">{t("lp.prob.bad")}</p>
                 <div className="space-y-4">
                   {[
-                    { stat: "3–5 days", label: "average broker turnaround time" },
-                    { stat: "60%",      label: "of underwriter time spent on data entry" },
-                    { stat: "23%",      label: "of viable business turned away due to capacity" },
-                    { stat: "£0",       label: "audit trail for AI-assisted decisions" },
+                    { stat: t("lp.prob.b1s"), label: t("lp.prob.b1l") },
+                    { stat: t("lp.prob.b2s"), label: t("lp.prob.b2l") },
+                    { stat: t("lp.prob.b3s"), label: t("lp.prob.b3l") },
+                    { stat: t("lp.prob.b4s"), label: t("lp.prob.b4l") },
                   ].map(({ stat, label }) => (
                     <div key={stat} className="flex items-center gap-3">
                       <AlertCircle size={14} className="text-red-500 flex-shrink-0" />
@@ -626,13 +538,13 @@ export default function Home() {
             {/* Solution */}
             <FadeIn delay={200}>
               <div className="card p-6 h-full" style={{ border: "1px solid rgba(16,185,129,0.2)", background: "rgba(16,185,129,0.03)" }}>
-                <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-5">With Velox</p>
+                <p className="text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-5">{t("lp.prob.good")}</p>
                 <div className="space-y-4">
                   {[
-                    { stat: "< 8 min",  label: "from document upload to decision" },
-                    { stat: "94%",       label: "of fields extracted automatically, zero manual entry" },
-                    { stat: "3×",        label: "more submissions processed with the same team" },
-                    { stat: "100%",      label: "of decisions logged with full AI reasoning" },
+                    { stat: t("lp.prob.g1s"), label: t("lp.prob.g1l") },
+                    { stat: t("lp.prob.g2s"), label: t("lp.prob.g2l") },
+                    { stat: t("lp.prob.g3s"), label: t("lp.prob.g3l") },
+                    { stat: t("lp.prob.g4s"), label: t("lp.prob.g4l") },
                   ].map(({ stat, label }) => (
                     <div key={stat} className="flex items-center gap-3">
                       <CheckCircle size={14} className="text-emerald-500 flex-shrink-0" />
@@ -653,13 +565,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">Platform</p>
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-                Everything your underwriting team needs
-              </h2>
-              <p className="text-slate-400 max-w-2xl mx-auto">
-                From first document to bound risk — Velox handles the entire workflow without the manual overhead.
-              </p>
+              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.feat.tag")}</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("lp.feat.h2")}</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">{t("lp.feat.sub")}</p>
             </div>
           </FadeIn>
 
@@ -690,9 +598,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">Workflow</p>
-              <h2 className="text-3xl font-bold text-white mb-4">From inbox to decision in three steps</h2>
-              <p className="text-slate-400 max-w-xl mx-auto">No rip-and-replace. Velox slots into your existing workflow.</p>
+              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.how.tag")}</p>
+              <h2 className="text-3xl font-bold text-white mb-4">{t("lp.how.h2")}</h2>
+              <p className="text-slate-400 max-w-xl mx-auto">{t("lp.how.sub")}</p>
             </div>
           </FadeIn>
 
@@ -731,8 +639,8 @@ export default function Home() {
                   <Lock size={18} style={{ color: "#818cf8" }} />
                 </div>
                 <div>
-                  <h3 className="text-sm font-semibold text-white mb-0.5">Enterprise-grade compliance, out of the box</h3>
-                  <p className="text-xs text-slate-500">No additional engineering required to meet Lloyd&apos;s and EU requirements.</p>
+                  <h3 className="text-sm font-semibold text-white mb-0.5">{t("lp.compl.h3")}</h3>
+                  <p className="text-xs text-slate-500">{t("lp.compl.sub")}</p>
                 </div>
               </div>
               <div className="flex flex-wrap gap-4">
@@ -759,8 +667,8 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <FadeIn>
             <div className="text-center mb-16">
-              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">Testimonials</p>
-              <h2 className="text-3xl font-bold text-white">What underwriters say</h2>
+              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.testi.tag")}</p>
+              <h2 className="text-3xl font-bold text-white">{t("lp.testi.h2")}</h2>
             </div>
           </FadeIn>
 
@@ -794,9 +702,9 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <FadeIn>
             <div className="text-center mb-10">
-              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">Pricing</p>
-              <h2 className="text-3xl font-bold text-white mb-3">Simple, transparent pricing</h2>
-              <p className="text-slate-500 text-sm mb-6">All plans include a 14-day free trial. No credit card required.</p>
+              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.price.tag")}</p>
+              <h2 className="text-3xl font-bold text-white mb-3">{t("lp.price.h2")}</h2>
+              <p className="text-slate-500 text-sm mb-6">{t("lp.price.sub")}</p>
 
               {/* Annual/monthly toggle */}
               <div className="inline-flex items-center rounded-xl p-1 gap-1" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)" }}>
@@ -807,7 +715,7 @@ export default function Home() {
                       background: billing === b ? "var(--brand)" : "transparent",
                       color: billing === b ? "white" : "#64748b",
                     }}>
-                    {b === "monthly" ? "Monthly" : "Annual · save 20%"}
+                    {b === "monthly" ? t("lp.price.monthly") : t("lp.price.annual")}
                   </button>
                 ))}
               </div>
@@ -827,9 +735,9 @@ export default function Home() {
                       <>
                         <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full opacity-20"
                           style={{ background: "var(--brand)", filter: "blur(20px)" }} />
-                        <div className="text-[10px] font-bold text-white px-2.5 py-0.5 rounded-full mb-4 w-fit"
+                        <div className="text-[10px] font-bold text-white px-2.5 py-0.5 rounded-full mb-4 w-fit uppercase"
                           style={{ background: "var(--brand)" }}>
-                          MOST POPULAR
+                          {t("lp.price.popular")}
                         </div>
                       </>
                     )}
@@ -839,15 +747,15 @@ export default function Home() {
                       {price !== null ? (
                         <>
                           <span className="text-4xl font-bold text-white">£{price.toLocaleString()}</span>
-                          <span className="text-sm text-slate-500 mb-1">/mo</span>
+                          <span className="text-sm text-slate-500 mb-1">{t("lp.price.mo")}</span>
                         </>
                       ) : (
-                        <span className="text-4xl font-bold text-white">Custom</span>
+                        <span className="text-4xl font-bold text-white">{t("lp.price.custom")}</span>
                       )}
                     </div>
                     {billing === "annual" && price !== null && (
                       <p className="text-xs text-emerald-500 -mt-4 mb-4 font-medium">
-                        Save £{((p.monthly! - price) * 12).toLocaleString()}/year
+                        {t("lp.price.save")} £{((p.monthly! - price) * 12).toLocaleString()}{t("lp.price.yr")}
                       </p>
                     )}
                     <ul className="space-y-2.5 mb-8 flex-1">
@@ -879,8 +787,8 @@ export default function Home() {
           </div>
 
           <p className="text-center text-xs text-slate-700 mt-8">
-            All prices ex. VAT · Enterprise contracts available with annual billing discount ·
-            {" "}<a href="mailto:max@velox-ai.io" className="text-indigo-500 hover:text-indigo-400 transition-colors">Contact sales</a> for a custom quote
+            {t("lp.price.vat")}
+            {" "}<a href="mailto:max@velox-ai.io" className="text-indigo-500 hover:text-indigo-400 transition-colors">{t("lp.price.vatLink")}</a> {t("lp.price.vatEnd")}
           </p>
         </div>
       </section>
@@ -905,12 +813,9 @@ export default function Home() {
               </div>
 
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-3 relative">
-                Start processing submissions today
+                {t("lp.cta.h2")}
               </h2>
-              <p className="text-slate-400 mb-8 relative">
-                Upload a document and see AI extract the data in real time.<br />
-                No setup required. No credit card. Cancel any time.
-              </p>
+              <p className="text-slate-400 mb-8 relative">{t("lp.cta.sub")}</p>
 
               {!emailSent ? (
                 <form onSubmit={handleEmailCapture} className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto mb-6 relative">
@@ -920,7 +825,7 @@ export default function Home() {
                       type="email"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      placeholder="your@mga.co.uk"
+                      placeholder={t("lp.cta.form")}
                       className="w-full pl-9 pr-4 py-3 rounded-xl text-sm"
                       style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)", color: "white" }}
                     />
@@ -928,14 +833,14 @@ export default function Home() {
                   <button type="submit"
                     className="px-6 py-3 rounded-xl text-sm font-semibold text-white flex-shrink-0 transition-all hover:opacity-90"
                     style={{ background: "var(--brand)" }}>
-                    Get early access
+                    {t("lp.cta.btn")}
                   </button>
                 </form>
               ) : (
                 <div className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-sm text-emerald-400 mb-6 relative"
                   style={{ background: "rgba(16,185,129,0.08)", border: "1px solid rgba(16,185,129,0.2)" }}>
                   <CheckCircle size={15} />
-                  We&apos;ll be in touch within 24 hours.
+                  {t("lp.cta.sent")}
                 </div>
               )}
 
@@ -943,12 +848,12 @@ export default function Home() {
                 <Link href="/dashboard"
                   className="flex items-center gap-2 text-sm font-semibold text-white px-8 py-3 rounded-xl w-full sm:w-auto justify-center transition-all hover:opacity-90"
                   style={{ background: "var(--brand)" }}>
-                  Open platform <ArrowRight size={14} />
+                  {t("lp.nav.open")} <ArrowRight size={14} />
                 </Link>
                 <Link href="/demo"
                   className="flex items-center gap-2 text-sm font-medium text-slate-300 px-8 py-3 rounded-xl w-full sm:w-auto justify-center transition-all hover:text-white"
                   style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}>
-                  <Play size={13} /> Watch the demo
+                  <Play size={13} /> {t("lp.nav.demo")}
                 </Link>
               </div>
             </div>
@@ -969,7 +874,7 @@ export default function Home() {
                 <span className="text-white font-bold">Velox AI</span>
               </div>
               <p className="text-xs text-slate-600 leading-relaxed mb-4">
-                AI-powered insurance submission intake for the Lloyd&apos;s of London market. Built to make underwriting faster, consistent, and scalable.
+                {t("lp.footer.brand")}
               </p>
               <div className="flex items-center gap-3">
                 {[
@@ -988,26 +893,26 @@ export default function Home() {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-xs flex-1">
               <div>
-                <p className="text-slate-400 font-semibold mb-3">Platform</p>
-                {[["Dashboard", "/dashboard"], ["Broker portal", "/portal"], ["Investor demo", "/demo"], ["Analytics", "/dashboard/analytics"]].map(([l, h]) => (
+                <p className="text-slate-400 font-semibold mb-3">{t("lp.footer.col1")}</p>
+                {[["Dashboard", "/dashboard"], [t("nav.brokerPortal"), "/portal"], ["Demo", "/demo"], [t("nav.analytics"), "/dashboard/analytics"]].map(([l, h]) => (
                   <Link key={l} href={h} className="block text-slate-600 mb-2 hover:text-slate-400 transition-colors">{l}</Link>
                 ))}
               </div>
               <div>
-                <p className="text-slate-400 font-semibold mb-3">Product</p>
-                {["AI extraction", "Risk scoring", "Appetite rules", "API docs"].map(l => (
+                <p className="text-slate-400 font-semibold mb-3">{t("lp.footer.col2")}</p>
+                {[t("lp.feat.f1t"), t("lp.feat.f2t"), t("lp.feat.f3t"), "API"].map(l => (
                   <p key={l} className="text-slate-600 mb-2 hover:text-slate-400 cursor-pointer transition-colors">{l}</p>
                 ))}
               </div>
               <div>
-                <p className="text-slate-400 font-semibold mb-3">Company</p>
+                <p className="text-slate-400 font-semibold mb-3">{t("lp.footer.col3")}</p>
                 {["About", "Blog", "Careers", "Contact"].map(l => (
                   <p key={l} className="text-slate-600 mb-2 hover:text-slate-400 cursor-pointer transition-colors">{l}</p>
                 ))}
               </div>
               <div>
-                <p className="text-slate-400 font-semibold mb-3">Legal</p>
-                {["Privacy policy", "Terms of service", "Security", "GDPR"].map(l => (
+                <p className="text-slate-400 font-semibold mb-3">{t("lp.footer.col4")}</p>
+                {["Privacy", "Terms", "Security", "GDPR"].map(l => (
                   <p key={l} className="text-slate-600 mb-2 hover:text-slate-400 cursor-pointer transition-colors">{l}</p>
                 ))}
               </div>
@@ -1015,13 +920,13 @@ export default function Home() {
           </div>
 
           <div className="flex flex-col md:flex-row items-center justify-between gap-3 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
-            <p className="text-xs text-slate-700">© 2026 Velox AI Ltd. Registered in England &amp; Wales. FCA authorised.</p>
+            <p className="text-xs text-slate-700">{t("lp.footer.copy")}</p>
             <div className="flex items-center gap-4 text-xs text-slate-700">
               <a href="mailto:max@velox-ai.io" className="hover:text-slate-500 transition-colors">max@velox-ai.io</a>
               <span>·</span>
               <span>London, UK</span>
               <span>·</span>
-              <Link href="/sign-in" className="hover:text-slate-500 transition-colors">Sign in</Link>
+              <Link href="/sign-in" className="hover:text-slate-500 transition-colors">{t("lp.footer.signin")}</Link>
             </div>
           </div>
         </div>

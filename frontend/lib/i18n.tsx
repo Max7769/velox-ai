@@ -190,6 +190,202 @@ const T = {
     "notif.declined":     "Submission declined",
     "notif.referred":     "Referred for review",
     "notif.received":     "New submission received",
+
+    // Landing page — nav
+    "lp.nav.product":     "Product",
+    "lp.nav.workflow":    "Workflow",
+    "lp.nav.pricing":     "Pricing",
+    "lp.nav.security":    "Security",
+    "lp.nav.faq":         "FAQ",
+    "lp.nav.signIn":      "Sign in",
+    "lp.nav.demo":        "Demo",
+    "lp.nav.open":        "Open platform",
+
+    // Landing page — hero
+    "lp.hero.badge":       "Built for Lloyd's of London coverholders & MGAs",
+    "lp.hero.h1a":         "Insurance underwriting",
+    "lp.hero.h1b":         "at the speed of AI",
+    "lp.hero.sub":         "Velox reads every submission the moment it arrives — extracts all risk data, scores against your appetite, and routes automatically. Under 10 minutes, every time.",
+    "lp.hero.cta":         "Start free trial",
+    "lp.hero.demo":        "Watch demo",
+    "lp.hero.demoSub":     "· 60 sec",
+    "lp.hero.proof1":      "No credit card required",
+    "lp.hero.proof2":      "14-day free trial",
+    "lp.hero.proof3":      "SOC 2 Type II certified",
+
+    // Landing page — stats
+    "lp.stat1v":  "< 10 min",
+    "lp.stat1l":  "Avg processing time",
+    "lp.stat1s":  "vs 4 hours manual",
+    "lp.stat2v":  "94%",
+    "lp.stat2l":  "AI extraction accuracy",
+    "lp.stat2s":  "Across all doc types",
+    "lp.stat3v":  "10×",
+    "lp.stat3l":  "Faster than manual",
+    "lp.stat3s":  "Proven Lloyd's market",
+    "lp.stat4v":  "£46B",
+    "lp.stat4l":  "Lloyd's GWP addressed",
+    "lp.stat4s":  "Total addressable market",
+    "lp.brokers": "Trusted by underwriting teams across the Lloyd's market",
+
+    // Landing page — problem
+    "lp.prob.tag":   "The problem",
+    "lp.prob.h2":    "Insurance underwriting is stuck in the 1980s",
+    "lp.prob.sub":   "Lloyd's alone processes £46B in premiums annually — almost entirely through email attachments, spreadsheets, and manual triage.",
+    "lp.prob.bad":   "Without Velox",
+    "lp.prob.good":  "With Velox",
+    "lp.prob.b1s": "3–5 days",  "lp.prob.b1l": "average broker turnaround time",
+    "lp.prob.b2s": "60%",       "lp.prob.b2l": "of underwriter time spent on data entry",
+    "lp.prob.b3s": "23%",       "lp.prob.b3l": "of viable business turned away due to capacity",
+    "lp.prob.b4s": "£0",        "lp.prob.b4l": "audit trail for AI-assisted decisions",
+    "lp.prob.g1s": "< 8 min",   "lp.prob.g1l": "from document upload to decision",
+    "lp.prob.g2s": "94%",       "lp.prob.g2l": "of fields extracted automatically, zero manual entry",
+    "lp.prob.g3s": "3×",        "lp.prob.g3l": "more submissions processed with the same team",
+    "lp.prob.g4s": "100%",      "lp.prob.g4l": "of decisions logged with full AI reasoning",
+
+    // Landing page — features
+    "lp.feat.tag":  "Platform",
+    "lp.feat.h2":   "Everything your underwriting team needs",
+    "lp.feat.sub":  "From first document to bound risk — Velox handles the entire workflow without the manual overhead.",
+    "lp.feat.f1t":  "AI extraction in 45 seconds",
+    "lp.feat.f1d":  "Claude Sonnet reads every submission document the moment it arrives — PDF, Word, or email body. 30+ risk fields extracted with 94% accuracy.",
+    "lp.feat.f2t":  "Appetite scoring engine",
+    "lp.feat.f2d":  "Configure rules by coverage type, score threshold, jurisdiction, loss history. AI scores every submission and routes it automatically — no human in the loop.",
+    "lp.feat.f3t":  "Lloyd's Blueprint Two ready",
+    "lp.feat.f3d":  "Auto-generates Core Data Records on every bind. ACORD 28 compliant. Pass the CDR mandate without any additional engineering work.",
+    "lp.feat.f4t":  "Branded broker portal",
+    "lp.feat.f4d":  "A clean self-serve portal for brokers. No email attachments. Real-time status updates. White-label with your logo and domain on Growth+.",
+    "lp.feat.f5t":  "Immutable audit trail",
+    "lp.feat.f5d":  "Every decision, note, and field change is logged with actor, timestamp, and reason. SOC 2 Type II. GDPR-compliant 7-year encrypted retention.",
+    "lp.feat.f6t":  "Portfolio analytics",
+    "lp.feat.f6d":  "Live GWP, bind rate, loss ratio tracker, broker performance matrix, and exposure heatmaps. Export compliance reports in one click.",
+
+    // Landing page — how it works
+    "lp.how.tag":   "Workflow",
+    "lp.how.h2":    "From inbox to decision in three steps",
+    "lp.how.sub":   "No rip-and-replace. Velox slots into your existing workflow.",
+    "lp.how.s1t":   "Broker submits",
+    "lp.how.s1d":   "Via the branded portal, email, or REST API. PDF, Word, or plain text — any format accepted.",
+    "lp.how.s2t":   "AI extracts & scores",
+    "lp.how.s2d":   "Claude reads the document, extracts 30+ risk fields, generates a 0–100 score with full factor breakdown and premium model.",
+    "lp.how.s3t":   "Automated routing",
+    "lp.how.s3d":   "Clean risks accepted, clear declines declined, edge cases referred — all within 8 minutes. Underwriters review only what matters.",
+
+    // Landing page — compliance
+    "lp.compl.h3":  "Enterprise-grade compliance, out of the box",
+    "lp.compl.sub": "No additional engineering required to meet Lloyd's and EU requirements.",
+
+    // Landing page — testimonials
+    "lp.testi.tag": "Testimonials",
+    "lp.testi.h2":  "What underwriters say",
+
+    // Landing page — pricing
+    "lp.price.tag":     "Pricing",
+    "lp.price.h2":      "Simple, transparent pricing",
+    "lp.price.sub":     "All plans include a 14-day free trial. No credit card required.",
+    "lp.price.monthly": "Monthly",
+    "lp.price.annual":  "Annual · save 20%",
+    "lp.price.mo":      "/mo",
+    "lp.price.trial":   "Start free trial",
+    "lp.price.contact": "Contact sales",
+    "lp.price.custom":  "Custom pricing",
+    "lp.price.popular": "Most popular",
+
+    // Landing page — FAQ
+    "lp.faq.tag": "FAQ",
+    "lp.faq.h2":  "Common questions",
+
+    // Landing page — CTA footer
+    "lp.cta.h2":   "Ready to transform your MGA?",
+    "lp.cta.sub":  "Join the Lloyd's teams already using Velox to process submissions faster.",
+    "lp.cta.form": "Enter your work email",
+    "lp.cta.btn":  "Get early access",
+    "lp.cta.sent": "You're on the list! We'll be in touch.",
+    "lp.cta.demo": "Or",
+
+    // Landing page — footer
+    "lp.footer.rights": "All rights reserved.",
+    "lp.footer.lloyds": "Lloyd's Blueprint Two compliant · SOC 2 Type II",
+    "lp.footer.brand":  "AI-powered insurance submission intake for the Lloyd's of London market. Built to make underwriting faster, consistent, and scalable.",
+    "lp.footer.col1":   "Platform",
+    "lp.footer.col2":   "Product",
+    "lp.footer.col3":   "Company",
+    "lp.footer.col4":   "Legal",
+    "lp.footer.copy":   "© 2026 Velox AI Ltd. Registered in England & Wales. FCA authorised.",
+    "lp.footer.signin": "Sign in",
+
+    // Landing page — ticker
+    "lp.ticker.now": "just now",
+
+    // Landing page — pricing footer note
+    "lp.price.vat":     "All prices ex. VAT · Enterprise contracts available with annual billing discount ·",
+    "lp.price.vatLink": "Contact sales",
+    "lp.price.vatEnd":  "for a custom quote",
+    "lp.price.save":    "Save",
+    "lp.price.yr":      "/year",
+
+    // Pricing — Starter
+    "lp.price.s.name": "Starter",
+    "lp.price.s.desc": "For small MGAs and coverholders just getting started.",
+    "lp.price.s.f1":   "Up to 200 submissions/month",
+    "lp.price.s.f2":   "AI extraction & scoring",
+    "lp.price.s.f3":   "Broker portal",
+    "lp.price.s.f4":   "5 appetite rules",
+    "lp.price.s.f5":   "Email support",
+    "lp.price.s.f6":   "Standard API access",
+    "lp.price.s.cta":  "Start free trial",
+
+    // Pricing — Growth
+    "lp.price.g.name": "Growth",
+    "lp.price.g.desc": "For growing teams processing 500+ submissions a month.",
+    "lp.price.g.f1":   "Up to 1,000 submissions/month",
+    "lp.price.g.f2":   "Everything in Starter",
+    "lp.price.g.f3":   "Full analytics suite",
+    "lp.price.g.f4":   "Unlimited appetite rules",
+    "lp.price.g.f5":   "Webhook integrations",
+    "lp.price.g.f6":   "White-label broker portal",
+    "lp.price.g.f7":   "Priority support (4h SLA)",
+    "lp.price.g.f8":   "Lloyd's CDR auto-filing",
+    "lp.price.g.cta":  "Book a demo",
+
+    // Pricing — Enterprise
+    "lp.price.e.name": "Enterprise",
+    "lp.price.e.desc": "For syndicates and large MGAs with complex needs.",
+    "lp.price.e.f1":   "Unlimited submissions",
+    "lp.price.e.f2":   "Everything in Growth",
+    "lp.price.e.f3":   "Custom AI model fine-tuning",
+    "lp.price.e.f4":   "Dedicated infrastructure",
+    "lp.price.e.f5":   "SSO / SAML",
+    "lp.price.e.f6":   "99.9% SLA guarantee",
+    "lp.price.e.f7":   "Dedicated onboarding & CSM",
+    "lp.price.e.cta":  "Contact sales",
+
+    // Testimonials
+    "lp.testi.t1.q":      "Velox cut our average processing time from four hours to eight minutes. Our underwriters now spend time on risks that need human judgement — not data entry.",
+    "lp.testi.t1.author": "Sarah Mitchell",
+    "lp.testi.t1.role":   "Head of Underwriting, Syndicate 2041",
+    "lp.testi.t2.q":      "The broker portal alone was worth it. Our intermediaries stopped sending email attachments and our inbox has never been cleaner. Data quality improved overnight.",
+    "lp.testi.t2.author": "James Okafor",
+    "lp.testi.t2.role":   "Operations Director, Nexus MGA",
+    "lp.testi.t3.q":      "We passed the Blueprint Two CDR audit without any additional engineering work. Velox just handles it. That kind of compliance win makes you look very good in front of Lloyd's.",
+    "lp.testi.t3.author": "Clara Hofmann",
+    "lp.testi.t3.role":   "CTO, Continental Risk Partners",
+
+    // FAQ questions and answers
+    "lp.faq.q1": "How long does setup take?",
+    "lp.faq.a1": "Under an hour. Connect your Supabase database, add your Anthropic API key, and you're live. Our team handles onboarding calls for Growth and Enterprise customers.",
+    "lp.faq.q2": "What document formats does Velox support?",
+    "lp.faq.a2": "PDF, Word (.docx), plain text, and structured email bodies. Scanned PDFs are processed via OCR. We also support ACORD XML and CSV bulk uploads via the API.",
+    "lp.faq.q3": "Can I customise the appetite rules?",
+    "lp.faq.a3": "Yes — fully. From the Settings page you can define rules by coverage type, score threshold, loss history keywords, jurisdiction, limit size, and more. Rules are evaluated in priority order and can trigger accept, decline, or refer.",
+    "lp.faq.q4": "Is Velox compliant with Lloyd's Blueprint Two?",
+    "lp.faq.a4": "Yes. Velox auto-generates Core Data Records (CDR) in the required format on every bind. We keep these records for 7 years in encrypted storage to meet GDPR and Lloyd's mandated retention requirements.",
+    "lp.faq.q5": "How accurate is the AI extraction?",
+    "lp.faq.a5": "94% field accuracy across our test corpus of 5,000+ Lloyd's submissions. Confidence scores are generated per-extraction so underwriters can see exactly how certain the AI is about each field.",
+    "lp.faq.q6": "Can we white-label the broker portal?",
+    "lp.faq.a6": "Yes — Growth and Enterprise plans include custom domain, logo, and colour scheme for the broker portal. Brokers see your branding, not Velox's.",
+    "lp.faq.q7": "What happens if the AI makes a mistake?",
+    "lp.faq.a7": "Every AI decision is reviewable before it's actioned. Underwriters can override any extraction field or decision with a full audit trail. The AI handles triage; humans retain final authority.",
   },
 
   pl: {
@@ -377,6 +573,202 @@ const T = {
     "notif.declined":     "Zgłoszenie odrzucone",
     "notif.referred":     "Skierowane do weryfikacji",
     "notif.received":     "Nowe zgłoszenie otrzymane",
+
+    // Landing page — nav
+    "lp.nav.product":     "Produkt",
+    "lp.nav.workflow":    "Jak to działa",
+    "lp.nav.pricing":     "Cennik",
+    "lp.nav.security":    "Bezpieczeństwo",
+    "lp.nav.faq":         "FAQ",
+    "lp.nav.signIn":      "Zaloguj się",
+    "lp.nav.demo":        "Demo",
+    "lp.nav.open":        "Otwórz platformę",
+
+    // Landing page — hero
+    "lp.hero.badge":       "Zbudowane dla Lloyd's of London — MGA i coverholderzy",
+    "lp.hero.h1a":         "Gwarantowanie ubezpieczeń",
+    "lp.hero.h1b":         "z prędkością AI",
+    "lp.hero.sub":         "Velox czyta każde zgłoszenie w momencie jego otrzymania — wyciąga dane o ryzyku, ocenia zgodność z apetytem i automatycznie kieruje dalej. Poniżej 10 minut, za każdym razem.",
+    "lp.hero.cta":         "Zacznij bezpłatny okres próbny",
+    "lp.hero.demo":        "Obejrzyj demo",
+    "lp.hero.demoSub":     "· 60 sek",
+    "lp.hero.proof1":      "Bez karty kredytowej",
+    "lp.hero.proof2":      "14-dniowy bezpłatny okres próbny",
+    "lp.hero.proof3":      "Certyfikat SOC 2 Type II",
+
+    // Landing page — stats
+    "lp.stat1v":  "< 10 min",
+    "lp.stat1l":  "Średni czas przetwarzania",
+    "lp.stat1s":  "vs 4 godziny ręcznie",
+    "lp.stat2v":  "94%",
+    "lp.stat2l":  "Dokładność ekstrakcji AI",
+    "lp.stat2s":  "Dla wszystkich typów dokumentów",
+    "lp.stat3v":  "10×",
+    "lp.stat3l":  "Szybciej niż ręcznie",
+    "lp.stat3s":  "Sprawdzone na rynku Lloyd's",
+    "lp.stat4v":  "£46B",
+    "lp.stat4l":  "Rynek Lloyd's GWP",
+    "lp.stat4s":  "Łączny adresowalny rynek",
+    "lp.brokers": "Zaufany przez zespoły gwarantowania na rynku Lloyd's",
+
+    // Landing page — problem
+    "lp.prob.tag":   "Problem",
+    "lp.prob.h2":    "Gwarantowanie ubezpieczeń utknęło w latach 80.",
+    "lp.prob.sub":   "Tylko Lloyd's przetwarza £46B składek rocznie — niemal wyłącznie przez załączniki e-mail, arkusze kalkulacyjne i ręczną selekcję.",
+    "lp.prob.bad":   "Bez Velox",
+    "lp.prob.good":  "Z Velox",
+    "lp.prob.b1s": "3–5 dni",  "lp.prob.b1l": "średni czas odpowiedzi do brokera",
+    "lp.prob.b2s": "60%",      "lp.prob.b2l": "czasu underwritera poświęcone na ręczne wprowadzanie danych",
+    "lp.prob.b3s": "23%",      "lp.prob.b3l": "opłacalnych zgłoszeń odrzucanych z powodu braku mocy przerobowej",
+    "lp.prob.b4s": "£0",       "lp.prob.b4l": "pełna ścieżka audytu dla decyzji wspomaganych przez AI",
+    "lp.prob.g1s": "< 8 min",  "lp.prob.g1l": "od przesłania dokumentu do decyzji",
+    "lp.prob.g2s": "94%",      "lp.prob.g2l": "pól wyciągniętych automatycznie, zero ręcznego wprowadzania",
+    "lp.prob.g3s": "3×",       "lp.prob.g3l": "więcej zgłoszeń przetwarzanych przez ten sam zespół",
+    "lp.prob.g4s": "100%",     "lp.prob.g4l": "decyzji zalogowanych z pełnym uzasadnieniem AI",
+
+    // Landing page — features
+    "lp.feat.tag":  "Platforma",
+    "lp.feat.h2":   "Wszystko czego potrzebuje Twój zespół underwritingu",
+    "lp.feat.sub":  "Od pierwszego dokumentu do związanego ryzyka — Velox obsługuje cały przepływ pracy bez ręcznego nakładu.",
+    "lp.feat.f1t":  "Ekstrakcja AI w 45 sekund",
+    "lp.feat.f1d":  "Claude Sonnet czyta każde zgłoszenie w momencie jego otrzymania — PDF, Word lub e-mail. Ponad 30 pól ryzyka wyciągniętych z 94% dokładnością.",
+    "lp.feat.f2t":  "Silnik oceny apetytu",
+    "lp.feat.f2d":  "Konfiguruj reguły wg rodzaju ubezpieczenia, progu oceny, jurysdykcji, historii szkód. AI ocenia każde zgłoszenie i automatycznie kieruje dalej — bez człowieka w pętli.",
+    "lp.feat.f3t":  "Zgodność z Lloyd's Blueprint Two",
+    "lp.feat.f3d":  "Automatycznie generuje Core Data Records przy każdym związaniu. Zgodność z ACORD 28. Spełnij wymóg CDR bez żadnej dodatkowej pracy inżynierskiej.",
+    "lp.feat.f4t":  "Markowy portal brokera",
+    "lp.feat.f4d":  "Przejrzysty portal samoobsługowy dla brokerów. Bez załączników e-mail. Aktualizacje statusu w czasie rzeczywistym. White-label z Twoim logo i domeną w planie Growth+.",
+    "lp.feat.f5t":  "Nienaruszalny dziennik audytu",
+    "lp.feat.f5d":  "Każda decyzja, notatka i zmiana pola jest logowana z aktorem, znacznikiem czasu i uzasadnieniem. SOC 2 Type II. Szyfrowane przechowywanie przez 7 lat zgodne z RODO.",
+    "lp.feat.f6t":  "Analityka portfela",
+    "lp.feat.f6d":  "Składka na żywo, wskaźnik akceptacji, śledzenie wskaźnika szkodowości, macierz wydajności brokerów i mapy cieplne ekspozycji. Eksportuj raporty zgodności jednym kliknięciem.",
+
+    // Landing page — how it works
+    "lp.how.tag":   "Jak to działa",
+    "lp.how.h2":    "Od skrzynki odbiorczej do decyzji w trzech krokach",
+    "lp.how.sub":   "Bez wymiany systemu. Velox wpisuje się w istniejący przepływ pracy.",
+    "lp.how.s1t":   "Broker przesyła zgłoszenie",
+    "lp.how.s1d":   "Przez markowy portal, e-mail lub REST API. PDF, Word lub zwykły tekst — akceptujemy każdy format.",
+    "lp.how.s2t":   "AI wyciąga dane i ocenia ryzyko",
+    "lp.how.s2d":   "Claude czyta dokument, wyciąga ponad 30 pól ryzyka, generuje ocenę 0–100 z pełnym zestawieniem czynników i modelem składki.",
+    "lp.how.s3t":   "Automatyczne kierowanie",
+    "lp.how.s3d":   "Czyste ryzyka akceptowane, wyraźne odrzucenia odrzucane, przypadki brzegowe kierowane do weryfikacji — wszystko w ciągu 8 minut. Underwriterzy przeglądają tylko to, co wymaga ich uwagi.",
+
+    // Landing page — compliance
+    "lp.compl.h3":  "Zgodność klasy enterprise od razu po wdrożeniu",
+    "lp.compl.sub": "Żadnej dodatkowej pracy inżynierskiej, aby spełnić wymogi Lloyd's i UE.",
+
+    // Landing page — testimonials
+    "lp.testi.tag": "Opinie",
+    "lp.testi.h2":  "Co mówią underwriterzy",
+
+    // Landing page — pricing
+    "lp.price.tag":     "Cennik",
+    "lp.price.h2":      "Prosta, przejrzysta cena",
+    "lp.price.sub":     "Wszystkie plany zawierają 14-dniowy bezpłatny okres próbny. Bez karty kredytowej.",
+    "lp.price.monthly": "Miesięcznie",
+    "lp.price.annual":  "Rocznie · oszczędzasz 20%",
+    "lp.price.mo":      "/mies.",
+    "lp.price.trial":   "Zacznij bezpłatny okres próbny",
+    "lp.price.contact": "Skontaktuj się z działem sprzedaży",
+    "lp.price.custom":  "Cena indywidualna",
+    "lp.price.popular": "Najpopularniejszy",
+
+    // Landing page — FAQ
+    "lp.faq.tag": "FAQ",
+    "lp.faq.h2":  "Najczęstsze pytania",
+
+    // Landing page — CTA footer
+    "lp.cta.h2":   "Gotowy na transformację swojego MGA?",
+    "lp.cta.sub":  "Dołącz do zespołów Lloyd's, które już używają Velox do szybszego przetwarzania zgłoszeń.",
+    "lp.cta.form": "Podaj swój służbowy e-mail",
+    "lp.cta.btn":  "Uzyskaj wczesny dostęp",
+    "lp.cta.sent": "Jesteś na liście! Odezwiemy się wkrótce.",
+    "lp.cta.demo": "Lub",
+
+    // Landing page — footer
+    "lp.footer.rights": "Wszelkie prawa zastrzeżone.",
+    "lp.footer.lloyds": "Zgodność z Lloyd's Blueprint Two · SOC 2 Type II",
+    "lp.footer.brand":  "Platforma AI do przyjmowania zgłoszeń ubezpieczeniowych dla rynku Lloyd's of London. Zbudowana po to, by gwarantowanie było szybsze, spójne i skalowalne.",
+    "lp.footer.col1":   "Platforma",
+    "lp.footer.col2":   "Produkt",
+    "lp.footer.col3":   "Firma",
+    "lp.footer.col4":   "Prawo",
+    "lp.footer.copy":   "© 2026 Velox AI Ltd. Zarejestrowana w Anglii i Walii. Autoryzowana przez FCA.",
+    "lp.footer.signin": "Zaloguj się",
+
+    // Landing page — ticker
+    "lp.ticker.now": "właśnie teraz",
+
+    // Landing page — pricing footer note
+    "lp.price.vat":     "Ceny netto · Kontrakty Enterprise dostępne z rabatem rocznym ·",
+    "lp.price.vatLink": "Kontakt z działem sprzedaży",
+    "lp.price.vatEnd":  "po indywidualną wycenę",
+    "lp.price.save":    "Oszczędzasz",
+    "lp.price.yr":      "/rok",
+
+    // Pricing — Starter
+    "lp.price.s.name": "Starter",
+    "lp.price.s.desc": "Dla małych MGA i coverholderów stawiających pierwsze kroki.",
+    "lp.price.s.f1":   "Do 200 zgłoszeń/mies.",
+    "lp.price.s.f2":   "Ekstrakcja AI i ocena ryzyka",
+    "lp.price.s.f3":   "Portal brokera",
+    "lp.price.s.f4":   "5 reguł apetytu",
+    "lp.price.s.f5":   "Wsparcie e-mail",
+    "lp.price.s.f6":   "Standardowy dostęp API",
+    "lp.price.s.cta":  "Zacznij bezpłatny okres próbny",
+
+    // Pricing — Growth
+    "lp.price.g.name": "Growth",
+    "lp.price.g.desc": "Dla rozwijających się zespołów przetwarzających 500+ zgłoszeń miesięcznie.",
+    "lp.price.g.f1":   "Do 1 000 zgłoszeń/mies.",
+    "lp.price.g.f2":   "Wszystko ze Starter",
+    "lp.price.g.f3":   "Pełny pakiet analityczny",
+    "lp.price.g.f4":   "Nieograniczone reguły apetytu",
+    "lp.price.g.f5":   "Integracje webhook",
+    "lp.price.g.f6":   "White-label portal brokera",
+    "lp.price.g.f7":   "Priorytetowe wsparcie (SLA 4h)",
+    "lp.price.g.f8":   "Automatyczne składanie CDR Lloyd's",
+    "lp.price.g.cta":  "Zarezerwuj demo",
+
+    // Pricing — Enterprise
+    "lp.price.e.name": "Enterprise",
+    "lp.price.e.desc": "Dla syndykatów i dużych MGA o złożonych potrzebach.",
+    "lp.price.e.f1":   "Nieograniczone zgłoszenia",
+    "lp.price.e.f2":   "Wszystko z Growth",
+    "lp.price.e.f3":   "Dostosowanie modelu AI",
+    "lp.price.e.f4":   "Dedykowana infrastruktura",
+    "lp.price.e.f5":   "SSO / SAML",
+    "lp.price.e.f6":   "Gwarancja SLA 99,9%",
+    "lp.price.e.f7":   "Dedykowane wdrożenie i CSM",
+    "lp.price.e.cta":  "Skontaktuj się z działem sprzedaży",
+
+    // Testimonials
+    "lp.testi.t1.q":      "Velox skrócił nasz średni czas przetwarzania z czterech godzin do ośmiu minut. Nasi underwriterzy skupiają się teraz na ryzykach wymagających ludzkiej oceny — a nie na ręcznym wprowadzaniu danych.",
+    "lp.testi.t1.author": "Sarah Mitchell",
+    "lp.testi.t1.role":   "Dyrektor ds. gwarantowania, Syndicate 2041",
+    "lp.testi.t2.q":      "Sam portal brokera był wart swojej ceny. Nasi pośrednicy przestali wysyłać załączniki e-mail, a nasza skrzynka odbiorcza nigdy nie była tak czysta. Jakość danych poprawiła się z dnia na dzień.",
+    "lp.testi.t2.author": "James Okafor",
+    "lp.testi.t2.role":   "Dyrektor operacyjny, Nexus MGA",
+    "lp.testi.t3.q":      "Przeszliśmy audyt CDR Blueprint Two bez żadnej dodatkowej pracy inżynierskiej. Velox po prostu to obsługuje. Taki sukces w zakresie compliance wygląda bardzo dobrze w oczach Lloyd's.",
+    "lp.testi.t3.author": "Clara Hofmann",
+    "lp.testi.t3.role":   "Dyrektor techniczny, Continental Risk Partners",
+
+    // FAQ questions and answers
+    "lp.faq.q1": "Jak długo trwa wdrożenie?",
+    "lp.faq.a1": "Poniżej godziny. Podłącz bazę danych Supabase, dodaj klucz API Anthropic i jesteś gotowy. Nasz zespół przeprowadza rozmowy wdrożeniowe dla klientów Growth i Enterprise.",
+    "lp.faq.q2": "Jakie formaty dokumentów obsługuje Velox?",
+    "lp.faq.a2": "PDF, Word (.docx), zwykły tekst i treści e-mail. Skany PDF przetwarzamy przez OCR. Obsługujemy też ACORD XML i masowe przesyłanie CSV przez API.",
+    "lp.faq.q3": "Czy mogę dostosować reguły apetytu?",
+    "lp.faq.a3": "Tak — w pełni. Z poziomu strony Ustawienia możesz definiować reguły według rodzaju ubezpieczenia, progu oceny, słów kluczowych historii szkód, jurysdykcji, wysokości limitu i innych. Reguły są oceniane według priorytetu i mogą wyzwalać akceptację, odrzucenie lub skierowanie do weryfikacji.",
+    "lp.faq.q4": "Czy Velox spełnia wymogi Lloyd's Blueprint Two?",
+    "lp.faq.a4": "Tak. Velox automatycznie generuje Core Data Records (CDR) w wymaganym formacie przy każdym związaniu polisy. Przechowujemy te rekordy przez 7 lat w zaszyfrowanym magazynie, spełniając wymogi RODO i Lloyd's dotyczące przechowywania danych.",
+    "lp.faq.q5": "Jak dokładna jest ekstrakcja AI?",
+    "lp.faq.a5": "94% dokładności pól w naszym zbiorze testowym ponad 5 000 zgłoszeń Lloyd's. Oceny pewności są generowane dla każdej ekstrakcji, dzięki czemu underwriterzy widzą dokładnie, jak pewna jest AI co do każdego pola.",
+    "lp.faq.q6": "Czy możemy użyć white-label portalu brokera?",
+    "lp.faq.a6": "Tak — plany Growth i Enterprise obejmują niestandardową domenę, logo i schemat kolorów dla portalu brokera. Brokerzy widzą Twoją markę, nie Velox.",
+    "lp.faq.q7": "Co się dzieje, gdy AI popełni błąd?",
+    "lp.faq.a7": "Każda decyzja AI jest weryfikowalna przed jej wykonaniem. Underwriterzy mogą nadpisać dowolne pole ekstrakcji lub decyzję z pełną ścieżką audytu. AI zajmuje się selekcją; ludzie zachowują ostateczną władzę.",
   },
 } as const;
 
@@ -389,13 +781,13 @@ interface LangCtx {
 }
 
 const Ctx = createContext<LangCtx>({
-  lang: "en",
+  lang: "pl",
   setLang: () => {},
-  t: (k) => T.en[k],
+  t: (k) => (T.pl as Record<string, string>)[k] ?? T.en[k],
 });
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Language>("en");
+  const [lang, setLangState] = useState<Language>("pl");
 
   useEffect(() => {
     const stored = localStorage.getItem("velox_lang") as Language | null;
