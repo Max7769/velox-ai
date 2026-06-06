@@ -110,7 +110,13 @@ export async function updateSubmission(
   updates: Partial<Pick<Submission, "status" | "notes" | "decision_by" | "decision_at">>,
 ): Promise<void> {
   const client = getClient();
-  if (!client) return; // mock — no persistence needed in demo mode
+  if (!client) {
+    // Demo mode: mutate in-memory array so pipeline/listing immediately
+    // reflects decisions made during the current session.
+    const idx = mockSubmissions.findIndex(s => s.id === id);
+    if (idx !== -1) mockSubmissions[idx] = { ...mockSubmissions[idx], ...updates };
+    return;
+  }
 
   try {
     const { error } = await client
