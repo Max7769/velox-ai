@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
+import { startCheckout } from "@/lib/stripe";
 import {
   Zap, ArrowRight, Shield, Clock, TrendingUp, CheckCircle,
   FileText, BarChart2, Globe, ChevronRight, ChevronDown,
@@ -393,11 +394,17 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const handleEmailCapture = (e: React.FormEvent) => {
+  const handleEmailCapture = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.includes("@")) return;
     setEmailSent(true);
-  };
+    // Fire and forget — don't block the success state on network
+    fetch("/api/waitlist", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    }).catch(() => {});
+  }, [email]);
 
   return (
     <main className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-base)" }}>
@@ -851,13 +858,20 @@ export default function Home() {
                         </li>
                       ))}
                     </ul>
-                    <Link href={p.highlight ? "/demo" : "/dashboard"}
-                      className="text-center py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
+                    <button
+                      onClick={() => {
+                        if (p.name === "Enterprise") {
+                          window.location.href = "mailto:uzarek.maksymilian@gmail.com?subject=Velox AI Enterprise enquiry";
+                        } else {
+                          startCheckout(p.name.toLowerCase(), undefined, billing === "annual");
+                        }
+                      }}
+                      className="w-full text-center py-3 rounded-xl text-sm font-semibold transition-all hover:opacity-90"
                       style={p.highlight
                         ? { background: "var(--brand)", color: "#fff" }
                         : { background: "rgba(255,255,255,0.05)", color: "#94a3b8", border: "1px solid var(--border)" }}>
                       {p.cta}
-                    </Link>
+                    </button>
                   </div>
                 </FadeIn>
               );
