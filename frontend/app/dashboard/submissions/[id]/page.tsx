@@ -6,7 +6,7 @@ import { StatusBadge } from "@/components/ui/status-badge";
 import { RiskScore } from "@/components/ui/risk-score";
 import {
   CheckCircle, XCircle, MessageSquare, Download, AlertTriangle,
-  Shield, Clock, User, ChevronLeft, Zap, Building2, FileText,
+  Shield, Clock, User, ChevronLeft, ChevronRight, Zap, Building2, FileText,
   TrendingUp, TrendingDown, Info, ExternalLink, Copy, BarChart3,
   RefreshCw
 } from "lucide-react";
@@ -100,6 +100,11 @@ export default function SubmissionDetail() {
   const [copied,    setCopied]    = useState(false);
   const [deciding,  setDeciding]  = useState(false);
 
+  // Computed before any early returns so the keyboard handler closure can capture them
+  const currentIndex = sub ? allSubs.findIndex(s => s.id === sub.id) : -1;
+  const prevSub = currentIndex > 0 ? allSubs[currentIndex - 1] : null;
+  const nextSub = currentIndex >= 0 && currentIndex < allSubs.length - 1 ? allSubs[currentIndex + 1] : null;
+
   const load = useCallback(async () => {
     try {
       const [s, audit, all] = await Promise.all([
@@ -172,10 +177,12 @@ export default function SubmissionDetail() {
       if (e.key === "1") setTab("overview");
       if (e.key === "2") setTab("ai");
       if (e.key === "3") setTab("premium");
+      if (e.key === "ArrowLeft"  && prevSub) router.push(`/dashboard/submissions/${prevSub.id}`);
+      if (e.key === "ArrowRight" && nextSub) router.push(`/dashboard/submissions/${nextSub.id}`);
     };
     window.addEventListener("keydown", handler);
     return () => window.removeEventListener("keydown", handler);
-  }, [status, decide, router]);
+  }, [status, decide, router, prevSub, nextSub]);
 
   if (loading) {
     return (
@@ -227,9 +234,32 @@ export default function SubmissionDetail() {
 
   return (
     <div className="p-6">
-      <Link href="/dashboard/submissions" className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors mb-4">
-        <ChevronLeft size={13} /> All submissions
-      </Link>
+      {/* Breadcrumb + prev/next navigation */}
+      <div className="flex items-center justify-between mb-4">
+        <Link href="/dashboard/submissions"
+          className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors">
+          <ChevronLeft size={13} /> All submissions
+        </Link>
+        <div className="flex items-center gap-1">
+          {currentIndex >= 0 && (
+            <span className="text-[10px] text-slate-700 mr-2">
+              {currentIndex + 1} / {allSubs.length}
+            </span>
+          )}
+          <Link href={prevSub ? `/dashboard/submissions/${prevSub.id}` : "#"}
+            aria-disabled={!prevSub}
+            className={`p-1.5 rounded-lg transition-all ${prevSub ? "text-slate-500 hover:text-slate-200 hover:bg-white/5" : "text-slate-800 cursor-not-allowed"}`}
+            title={prevSub ? `← ${prevSub.extracted_data?.insured_name ?? prevSub.id}` : "No previous"}>
+            <ChevronLeft size={14} />
+          </Link>
+          <Link href={nextSub ? `/dashboard/submissions/${nextSub.id}` : "#"}
+            aria-disabled={!nextSub}
+            className={`p-1.5 rounded-lg transition-all ${nextSub ? "text-slate-500 hover:text-slate-200 hover:bg-white/5" : "text-slate-800 cursor-not-allowed"}`}
+            title={nextSub ? `→ ${nextSub.extracted_data?.insured_name ?? nextSub.id}` : "No next"}>
+            <ChevronRight size={14} />
+          </Link>
+        </div>
+      </div>
 
       {/* Header */}
       <div className="flex items-start justify-between mb-5">

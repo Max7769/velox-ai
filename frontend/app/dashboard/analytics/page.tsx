@@ -43,7 +43,11 @@ export default function AnalyticsPage() {
   const totalAccepted = useMemo(() => analytics.reduce((a, d) => a + d.accepted, 0), [analytics]);
   const bindRate      = totalVolume > 0 ? Math.round((totalAccepted / totalVolume) * 100) : 0;
   const avgGWP        = Math.round(totalGWP / Math.max(totalAccepted, 1));
-  const pending       = submissions.filter(s => s.status === "referred").length;
+  const pending          = submissions.filter(s => s.status === "referred").length;
+  const referredPipelineGWP = useMemo(() =>
+    submissions.filter(s => s.status === "referred")
+      .reduce((a, s) => a + (s.extracted_data?.premium_model?.mid ?? 0), 0)
+  , [submissions]);
 
   const chartData = useMemo(() => analytics.map(d => ({
     ...d,
@@ -71,13 +75,26 @@ export default function AnalyticsPage() {
 
   const coverageData = useMemo(() =>
     Object.entries(coverageBreakdown)
-      .map(([name, v]) => ({
-        name: name.split(" ").slice(0, 2).join(" "),
-        ...v,
-        total: v.accepted + v.declined + v.referred,
-      }))
-      .sort((a, b) => b.total - a.total)
-  , [coverageBreakdown]);
+      .map(([name, v]) => {
+        const total    = v.accepted + v.declined + v.referred;
+        const bindRate = total > 0 ? Math.round((v.accepted / total) * 100) : 0;
+        const avgScore = (() => {
+          const scored = submissions.filter(s =>
+            (s.extracted_data?.coverage_type ?? "Unknown") === name && s.score !== null
+          );
+          return scored.length ? Math.round(scored.reduce((a, s) => a + (s.score ?? 0), 0) / scored.length) : null;
+        })();
+        return {
+          name: name.split(" ").slice(0, 2).join(" "),
+          fullName: name,
+          ...v,
+          total,
+          bindRate,
+          avgScore,
+        };
+      })
+      .sort((a, b) => b.gwp - a.gwp)
+  , [coverageBreakdown, submissions]);
 
   const classPie = useMemo(() =>
     coverageData.map((c, i) => ({ name: c.name, value: c.total, color: PIE_COLORS[i % PIE_COLORS.length] }))
@@ -100,7 +117,7 @@ export default function AnalyticsPage() {
     { label: t("ana.bindRate"),   value: `${bindRate}%`,                          sub: t("ana.acceptedSub"),             icon: CheckCircle,   color: "#10b981" },
     { label: t("ana.avgPremium"), value: `£${(avgGWP / 1000).toFixed(1)}K`,      sub: t("ana.acrossBound"),             icon: Target,        color: "#f59e0b" },
     { label: t("ana.avgTime"),    value: "8.4 min",                               sub: `−23% ${t("ana.priorPeriod")}`,  icon: Clock,         color: "#6366f1" },
-    { label: t("ana.pending"),    value: String(pending),                          sub: t("ana.referredSub"),             icon: AlertCircle,   color: "#f59e0b" },
+    { label: t("ana.pending"),    value: String(pending),                          sub: referredPipelineGWP > 0 ? `£${(referredPipelineGWP/1000).toFixed(0)}K pipeline` : t("ana.referredSub"), icon: AlertCircle, color: "#f59e0b" },
   ];
 
   if (loading) {
@@ -294,6 +311,55 @@ export default function AnalyticsPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Class of business performance table */}
+      <div className="card overflow-hidden">
+        <div className="px-5 py-3.5 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border)" }}>
+          <h2 className="text-sm font-semibold text-white">Class of Business Performance</h2>
+          <span className="text-[10px] text-slate-600">Sorted by GWP</span>
+        </div>
+        <table className="w-full">
+          <thead>
+            <tr style={{ borderBottom: "1px solid var(--border)" }}>
+              {["Class", "Total", "Accepted", "Referred", "Declined", "GWP", "Bind Rate", "Avg Score"].map(h => (
+                <th key={h} className="th">{h}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {coverageData.map((c, i) => (
+              <tr key={c.fullName} className="hover:bg-white/[0.02] transition-colors"
+                style={i !== coverageData.length - 1 ? { borderBottom: "1px solid var(--border)" } : undefined}>
+                <td className="td font-semibold text-slate-200">{c.fullName}</td>
+                <td className="td text-slate-400">{c.total}</td>
+                <td className="td"><span className="text-emerald-400 font-medium">{c.accepted}</span></td>
+                <td className="td"><span className="text-amber-400 font-medium">{c.referred}</span></td>
+                <td className="td"><span className="text-red-400 font-medium">{c.declined}</span></td>
+                <td className="td font-medium text-slate-300">
+                  {c.gwp > 0 ? `£${c.gwp.toLocaleString("en-GB")}` : "—"}
+                </td>
+                <td className="td">
+                  <span className="text-xs font-semibold"
+                    style={{ color: c.bindRate >= 70 ? "#10b981" : c.bindRate >= 40 ? "#f59e0b" : "#ef4444" }}>
+                    {c.bindRate}%
+                  </span>
+                </td>
+                <td className="td">
+                  {c.avgScore !== null ? (
+                    <div className="flex items-center gap-2">
+                      <div className="w-12 h-1.5 rounded-full overflow-hidden" style={{ background: "rgba(255,255,255,0.06)" }}>
+                        <div className="h-full rounded-full"
+                          style={{ width: `${c.avgScore}%`, background: c.avgScore >= 70 ? "#10b981" : c.avgScore >= 50 ? "#f59e0b" : "#ef4444" }} />
+                      </div>
+                      <span className="text-xs font-semibold tabular-nums text-slate-400">{c.avgScore}</span>
+                    </div>
+                  ) : <span className="text-slate-700">—</span>}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Broker performance matrix */}
