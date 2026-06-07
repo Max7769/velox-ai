@@ -149,6 +149,24 @@ const T = {
     "pipe.empty":       "No submissions in this stage",
     "pipe.refresh":     "Refresh",
     "pipe.score":       "Score",
+    "pipe.accept":          "Accept",
+    "pipe.decline":         "Decline",
+    "pipe.viewDetail":      "View detail",
+    "pipe.awaitingOne":     "awaiting decision",
+    "pipe.awaitingMany":    "awaiting decisions",
+    "pipe.needsOne":        "needs a decision — use buttons below",
+    "pipe.needsMany":       "need a decision — use buttons below",
+    "pipe.toastFailed":     "Failed to save decision — please try again",
+
+    // Class of business performance table
+    "ana.cob.title":     "Class of Business Performance",
+    "ana.cob.sortedGwp": "Sorted by GWP",
+    "ana.cob.class":     "Class",
+    "ana.cob.total":     "Total",
+    "ana.cob.gwp":       "GWP",
+    "ana.cob.bindRate":  "Bind Rate",
+    "ana.cob.avgScore":  "Avg Score",
+    "ana.pipelineValue": "pipeline",
 
     // Reports
     "rep.title":         "Reports",
@@ -532,6 +550,24 @@ const T = {
     "pipe.empty":       "Brak zgłoszeń na tym etapie",
     "pipe.refresh":     "Odśwież",
     "pipe.score":       "Ocena",
+    "pipe.accept":          "Akceptuj",
+    "pipe.decline":         "Odrzuć",
+    "pipe.viewDetail":      "Zobacz szczegóły",
+    "pipe.awaitingOne":     "oczekuje na decyzję",
+    "pipe.awaitingMany":    "oczekuje na decyzje",
+    "pipe.needsOne":        "wymaga decyzji — użyj przycisków poniżej",
+    "pipe.needsMany":       "wymagają decyzji — użyj przycisków poniżej",
+    "pipe.toastFailed":     "Nie udało się zapisać decyzji — spróbuj ponownie",
+
+    // Tabela wyników wg klasy działalności
+    "ana.cob.title":     "Wyniki wg klasy działalności",
+    "ana.cob.sortedGwp": "Sortowane wg składki",
+    "ana.cob.class":     "Klasa",
+    "ana.cob.total":     "Łącznie",
+    "ana.cob.gwp":       "Składka",
+    "ana.cob.bindRate":  "Wsk. zawarcia",
+    "ana.cob.avgScore":  "Śr. ocena",
+    "ana.pipelineValue": "w portfelu",
 
     // Reports
     "rep.title":         "Raporty",

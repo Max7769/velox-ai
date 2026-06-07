@@ -19,6 +19,7 @@ function SubmissionCard({
   premiumLabel: string;
   onDecide: (id: string, decision: "accepted" | "declined") => void;
 }) {
+  const { t } = useTranslation();
   const [deciding, setDeciding] = useState<"accepted" | "declined" | null>(null);
 
   const handleDecide = async (e: React.MouseEvent, decision: "accepted" | "declined") => {
@@ -35,7 +36,7 @@ function SubmissionCard({
         duration: 2500,
       });
     } catch {
-      toast.error("Failed to save decision — please try again");
+      toast.error(t("pipe.toastFailed"));
     } finally {
       setDeciding(null);
     }
@@ -74,7 +75,7 @@ function SubmissionCard({
         )}
 
         <div className="mt-2 flex items-center gap-1 text-[10px] text-slate-700">
-          View detail <ChevronRight size={9} />
+          {t("pipe.viewDetail")} <ChevronRight size={9} />
         </div>
       </Link>
 
@@ -89,7 +90,7 @@ function SubmissionCard({
             {deciding === "accepted"
               ? <RefreshCw size={10} className="animate-spin" />
               : <CheckCircle size={11} />}
-            Accept
+            {t("pipe.accept")}
           </button>
           <button
             onClick={e => handleDecide(e, "declined")}
@@ -99,7 +100,7 @@ function SubmissionCard({
             {deciding === "declined"
               ? <RefreshCw size={10} className="animate-spin" />
               : <XCircle size={11} />}
-            Decline
+            {t("pipe.decline")}
           </button>
         </div>
       )}
@@ -203,7 +204,7 @@ export default function PipelinePage() {
               <>
                 {" · "}
                 <span className="text-amber-400 font-medium">{referredCount}</span>
-                <span className="text-slate-500"> {referredCount === 1 ? "awaiting decision" : "awaiting decisions"}</span>
+                <span className="text-slate-500"> {referredCount === 1 ? t("pipe.awaitingOne") : t("pipe.awaitingMany")}</span>
               </>
             )}
           </p>
@@ -215,7 +216,7 @@ export default function PipelinePage() {
               style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
               <span className="text-amber-400 font-medium">
-                {referredCount} need{referredCount === 1 ? "s" : ""} a decision — use buttons below
+                {referredCount} {referredCount === 1 ? t("pipe.needsOne") : t("pipe.needsMany")}
               </span>
             </div>
           )}

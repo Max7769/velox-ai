@@ -117,7 +117,7 @@ export default function AnalyticsPage() {
     { label: t("ana.bindRate"),   value: `${bindRate}%`,                          sub: t("ana.acceptedSub"),             icon: CheckCircle,   color: "#10b981" },
     { label: t("ana.avgPremium"), value: `£${(avgGWP / 1000).toFixed(1)}K`,      sub: t("ana.acrossBound"),             icon: Target,        color: "#f59e0b" },
     { label: t("ana.avgTime"),    value: "8.4 min",                               sub: `−23% ${t("ana.priorPeriod")}`,  icon: Clock,         color: "#6366f1" },
-    { label: t("ana.pending"),    value: String(pending),                          sub: referredPipelineGWP > 0 ? `£${(referredPipelineGWP/1000).toFixed(0)}K pipeline` : t("ana.referredSub"), icon: AlertCircle, color: "#f59e0b" },
+    { label: t("ana.pending"),    value: String(pending),                          sub: referredPipelineGWP > 0 ? `£${(referredPipelineGWP/1000).toFixed(0)}K ${t("ana.pipelineValue")}` : t("ana.referredSub"), icon: AlertCircle, color: "#f59e0b" },
   ];
 
   if (loading) {
@@ -316,13 +316,13 @@ export default function AnalyticsPage() {
       {/* Class of business performance table */}
       <div className="card overflow-hidden">
         <div className="px-5 py-3.5 flex items-center justify-between" style={{ borderBottom: "1px solid var(--border)" }}>
-          <h2 className="text-sm font-semibold text-white">Class of Business Performance</h2>
-          <span className="text-[10px] text-slate-600">Sorted by GWP</span>
+          <h2 className="text-sm font-semibold text-white">{t("ana.cob.title")}</h2>
+          <span className="text-[10px] text-slate-600">{t("ana.cob.sortedGwp")}</span>
         </div>
         <table className="w-full">
           <thead>
             <tr style={{ borderBottom: "1px solid var(--border)" }}>
-              {["Class", "Total", "Accepted", "Referred", "Declined", "GWP", "Bind Rate", "Avg Score"].map(h => (
+              {[t("ana.cob.class"), t("ana.cob.total"), t("status.accepted"), t("status.referred"), t("status.declined"), t("ana.cob.gwp"), t("ana.cob.bindRate"), t("ana.cob.avgScore")].map(h => (
                 <th key={h} className="th">{h}</th>
               ))}
             </tr>
