@@ -9,14 +9,7 @@ import {
 import { toast } from "sonner";
 import type { TeamMember, AppetiteRule } from "@/lib/types";
 import { deleteRuleAction, inviteTeamAction, createRuleAction } from "@/lib/actions";
-
-const tabs = [
-  { id: "company",      label: "Company",      icon: Building2 },
-  { id: "team",         label: "Team",         icon: Users },
-  { id: "appetite",     label: "Appetite",     icon: Shield },
-  { id: "integrations", label: "Integrations", icon: Puzzle },
-  { id: "api",          label: "API",          icon: Key },
-];
+import { useTranslation } from "@/lib/i18n";
 
 // Coverage types for rule builder
 const COVERAGE_TYPES = [
@@ -52,6 +45,14 @@ const BLANK_FORM: RuleForm = {
 const FAKE_KEY = "vlx_live_sk_3hKq9mPwRxN2jLdY7vFcBtAeZsUo1Gi";
 
 export default function SettingsPage() {
+  const { t } = useTranslation();
+  const tabs = [
+    { id: "company",      label: t("set.company"),      icon: Building2 },
+    { id: "team",         label: t("set.team"),         icon: Users },
+    { id: "appetite",     label: t("set.appetite"),     icon: Shield },
+    { id: "integrations", label: t("set.integrations"), icon: Puzzle },
+    { id: "api",          label: t("set.api"),          icon: Key },
+  ];
   const [tab,         setTab]         = useState("company");
   const [inviteEmail, setInviteEmail] = useState("");
   const [inviting,    setInviting]    = useState(false);
@@ -77,14 +78,14 @@ export default function SettingsPage() {
   useEffect(() => { loadSettings(); }, [loadSettings]);
 
   const handleInvite = async () => {
-    if (!inviteEmail.includes("@")) { toast.error("Enter a valid email address"); return; }
+    if (!inviteEmail.includes("@")) { toast.error(t("set.team.invalidEmail")); return; }
     setInviting(true);
     try {
       await inviteTeamAction(inviteEmail);
-      toast.success(`Invitation sent to ${inviteEmail}`);
+      toast.success(`${t("set.team.invited")} ${inviteEmail}`);
       setInviteEmail("");
       loadSettings();
-    } catch { toast.error("Failed to send invitation"); }
+    } catch { toast.error(t("set.team.inviteFailed")); }
     finally { setInviting(false); }
   };
 
@@ -92,12 +93,12 @@ export default function SettingsPage() {
     try {
       await deleteRuleAction(id);
       setRules(r => r.filter(x => x.id !== id));
-      toast.success("Rule deleted");
-    } catch { toast.error("Failed to delete rule"); }
+      toast.success(t("set.appetite.deleted"));
+    } catch { toast.error(t("set.appetite.deleteFailed")); }
   };
 
   const handleAddRule = async () => {
-    if (!ruleForm.value.trim()) { toast.error("Enter a value for the rule condition"); return; }
+    if (!ruleForm.value.trim()) { toast.error(t("set.modal.valueRequired")); return; }
     setSavingRule(true);
     try {
       const newRule = await createRuleAction({
@@ -112,14 +113,14 @@ export default function SettingsPage() {
       setRules(r => [...r, newRule].sort((a, b) => a.priority - b.priority));
       setShowModal(false);
       setRuleForm(BLANK_FORM);
-      toast.success("Rule added — active immediately");
-    } catch { toast.error("Failed to save rule"); }
+      toast.success(t("set.modal.added"));
+    } catch { toast.error(t("set.modal.saveFailed")); }
     finally { setSavingRule(false); }
   };
 
   const copyKey = () => {
     navigator.clipboard.writeText(FAKE_KEY);
-    toast.success("API key copied to clipboard");
+    toast.success(t("set.api.copied"));
   };
 
   const section = (title: string, sub?: string) => (
@@ -132,8 +133,8 @@ export default function SettingsPage() {
   return (
     <div className="p-6 max-w-4xl">
       <div className="mb-6">
-        <h1 className="text-lg font-semibold text-white">Settings</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Manage your workspace, team, underwriting rules, and integrations.</p>
+        <h1 className="text-lg font-semibold text-white">{t("set.title")}</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{t("set.subtitle")}</p>
       </div>
 
       {/* Tab bar */}
@@ -151,15 +152,15 @@ export default function SettingsPage() {
       {tab === "company" && (
         <div className="space-y-4">
           <div className="card p-5">
-            {section("Company details")}
+            {section(t("set.companyDetails"))}
             <div className="grid grid-cols-2 gap-4">
               {[
-                { label: "Company name",                  val: "Velox AI Ltd" },
-                { label: "Lloyd's coverholder reference", val: "CHE-2026-0094" },
-                { label: "FCA reference number",          val: "987654" },
-                { label: "Lloyd's syndicate",             val: "2026" },
-                { label: "Primary underwriting email",    val: "underwriting@velox.ai" },
-                { label: "Domicile jurisdiction",         val: "England & Wales" },
+                { label: t("set.company.name"),         val: "Velox AI Ltd" },
+                { label: t("set.company.coverholder"),  val: "CHE-2026-0094" },
+                { label: t("set.company.fca"),          val: "987654" },
+                { label: t("set.company.syndicate"),    val: "2026" },
+                { label: t("set.company.email"),        val: "underwriting@velox.ai" },
+                { label: t("set.company.jurisdiction"), val: "England & Wales" },
               ].map(f => (
                 <div key={f.label}>
                   <label className="block text-xs text-slate-500 mb-1.5">{f.label}</label>
@@ -167,20 +168,20 @@ export default function SettingsPage() {
                 </div>
               ))}
             </div>
-            <button onClick={() => toast.success("Company details saved")}
+            <button onClick={() => toast.success(t("set.company.saved"))}
               className="mt-5 btn-primary px-4 py-2 text-sm">
-              Save changes
+              {t("set.company.save")}
             </button>
           </div>
 
           <div className="card p-5">
-            {section("Compliance", "Regulatory and data governance settings")}
+            {section(t("set.compliance.title"), t("set.compliance.sub"))}
             <div className="space-y-3">
               {[
-                { label: "GDPR data retention",      val: "7 years (Lloyd's minimum)",       desc: "Submission data and audit logs" },
-                { label: "EU AI Act classification", val: "High-risk (Article 6(2))",        desc: "Human oversight required for all automated decisions" },
-                { label: "Blueprint Two CDR",        val: "Enabled",                         desc: "Automatic Core Data Record generation on bind" },
-                { label: "SOC 2 Type II",            val: "Certified — expires Dec 2026",    desc: "Annual assessment by third-party auditor" },
+                { label: t("set.compliance.gdpr"),   val: t("set.compliance.gdprVal"),   desc: t("set.compliance.gdprDesc") },
+                { label: t("set.compliance.aiAct"),  val: t("set.compliance.aiActVal"),  desc: t("set.compliance.aiActDesc") },
+                { label: t("set.compliance.cdr"),    val: t("set.compliance.cdrVal"),    desc: t("set.compliance.cdrDesc") },
+                { label: t("set.compliance.soc2"),   val: t("set.compliance.soc2Val"),   desc: t("set.compliance.soc2Desc") },
               ].map(c => (
                 <div key={c.label} className="flex items-center justify-between p-3 rounded-xl"
                   style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)" }}>
@@ -195,12 +196,12 @@ export default function SettingsPage() {
           </div>
 
           <div className="card p-5" style={{ borderColor: "rgba(239,68,68,0.2)" }}>
-            <h2 className="text-sm font-semibold text-red-400 mb-1">Danger zone</h2>
-            <p className="text-xs text-slate-600 mb-4">These actions are permanent and cannot be undone.</p>
-            <button onClick={() => toast.error("Delete requires owner confirmation via email")}
+            <h2 className="text-sm font-semibold text-red-400 mb-1">{t("set.danger.title")}</h2>
+            <p className="text-xs text-slate-600 mb-4">{t("set.danger.sub")}</p>
+            <button onClick={() => toast.error(t("set.danger.toast"))}
               className="text-xs px-3 py-2 rounded-lg text-red-400 font-medium transition-all"
               style={{ background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)" }}>
-              Delete workspace
+              {t("set.danger.delete")}
             </button>
           </div>
         </div>
@@ -211,19 +212,19 @@ export default function SettingsPage() {
         <div className="space-y-4">
           <div className="card overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: "1px solid var(--border)" }}>
-              <h2 className="text-sm font-semibold text-white">Team members ({team.length})</h2>
-              <span className="text-xs text-slate-600">{team.length} of 10 seats used</span>
+              <h2 className="text-sm font-semibold text-white">{t("set.team.heading")} ({team.length})</h2>
+              <span className="text-xs text-slate-600">{team.length} {t("set.team.seats")}</span>
             </div>
             {loadingTeam ? (
               <div className="py-8 flex items-center justify-center gap-2 text-slate-600">
                 <RefreshCw size={13} className="animate-spin" />
-                <span className="text-xs">Loading team…</span>
+                <span className="text-xs">{t("set.team.loading")}</span>
               </div>
             ) : (
               <table className="w-full">
                 <thead>
                   <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                    {["Member", "Role", "Joined", ""].map(h => <th key={h} className="th">{h}</th>)}
+                    {[t("set.team.member"), t("set.team.role"), t("set.team.joined"), ""].map(h => <th key={h} className="th">{h}</th>)}
                   </tr>
                 </thead>
                 <tbody>
@@ -256,7 +257,7 @@ export default function SettingsPage() {
                       </td>
                       <td className="td">
                         {m.role !== "admin" && (
-                          <button onClick={() => toast.error("Remove member: requires confirmation")} className="text-slate-700 hover:text-red-400 transition-colors">
+                          <button onClick={() => toast.error(t("set.team.removeToast"))} className="text-slate-700 hover:text-red-400 transition-colors">
                             <Trash2 size={13} />
                           </button>
                         )}
@@ -270,19 +271,19 @@ export default function SettingsPage() {
 
           <div className="card p-5">
             <h2 className="text-sm font-semibold text-white mb-3 flex items-center gap-2">
-              <Mail size={13} className="text-slate-500" /> Invite a team member
+              <Mail size={13} className="text-slate-500" /> {t("set.inviteMember")}
             </h2>
             <div className="flex gap-2">
               <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)}
-                placeholder="colleague@broker.com" className="input-dark flex-1"
+                placeholder={t("set.team.placeholder")} className="input-dark flex-1"
                 onKeyDown={e => e.key === "Enter" && handleInvite()} />
               <button onClick={handleInvite} disabled={inviting}
                 className="flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-50"
                 style={{ background: "var(--brand)" }}>
-                {inviting ? <><RefreshCw size={13} className="animate-spin" /> Sending…</> : <><Plus size={13} /> Invite</>}
+                {inviting ? <><RefreshCw size={13} className="animate-spin" /> {t("set.team.sending")}</> : <><Plus size={13} /> {t("set.team.invite")}</>}
               </button>
             </div>
-            <p className="text-xs text-slate-600 mt-2">They will receive an email with instructions to join your workspace.</p>
+            <p className="text-xs text-slate-600 mt-2">{t("set.team.hint")}</p>
           </div>
         </div>
       )}
@@ -293,25 +294,25 @@ export default function SettingsPage() {
           <div className="card overflow-hidden">
             <div className="flex items-center justify-between px-5 py-3.5" style={{ borderBottom: "1px solid var(--border)" }}>
               <div>
-                <h2 className="text-sm font-semibold text-white">Underwriting appetite rules</h2>
-                <p className="text-xs text-slate-600 mt-0.5">Applied in priority order. First match wins.</p>
+                <h2 className="text-sm font-semibold text-white">{t("set.appetite.heading")}</h2>
+                <p className="text-xs text-slate-600 mt-0.5">{t("set.appetite.sub")}</p>
               </div>
               <button onClick={() => { setRuleForm(BLANK_FORM); setShowModal(true); }}
                 className="flex items-center gap-1.5 text-xs font-semibold text-white px-3 py-1.5 rounded-lg transition-all hover:opacity-90"
                 style={{ background: "var(--brand)" }}>
-                <Plus size={11} /> Add rule
+                <Plus size={11} /> {t("set.addRule")}
               </button>
             </div>
             <table className="w-full">
               <thead>
                 <tr style={{ borderBottom: "1px solid var(--border)" }}>
-                  {["", "Priority", "Coverage type", "Condition", "Action", ""].map(h => <th key={h} className="th">{h}</th>)}
+                  {["", t("set.appetite.priority"), t("set.appetite.coverageType"), t("set.appetite.condition"), t("set.appetite.action"), ""].map(h => <th key={h} className="th">{h}</th>)}
                 </tr>
               </thead>
               <tbody>
                 {rules.length === 0 ? (
                   <tr><td colSpan={6} className="td text-center py-8 text-slate-600 text-sm">
-                    No rules yet. Add your first underwriting rule.
+                    {t("set.noRules")}
                   </td></tr>
                 ) : rules.map((r, i) => (
                   <tr key={r.id} className="hover:bg-white/[0.02] transition-colors"
@@ -347,24 +348,24 @@ export default function SettingsPage() {
 
           {/* Rule tester */}
           <div className="card p-5">
-            <h2 className="text-sm font-semibold text-white mb-3">Rule tester</h2>
-            <p className="text-xs text-slate-500 mb-3">Test how a risk would be processed with the current rule set.</p>
+            <h2 className="text-sm font-semibold text-white mb-3">{t("set.appetite.testerTitle")}</h2>
+            <p className="text-xs text-slate-500 mb-3">{t("set.appetite.testerSub")}</p>
             <div className="grid grid-cols-3 gap-3 mb-3">
               <div>
-                <label className="block text-xs text-slate-600 mb-1">Coverage type</label>
+                <label className="block text-xs text-slate-600 mb-1">{t("set.appetite.coverageType")}</label>
                 <select className="input-dark w-full text-xs">
                   {COVERAGE_TYPES.map(o => <option key={o}>{o}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-slate-600 mb-1">Risk score</label>
+                <label className="block text-xs text-slate-600 mb-1">{t("set.appetite.testerScore")}</label>
                 <input type="number" defaultValue={65} min={0} max={100} className="input-dark w-full text-xs" />
               </div>
               <div className="flex items-end">
-                <button onClick={() => toast.success("Rule tester: score 65, Marine Cargo → Refer (rule #1 matched)")}
+                <button onClick={() => toast.success(t("set.appetite.testResult"))}
                   className="w-full px-3 py-2 rounded-lg text-xs font-semibold text-white transition-all hover:opacity-90"
                   style={{ background: "var(--brand)" }}>
-                  Test rules
+                  {t("set.appetite.testBtn")}
                 </button>
               </div>
             </div>
@@ -396,14 +397,14 @@ export default function SettingsPage() {
                     </span>
                     {int.status === "connected" && (
                       <span className="flex items-center gap-1 text-[10px] text-emerald-400">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> Connected
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" /> {t("set.int.connected")}
                       </span>
                     )}
                   </div>
                   <p className="text-xs text-slate-600 leading-relaxed">{int.desc}</p>
                 </div>
                 <button
-                  onClick={() => int.status !== "coming" ? toast.info(`${int.name} configuration`) : undefined}
+                  onClick={() => int.status !== "coming" ? toast.info(`${int.name} ${t("set.int.configToast")}`) : undefined}
                   disabled={int.status === "coming"}
                   className="flex-shrink-0 text-xs px-3 py-1.5 rounded-lg font-medium transition-all"
                   style={{
@@ -411,7 +412,7 @@ export default function SettingsPage() {
                     color:      int.status === "connected" ? "#64748b" : int.status === "coming" ? "#334155" : "#fff",
                     cursor:     int.status === "coming" ? "not-allowed" : "pointer",
                   }}>
-                  {int.status === "connected" ? "Configure" : int.status === "coming" ? "Soon" : "Connect"}
+                  {int.status === "connected" ? t("set.int.configure") : int.status === "coming" ? t("set.int.soon") : t("set.int.connect")}
                 </button>
               </div>
             ))}
@@ -420,23 +421,23 @@ export default function SettingsPage() {
           <div className="card p-5">
             <div className="flex items-center gap-2 mb-3">
               <Webhook size={13} className="text-slate-500" />
-              <h2 className="text-sm font-semibold text-white">Outbound webhook</h2>
+              <h2 className="text-sm font-semibold text-white">{t("set.webhook")}</h2>
             </div>
-            <p className="text-xs text-slate-600 mb-3">Velox AI will POST events to this URL when a submission is received, extracted, or decided.</p>
+            <p className="text-xs text-slate-600 mb-3">{t("set.int.webhookDesc")}</p>
             <div className="flex gap-2">
               <input value={webhookUrl} onChange={e => setWebhookUrl(e.target.value)} className="input-dark flex-1 text-xs font-mono" />
-              <button onClick={() => toast.success("Webhook URL saved")}
+              <button onClick={() => toast.success(t("set.int.saved"))}
                 className="flex-shrink-0 px-3 py-2 rounded-lg text-xs font-semibold text-white" style={{ background: "var(--brand)" }}>
-                Save
+                {t("set.int.save")}
               </button>
-              <button onClick={() => toast.info("Test event sent to webhook URL")}
+              <button onClick={() => toast.info(t("set.int.tested"))}
                 className="flex-shrink-0 px-3 py-2 rounded-lg text-xs font-medium text-slate-400"
                 style={{ background: "rgba(255,255,255,0.04)", border: "1px solid var(--border)" }}>
-                Test
+                {t("set.int.test")}
               </button>
             </div>
             <div className="mt-3 space-y-1.5">
-              <p className="text-[10px] text-slate-600 uppercase tracking-wider mb-2">Events</p>
+              <p className="text-[10px] text-slate-600 uppercase tracking-wider mb-2">{t("set.int.events")}</p>
               {["submission.received", "submission.extracted", "submission.accepted", "submission.declined", "submission.referred"].map(ev => (
                 <label key={ev} className="flex items-center gap-2 cursor-pointer">
                   <CheckCircle size={12} className="text-emerald-400 flex-shrink-0" />
@@ -454,12 +455,12 @@ export default function SettingsPage() {
           <div className="card p-5">
             <div className="flex items-center gap-2 mb-1">
               <Key size={13} style={{ color: "var(--brand)" }} />
-              <h2 className="text-sm font-semibold text-white">API key</h2>
+              <h2 className="text-sm font-semibold text-white">{t("set.apiKey")}</h2>
               <span className="ml-auto text-[10px] text-emerald-400 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> Live
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" /> {t("set.api.live")}
               </span>
             </div>
-            <p className="text-xs text-slate-600 mb-4">Use this key to authenticate requests to the Velox AI REST API. Keep it secret.</p>
+            <p className="text-xs text-slate-600 mb-4">{t("set.api.desc")}</p>
             <div className="flex items-center gap-2 p-3 rounded-xl font-mono text-xs"
               style={{ background: "rgba(255,255,255,0.03)", border: "1px solid var(--border)" }}>
               <span className="flex-1 text-slate-300 truncate">
@@ -476,9 +477,9 @@ export default function SettingsPage() {
               <button onClick={() => setShowRotateConfirm(true)}
                 className="flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-lg text-amber-400 font-medium transition-all"
                 style={{ background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)" }}>
-                <RefreshCw size={11} /> Rotate key
+                <RefreshCw size={11} /> {t("set.rotateKey")}
               </button>
-              <span className="text-[10px] text-slate-700">Created 01 May 2026 · Last used 2 minutes ago</span>
+              <span className="text-[10px] text-slate-700">{t("set.api.created")}</span>
             </div>
 
             {showRotateConfirm && (
@@ -486,19 +487,19 @@ export default function SettingsPage() {
                 style={{ background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
                 <AlertTriangle size={14} className="text-amber-400 flex-shrink-0 mt-0.5" />
                 <div className="flex-1">
-                  <p className="text-xs font-semibold text-amber-400 mb-1">Rotate API key?</p>
-                  <p className="text-xs text-slate-500 mb-3">The old key will be invalidated immediately. Any existing integrations using it will break.</p>
+                  <p className="text-xs font-semibold text-amber-400 mb-1">{t("set.api.rotateTitle")}</p>
+                  <p className="text-xs text-slate-500 mb-3">{t("set.api.rotateDesc")}</p>
                   <div className="flex gap-2">
                     <button
-                      onClick={() => { toast.success("API key rotated. Update your integrations."); setShowRotateConfirm(false); }}
+                      onClick={() => { toast.success(t("set.api.rotated")); setShowRotateConfirm(false); }}
                       className="text-xs px-3 py-1.5 rounded-lg font-semibold text-white"
                       style={{ background: "#f59e0b" }}>
-                      Yes, rotate key
+                      {t("set.api.rotateYes")}
                     </button>
                     <button onClick={() => setShowRotateConfirm(false)}
                       className="text-xs px-3 py-1.5 rounded-lg text-slate-400"
                       style={{ background: "rgba(255,255,255,0.05)" }}>
-                      Cancel
+                      {t("set.api.cancel")}
                     </button>
                   </div>
                 </div>
@@ -507,7 +508,7 @@ export default function SettingsPage() {
           </div>
 
           <div className="card p-5">
-            <h2 className="text-sm font-semibold text-white mb-4">API reference</h2>
+            <h2 className="text-sm font-semibold text-white mb-4">{t("set.api.reference")}</h2>
             <div className="space-y-2">
               {[
                 { method: "POST",  path: "/api/v1/submissions/ingest", desc: "Ingest a submission document" },
@@ -532,25 +533,25 @@ export default function SettingsPage() {
           </div>
 
           <div className="card p-5">
-            <h2 className="text-sm font-semibold text-white mb-4">API usage — this month</h2>
+            <h2 className="text-sm font-semibold text-white mb-4">{t("set.api.usage")}</h2>
             <div className="grid grid-cols-3 gap-4">
               {[
-                { label: "Requests",           value: "1,247", limit: "10,000" },
-                { label: "Extractions",        value: "89",    limit: "500"    },
-                { label: "Webhook deliveries", value: "312",   limit: "∞"      },
+                { label: t("set.api.requests"),           value: "1,247", limit: "10,000" },
+                { label: t("set.api.extractions"),        value: "89",    limit: "500"    },
+                { label: t("set.api.webhookDeliveries"),  value: "312",   limit: "∞"      },
               ].map(u => (
                 <div key={u.label} className="p-3 rounded-xl text-center"
                   style={{ background: "rgba(255,255,255,0.02)", border: "1px solid var(--border)" }}>
                   <p className="text-xl font-bold text-white">{u.value}</p>
                   <p className="text-xs text-slate-500 mt-0.5">{u.label}</p>
-                  <p className="text-[10px] text-slate-700 mt-1">of {u.limit}</p>
+                  <p className="text-[10px] text-slate-700 mt-1">{t("set.api.ofLimit")} {u.limit}</p>
                 </div>
               ))}
             </div>
           </div>
 
           <div className="card p-5">
-            <h2 className="text-sm font-semibold text-white mb-3">Quick start</h2>
+            <h2 className="text-sm font-semibold text-white mb-3">{t("set.api.quickStart")}</h2>
             <pre className="text-xs font-mono p-4 rounded-xl overflow-x-auto leading-relaxed"
               style={{ background: "rgba(0,0,0,0.3)", color: "#94a3b8", border: "1px solid rgba(255,255,255,0.05)" }}>
 {`curl -X POST https://api.velox.ai/v1/submissions/ingest \\
@@ -571,7 +572,7 @@ export default function SettingsPage() {
           <div className="w-full max-w-lg rounded-2xl p-6"
             style={{ background: "var(--bg-surface)", border: "1px solid var(--border)" }}>
             <div className="flex items-center justify-between mb-5">
-              <h2 className="text-base font-semibold text-white">Add appetite rule</h2>
+              <h2 className="text-base font-semibold text-white">{t("set.modal.title")}</h2>
               <button onClick={() => setShowModal(false)} className="text-slate-500 hover:text-slate-300 transition-colors">
                 <X size={16} />
               </button>
@@ -580,7 +581,7 @@ export default function SettingsPage() {
             <div className="space-y-4">
               {/* Coverage type */}
               <div>
-                <label className="block text-xs text-slate-500 mb-1.5">Coverage type</label>
+                <label className="block text-xs text-slate-500 mb-1.5">{t("set.modal.coverageType")}</label>
                 <select value={ruleForm.coverage_type}
                   onChange={e => setRuleForm(f => ({ ...f, coverage_type: e.target.value }))}
                   className="input-dark w-full">
@@ -590,7 +591,7 @@ export default function SettingsPage() {
 
               {/* Condition row */}
               <div>
-                <label className="block text-xs text-slate-500 mb-1.5">Condition</label>
+                <label className="block text-xs text-slate-500 mb-1.5">{t("set.modal.condition")}</label>
                 <div className="grid grid-cols-3 gap-2">
                   <select value={ruleForm.field}
                     onChange={e => setRuleForm(f => ({ ...f, field: e.target.value }))}
@@ -609,13 +610,13 @@ export default function SettingsPage() {
                     className="input-dark" />
                 </div>
                 <p className="text-[10px] text-slate-700 mt-1.5">
-                  Preview: <code className="font-mono">{ruleForm.field} {ruleForm.operator} {ruleForm.value || "…"}</code>
+                  {t("set.modal.preview")}: <code className="font-mono">{ruleForm.field} {ruleForm.operator} {ruleForm.value || "…"}</code>
                 </p>
               </div>
 
               {/* Action */}
               <div>
-                <label className="block text-xs text-slate-500 mb-1.5">Action</label>
+                <label className="block text-xs text-slate-500 mb-1.5">{t("set.modal.action")}</label>
                 <div className="flex gap-2">
                   {ACTIONS.map(a => (
                     <button key={a} type="button"
@@ -633,7 +634,7 @@ export default function SettingsPage() {
 
               {/* Priority */}
               <div>
-                <label className="block text-xs text-slate-500 mb-1.5">Priority (lower = evaluated first)</label>
+                <label className="block text-xs text-slate-500 mb-1.5">{t("set.modal.priority")}</label>
                 <input type="number" value={ruleForm.priority} min={1} max={999}
                   onChange={e => setRuleForm(f => ({ ...f, priority: Number(e.target.value) }))}
                   className="input-dark w-32" />
@@ -641,11 +642,11 @@ export default function SettingsPage() {
 
               {/* Rule summary */}
               <div className="p-3 rounded-xl" style={{ background: "rgba(79,110,247,0.06)", border: "1px solid rgba(79,110,247,0.15)" }}>
-                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Rule summary</p>
+                <p className="text-[10px] text-slate-500 uppercase tracking-wider mb-1">{t("set.modal.summary")}</p>
                 <p className="text-xs text-slate-300">
-                  If <span className="text-white font-semibold">{ruleForm.coverage_type}</span> submission has{" "}
+                  {t("set.modal.summaryIf")} <span className="text-white font-semibold">{ruleForm.coverage_type}</span> {t("set.modal.summaryHas")}{" "}
                   <code className="font-mono text-indigo-300">{ruleForm.field} {ruleForm.operator} {ruleForm.value || "…"}</code>,
-                  then <span className="font-semibold" style={{
+                  {" "}{t("set.modal.summaryThen")} <span className="font-semibold" style={{
                     color: ruleForm.action === "accept" ? "#10b981" : ruleForm.action === "decline" ? "#ef4444" : "#f59e0b",
                   }}>{ruleForm.action}</span>.
                 </p>
@@ -656,12 +657,12 @@ export default function SettingsPage() {
               <button onClick={handleAddRule} disabled={savingRule || !ruleForm.value.trim()}
                 className="flex-1 py-2.5 rounded-xl text-sm font-semibold text-white transition-all hover:opacity-90 disabled:opacity-40"
                 style={{ background: "var(--brand)" }}>
-                {savingRule ? "Saving…" : "Add rule"}
+                {savingRule ? t("set.modal.saving") : t("set.modal.add")}
               </button>
               <button onClick={() => setShowModal(false)}
                 className="py-2.5 px-5 rounded-xl text-sm font-medium text-slate-400 transition-all hover:text-slate-300"
                 style={{ background: "rgba(255,255,255,0.04)" }}>
-                Cancel
+                {t("set.modal.cancel")}
               </button>
             </div>
           </div>
