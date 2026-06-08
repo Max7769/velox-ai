@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Upload, FileText, X, Loader2, Shield, Lock, Zap, Search } from "lucide-react";
+import { Upload, FileText, X, Loader2, Shield, Lock, Zap, Search, LayoutGrid } from "lucide-react";
 import { portalSubmitAction } from "@/lib/actions";
 
 const coverageTypes = [
@@ -60,9 +60,14 @@ export default function PortalPage() {
           <span className="text-white font-semibold text-sm">Velox AI</span>
           <span className="text-slate-600 text-xs ml-1">· Broker Submission Portal</span>
         </Link>
-        <Link href="/portal/status" className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors">
-          <Search size={12} /> Track a submission
-        </Link>
+        <div className="flex items-center gap-4">
+          <Link href="/portal/dashboard" className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors">
+            <LayoutGrid size={12} /> My submissions
+          </Link>
+          <Link href="/portal/status" className="flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-300 transition-colors">
+            <Search size={12} /> Track a submission
+          </Link>
+        </div>
       </header>
 
       {/* Main */}

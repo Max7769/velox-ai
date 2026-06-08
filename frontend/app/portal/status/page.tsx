@@ -121,9 +121,14 @@ export default function PortalStatusPage() {
         </Link>
         <ChevronRight size={13} className="text-slate-700 mx-2" />
         <span className="text-sm text-slate-500">Submission status</span>
-        <Link href="/portal" className="ml-auto text-xs text-slate-600 hover:text-slate-400 transition-colors">
-          New submission →
-        </Link>
+        <div className="ml-auto flex items-center gap-4">
+          <Link href="/portal/dashboard" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">
+            My submissions
+          </Link>
+          <Link href="/portal" className="text-xs text-slate-600 hover:text-slate-400 transition-colors">
+            New submission →
+          </Link>
+        </div>
       </header>
 
       <main className="flex-1 flex flex-col items-center pt-16 pb-24 px-4">
