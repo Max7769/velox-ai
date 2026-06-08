@@ -17,6 +17,7 @@ const T = {
     "nav.administrator":  "Administrator",
     "nav.pipeline":       "Pipeline",
     "nav.reports":        "Reports",
+    "nav.about":          "About our business",
 
     // Common actions / labels
     "common.search":      "Search",
@@ -515,6 +516,7 @@ const T = {
     "nav.administrator":  "Administrator",
     "nav.pipeline":       "Pipeline",
     "nav.reports":        "Raporty",
+    "nav.about":          "Na czym polega nasz biznes?",
 
     // Common
     "common.search":      "Szukaj",
