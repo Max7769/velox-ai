@@ -327,7 +327,7 @@ export default function Home() {
           </div>
           <span className="text-white font-bold tracking-tight">Velox AI</span>
           <span className="hidden md:inline text-[10px] text-slate-700 ml-0.5 px-1.5 py-0.5 rounded font-mono"
-            style={{ background: "rgba(255,255,255,0.04)" }}>v2.0</span>
+            style={{ background: "rgba(255,255,255,0.04)" }}>V3</span>
         </Link>
 
         <div className="hidden md:flex items-center gap-8">
