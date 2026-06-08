@@ -8,6 +8,7 @@ import {
   FileText, BarChart2, Globe, ChevronRight, ChevronDown,
   Play, Cpu, Database, Bell, Menu, X, Mail,
   Brain, Lock, Users, Sparkles, AlertCircle,
+  GitBranch, Smartphone, ListChecks, Link2, Layers, Compass,
 } from "lucide-react";
 
 /* ── hooks ──────────────────────────────────────────────────────── */
@@ -569,6 +570,54 @@ export default function Home() {
               </FadeIn>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Roadmap ("coming soon" — honest about what's planned vs. live) ── */}
+      <section id="roadmap" className="py-24 px-6">
+        <div className="max-w-5xl mx-auto">
+          <FadeIn>
+            <div className="text-center mb-14">
+              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.road.tag")}</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("lp.road.h2")}</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">{t("lp.road.sub")}</p>
+            </div>
+          </FadeIn>
+
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              { icon: ListChecks, title: t("lp.road.r1t"), desc: t("lp.road.r1d") },
+              { icon: Link2,      title: t("lp.road.r2t"), desc: t("lp.road.r2d") },
+              { icon: Layers,     title: t("lp.road.r3t"), desc: t("lp.road.r3d") },
+              { icon: Clock,      title: t("lp.road.r4t"), desc: t("lp.road.r4d") },
+              { icon: GitBranch,  title: t("lp.road.r5t"), desc: t("lp.road.r5d") },
+              { icon: Smartphone, title: t("lp.road.r6t"), desc: t("lp.road.r6d") },
+            ].map((r, i) => (
+              <FadeIn key={r.title} delay={i * 70}>
+                <div className="card p-6 h-full relative overflow-hidden" style={{ borderStyle: "dashed", borderColor: "rgba(245,158,11,0.25)" }}>
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                      style={{ background: "rgba(245,158,11,0.12)" }}>
+                      <r.icon size={17} style={{ color: "#f59e0b" }} />
+                    </div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded-full"
+                      style={{ color: "#f59e0b", background: "rgba(245,158,11,0.1)", border: "1px solid rgba(245,158,11,0.2)" }}>
+                      {t("lp.road.badge.soon")}
+                    </span>
+                  </div>
+                  <h3 className="text-sm font-semibold text-white mb-2">{r.title}</h3>
+                  <p className="text-sm text-slate-400 leading-relaxed">{r.desc}</p>
+                </div>
+              </FadeIn>
+            ))}
+          </div>
+
+          <FadeIn delay={120}>
+            <div className="flex items-center justify-center gap-2 mt-10 text-xs text-slate-600">
+              <Compass size={13} className="text-slate-700" />
+              <span>{t("lp.testi.body")}</span>
+            </div>
+          </FadeIn>
         </div>
       </section>
 
