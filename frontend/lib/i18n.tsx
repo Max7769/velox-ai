@@ -219,10 +219,10 @@ const T = {
     "set.compliance.aiActVal":  "High-risk (Article 6(2))",
     "set.compliance.cdr":       "Blueprint Two CDR",
     "set.compliance.cdrDesc":   "Automatic Core Data Record generation on bind",
-    "set.compliance.cdrVal":    "Enabled",
+    "set.compliance.cdrVal":    "In development",
     "set.compliance.soc2":      "SOC 2 Type II",
     "set.compliance.soc2Desc":  "Annual assessment by third-party auditor",
-    "set.compliance.soc2Val":   "Certified — expires Dec 2026",
+    "set.compliance.soc2Val":   "Audit planned — not yet certified",
     "set.danger.title":  "Danger zone",
     "set.danger.sub":    "These actions are permanent and cannot be undone.",
     "set.danger.delete": "Delete workspace",
@@ -327,22 +327,21 @@ const T = {
     "lp.hero.demoSub":     "· 60 sec",
     "lp.hero.proof1":      "No credit card required",
     "lp.hero.proof2":      "14-day free trial",
-    "lp.hero.proof3":      "SOC 2 Type II certified",
+    "lp.hero.proof3":      "Built for the Lloyd's market",
 
-    // Landing page — stats
+    // Landing page — stats (targets we're building toward, not yet measured in production)
     "lp.stat1v":  "< 10 min",
-    "lp.stat1l":  "Avg processing time",
-    "lp.stat1s":  "vs 4 hours manual",
-    "lp.stat2v":  "94%",
-    "lp.stat2l":  "AI extraction accuracy",
-    "lp.stat2s":  "Across all doc types",
+    "lp.stat1l":  "Target processing time",
+    "lp.stat1s":  "vs ~4 hours manual",
+    "lp.stat2v":  "Early access",
+    "lp.stat2l":  "AI extraction engine",
+    "lp.stat2s":  "In active development",
     "lp.stat3v":  "10×",
-    "lp.stat3l":  "Faster than manual",
-    "lp.stat3s":  "Proven Lloyd's market",
+    "lp.stat3l":  "Faster than manual (goal)",
+    "lp.stat3s":  "Based on internal testing",
     "lp.stat4v":  "£46B",
     "lp.stat4l":  "Lloyd's GWP addressed",
     "lp.stat4s":  "Total addressable market",
-    "lp.brokers": "Trusted by underwriting teams across the Lloyd's market",
 
     // Landing page — problem
     "lp.prob.tag":   "The problem",
@@ -367,12 +366,12 @@ const T = {
     "lp.feat.f1d":  "Claude Sonnet reads every submission document the moment it arrives — PDF, Word, or email body. 30+ risk fields extracted with 94% accuracy.",
     "lp.feat.f2t":  "Appetite scoring engine",
     "lp.feat.f2d":  "Configure rules by coverage type, score threshold, jurisdiction, loss history. AI scores every submission and routes it automatically — no human in the loop.",
-    "lp.feat.f3t":  "Lloyd's Blueprint Two ready",
+    "lp.feat.f3t":  "Built toward Lloyd's Blueprint Two",
     "lp.feat.f3d":  "Auto-generates Core Data Records on every bind. ACORD 28 compliant. Pass the CDR mandate without any additional engineering work.",
     "lp.feat.f4t":  "Branded broker portal",
     "lp.feat.f4d":  "A clean self-serve portal for brokers. No email attachments. Real-time status updates. White-label with your logo and domain on Growth+.",
     "lp.feat.f5t":  "Immutable audit trail",
-    "lp.feat.f5d":  "Every decision, note, and field change is logged with actor, timestamp, and reason. SOC 2 Type II. GDPR-compliant 7-year encrypted retention.",
+    "lp.feat.f5d":  "Every decision, note, and field change is logged with actor, timestamp, and reason — designed for GDPR-aligned, encrypted long-term retention. SOC 2 Type II audit is on our roadmap.",
     "lp.feat.f6t":  "Portfolio analytics",
     "lp.feat.f6d":  "Live GWP, bind rate, loss ratio tracker, broker performance matrix, and exposure heatmaps. Export compliance reports in one click.",
 
@@ -391,9 +390,11 @@ const T = {
     "lp.compl.h3":  "Enterprise-grade compliance, out of the box",
     "lp.compl.sub": "No additional engineering required to meet Lloyd's and EU requirements.",
 
-    // Landing page — testimonials
-    "lp.testi.tag": "Testimonials",
-    "lp.testi.h2":  "What underwriters say",
+    // Landing page — early access (no live customers yet — be honest)
+    "lp.testi.tag": "Early access",
+    "lp.testi.h2":  "We're building Velox with the people who'll use it",
+    "lp.testi.body": "Velox AI is in early development. We're not claiming existing customers or results we haven't earned yet — instead, we're looking for a handful of MGAs and underwriting teams to help us shape the product as design partners. In exchange for early feedback, you get a direct line to the roadmap and preferential pricing once we launch.",
+    "lp.testi.cta": "Become a design partner",
 
     // Landing page — pricing
     "lp.price.tag":     "Pricing",
@@ -412,8 +413,8 @@ const T = {
     "lp.faq.h2":  "Common questions",
 
     // Landing page — CTA footer
-    "lp.cta.h2":   "Ready to transform your MGA?",
-    "lp.cta.sub":  "Join the Lloyd's teams already using Velox to process submissions faster.",
+    "lp.cta.h2":   "Ready to help shape the future of underwriting?",
+    "lp.cta.sub":  "We're onboarding a small group of MGAs and underwriting teams as early design partners. Get in early, influence the roadmap, and lock in founding-customer pricing.",
     "lp.cta.form": "Enter your work email",
     "lp.cta.btn":  "Get early access",
     "lp.cta.sent": "You're on the list! We'll be in touch.",
@@ -421,13 +422,13 @@ const T = {
 
     // Landing page — footer
     "lp.footer.rights": "All rights reserved.",
-    "lp.footer.lloyds": "Lloyd's Blueprint Two compliant · SOC 2 Type II",
+    "lp.footer.lloyds": "Designed around Lloyd's Blueprint Two / CDR data standards",
     "lp.footer.brand":  "AI-powered insurance submission intake for the Lloyd's of London market. Built to make underwriting faster, consistent, and scalable.",
     "lp.footer.col1":   "Platform",
     "lp.footer.col2":   "Product",
     "lp.footer.col3":   "Company",
     "lp.footer.col4":   "Legal",
-    "lp.footer.copy":   "© 2026 Velox AI Ltd. Registered in England & Wales. FCA authorised.",
+    "lp.footer.copy":   "© 2026 Velox AI Ltd. Building in early access — not yet regulated or certified.",
     "lp.footer.signin": "Sign in",
 
     // Landing page — ticker
@@ -476,16 +477,6 @@ const T = {
     "lp.price.e.f7":   "Dedicated onboarding & CSM",
     "lp.price.e.cta":  "Contact sales",
 
-    // Testimonials
-    "lp.testi.t1.q":      "Velox cut our average processing time from four hours to eight minutes. Our underwriters now spend time on risks that need human judgement — not data entry.",
-    "lp.testi.t1.author": "Sarah Mitchell",
-    "lp.testi.t1.role":   "Head of Underwriting, Syndicate 2041",
-    "lp.testi.t2.q":      "The broker portal alone was worth it. Our intermediaries stopped sending email attachments and our inbox has never been cleaner. Data quality improved overnight.",
-    "lp.testi.t2.author": "James Okafor",
-    "lp.testi.t2.role":   "Operations Director, Nexus MGA",
-    "lp.testi.t3.q":      "We passed the Blueprint Two CDR audit without any additional engineering work. Velox just handles it. That kind of compliance win makes you look very good in front of Lloyd's.",
-    "lp.testi.t3.author": "Clara Hofmann",
-    "lp.testi.t3.role":   "CTO, Continental Risk Partners",
 
     // FAQ questions and answers
     "lp.faq.q1": "How long does setup take?",
@@ -494,8 +485,8 @@ const T = {
     "lp.faq.a2": "PDF, Word (.docx), plain text, and structured email bodies. Scanned PDFs are processed via OCR. We also support ACORD XML and CSV bulk uploads via the API.",
     "lp.faq.q3": "Can I customise the appetite rules?",
     "lp.faq.a3": "Yes — fully. From the Settings page you can define rules by coverage type, score threshold, loss history keywords, jurisdiction, limit size, and more. Rules are evaluated in priority order and can trigger accept, decline, or refer.",
-    "lp.faq.q4": "Is Velox compliant with Lloyd's Blueprint Two?",
-    "lp.faq.a4": "Yes. Velox auto-generates Core Data Records (CDR) in the required format on every bind. We keep these records for 7 years in encrypted storage to meet GDPR and Lloyd's mandated retention requirements.",
+    "lp.faq.q4": "Will Velox support Lloyd's Blueprint Two compliance?",
+    "lp.faq.a4": "That's the goal. We're building Velox to auto-generate Core Data Records (CDR) in the required format on every bind, with encrypted long-term retention aligned to GDPR and Lloyd's data requirements. This is on our near-term roadmap — we'll confirm formal compliance status as we complete it with design partners.",
     "lp.faq.q5": "How accurate is the AI extraction?",
     "lp.faq.a5": "94% field accuracy across our test corpus of 5,000+ Lloyd's submissions. Confidence scores are generated per-extraction so underwriters can see exactly how certain the AI is about each field.",
     "lp.faq.q6": "Can we white-label the broker portal?",
@@ -718,10 +709,10 @@ const T = {
     "set.compliance.aiActVal":  "Wysokie ryzyko (art. 6(2))",
     "set.compliance.cdr":       "Blueprint Two CDR",
     "set.compliance.cdrDesc":   "Automatyczne generowanie Core Data Record przy zawarciu",
-    "set.compliance.cdrVal":    "Włączone",
+    "set.compliance.cdrVal":    "W trakcie tworzenia",
     "set.compliance.soc2":      "SOC 2 Type II",
     "set.compliance.soc2Desc":  "Coroczna ocena przez niezależnego audytora",
-    "set.compliance.soc2Val":   "Certyfikat — wygasa gru 2026",
+    "set.compliance.soc2Val":   "Audyt zaplanowany — jeszcze niecertyfikowane",
     "set.danger.title":  "Strefa zagrożenia",
     "set.danger.sub":    "Te działania są nieodwracalne i trwałe.",
     "set.danger.delete": "Usuń przestrzeń roboczą",
@@ -826,22 +817,21 @@ const T = {
     "lp.hero.demoSub":     "· 60 sek",
     "lp.hero.proof1":      "Bez karty kredytowej",
     "lp.hero.proof2":      "14-dniowy bezpłatny okres próbny",
-    "lp.hero.proof3":      "Certyfikat SOC 2 Type II",
+    "lp.hero.proof3":      "Budowane z myślą o rynku Lloyd's",
 
-    // Landing page — stats
+    // Landing page — stats (cele, do których dążymy, jeszcze niezmierzone w produkcji)
     "lp.stat1v":  "< 10 min",
-    "lp.stat1l":  "Średni czas przetwarzania",
-    "lp.stat1s":  "vs 4 godziny ręcznie",
-    "lp.stat2v":  "94%",
-    "lp.stat2l":  "Dokładność ekstrakcji AI",
-    "lp.stat2s":  "Dla wszystkich typów dokumentów",
+    "lp.stat1l":  "Docelowy czas przetwarzania",
+    "lp.stat1s":  "vs ~4 godziny ręcznie",
+    "lp.stat2v":  "Wczesny dostęp",
+    "lp.stat2l":  "Silnik ekstrakcji AI",
+    "lp.stat2s":  "W aktywnym rozwoju",
     "lp.stat3v":  "10×",
-    "lp.stat3l":  "Szybciej niż ręcznie",
-    "lp.stat3s":  "Sprawdzone na rynku Lloyd's",
+    "lp.stat3l":  "Szybciej niż ręcznie (cel)",
+    "lp.stat3s":  "Na podstawie testów wewnętrznych",
     "lp.stat4v":  "£46B",
     "lp.stat4l":  "Rynek Lloyd's GWP",
     "lp.stat4s":  "Łączny adresowalny rynek",
-    "lp.brokers": "Zaufany przez zespoły gwarantowania na rynku Lloyd's",
 
     // Landing page — problem
     "lp.prob.tag":   "Problem",
@@ -866,12 +856,12 @@ const T = {
     "lp.feat.f1d":  "Claude Sonnet czyta każde zgłoszenie w momencie jego otrzymania — PDF, Word lub e-mail. Ponad 30 pól ryzyka wyciągniętych z 94% dokładnością.",
     "lp.feat.f2t":  "Silnik oceny apetytu",
     "lp.feat.f2d":  "Konfiguruj reguły wg rodzaju ubezpieczenia, progu oceny, jurysdykcji, historii szkód. AI ocenia każde zgłoszenie i automatycznie kieruje dalej — bez człowieka w pętli.",
-    "lp.feat.f3t":  "Zgodność z Lloyd's Blueprint Two",
+    "lp.feat.f3t":  "Budowane pod kątem Lloyd's Blueprint Two",
     "lp.feat.f3d":  "Automatycznie generuje Core Data Records przy każdym związaniu. Zgodność z ACORD 28. Spełnij wymóg CDR bez żadnej dodatkowej pracy inżynierskiej.",
     "lp.feat.f4t":  "Markowy portal brokera",
     "lp.feat.f4d":  "Przejrzysty portal samoobsługowy dla brokerów. Bez załączników e-mail. Aktualizacje statusu w czasie rzeczywistym. White-label z Twoim logo i domeną w planie Growth+.",
     "lp.feat.f5t":  "Nienaruszalny dziennik audytu",
-    "lp.feat.f5d":  "Każda decyzja, notatka i zmiana pola jest logowana z aktorem, znacznikiem czasu i uzasadnieniem. SOC 2 Type II. Szyfrowane przechowywanie przez 7 lat zgodne z RODO.",
+    "lp.feat.f5d":  "Każda decyzja, notatka i zmiana pola jest logowana z aktorem, znacznikiem czasu i uzasadnieniem — zaprojektowane pod szyfrowane, długoterminowe przechowywanie zgodne z RODO. Audyt SOC 2 Type II jest w naszej roadmapie.",
     "lp.feat.f6t":  "Analityka portfela",
     "lp.feat.f6d":  "Składka na żywo, wskaźnik akceptacji, śledzenie wskaźnika szkodowości, macierz wydajności brokerów i mapy cieplne ekspozycji. Eksportuj raporty zgodności jednym kliknięciem.",
 
@@ -891,8 +881,10 @@ const T = {
     "lp.compl.sub": "Żadnej dodatkowej pracy inżynierskiej, aby spełnić wymogi Lloyd's i UE.",
 
     // Landing page — testimonials
-    "lp.testi.tag": "Opinie",
-    "lp.testi.h2":  "Co mówią underwriterzy",
+    "lp.testi.tag": "Wczesny dostęp",
+    "lp.testi.h2":  "Budujemy Velox razem z tymi, którzy będą z niego korzystać",
+    "lp.testi.body": "Velox AI jest we wczesnej fazie rozwoju. Nie twierdzimy, że mamy klientów ani wyników, na które jeszcze nie zapracowaliśmy — zamiast tego szukamy garstki MGA i zespołów underwritingowych, które pomogą nam ukształtować produkt jako partnerzy projektowi. W zamian za wczesny feedback zyskujecie bezpośredni wpływ na roadmapę i preferencyjne ceny po starcie.",
+    "lp.testi.cta": "Zostań partnerem projektowym",
 
     // Landing page — pricing
     "lp.price.tag":     "Cennik",
@@ -911,8 +903,8 @@ const T = {
     "lp.faq.h2":  "Najczęstsze pytania",
 
     // Landing page — CTA footer
-    "lp.cta.h2":   "Gotowy na transformację swojego MGA?",
-    "lp.cta.sub":  "Dołącz do zespołów Lloyd's, które już używają Velox do szybszego przetwarzania zgłoszeń.",
+    "lp.cta.h2":   "Gotowy współtworzyć przyszłość underwritingu?",
+    "lp.cta.sub":  "Przyjmujemy niewielką grupę MGA i zespołów underwritingowych jako wczesnych partnerów projektowych. Dołącz teraz, wpłyń na roadmapę i zapewnij sobie ceny dla pierwszych klientów.",
     "lp.cta.form": "Podaj swój służbowy e-mail",
     "lp.cta.btn":  "Uzyskaj wczesny dostęp",
     "lp.cta.sent": "Jesteś na liście! Odezwiemy się wkrótce.",
@@ -920,13 +912,13 @@ const T = {
 
     // Landing page — footer
     "lp.footer.rights": "Wszelkie prawa zastrzeżone.",
-    "lp.footer.lloyds": "Zgodność z Lloyd's Blueprint Two · SOC 2 Type II",
+    "lp.footer.lloyds": "Zaprojektowane wokół standardów danych Lloyd's Blueprint Two / CDR",
     "lp.footer.brand":  "Platforma AI do przyjmowania zgłoszeń ubezpieczeniowych dla rynku Lloyd's of London. Zbudowana po to, by gwarantowanie było szybsze, spójne i skalowalne.",
     "lp.footer.col1":   "Platforma",
     "lp.footer.col2":   "Produkt",
     "lp.footer.col3":   "Firma",
     "lp.footer.col4":   "Prawo",
-    "lp.footer.copy":   "© 2026 Velox AI Ltd. Zarejestrowana w Anglii i Walii. Autoryzowana przez FCA.",
+    "lp.footer.copy":   "© 2026 Velox AI Ltd. Budujemy we wczesnym dostępie — jeszcze nie regulowani ani certyfikowani.",
     "lp.footer.signin": "Zaloguj się",
 
     // Landing page — ticker
@@ -976,15 +968,6 @@ const T = {
     "lp.price.e.cta":  "Skontaktuj się z działem sprzedaży",
 
     // Testimonials
-    "lp.testi.t1.q":      "Velox skrócił nasz średni czas przetwarzania z czterech godzin do ośmiu minut. Nasi underwriterzy skupiają się teraz na ryzykach wymagających ludzkiej oceny — a nie na ręcznym wprowadzaniu danych.",
-    "lp.testi.t1.author": "Sarah Mitchell",
-    "lp.testi.t1.role":   "Dyrektor ds. gwarantowania, Syndicate 2041",
-    "lp.testi.t2.q":      "Sam portal brokera był wart swojej ceny. Nasi pośrednicy przestali wysyłać załączniki e-mail, a nasza skrzynka odbiorcza nigdy nie była tak czysta. Jakość danych poprawiła się z dnia na dzień.",
-    "lp.testi.t2.author": "James Okafor",
-    "lp.testi.t2.role":   "Dyrektor operacyjny, Nexus MGA",
-    "lp.testi.t3.q":      "Przeszliśmy audyt CDR Blueprint Two bez żadnej dodatkowej pracy inżynierskiej. Velox po prostu to obsługuje. Taki sukces w zakresie compliance wygląda bardzo dobrze w oczach Lloyd's.",
-    "lp.testi.t3.author": "Clara Hofmann",
-    "lp.testi.t3.role":   "Dyrektor techniczny, Continental Risk Partners",
 
     // FAQ questions and answers
     "lp.faq.q1": "Jak długo trwa wdrożenie?",
@@ -993,8 +976,8 @@ const T = {
     "lp.faq.a2": "PDF, Word (.docx), zwykły tekst i treści e-mail. Skany PDF przetwarzamy przez OCR. Obsługujemy też ACORD XML i masowe przesyłanie CSV przez API.",
     "lp.faq.q3": "Czy mogę dostosować reguły apetytu?",
     "lp.faq.a3": "Tak — w pełni. Z poziomu strony Ustawienia możesz definiować reguły według rodzaju ubezpieczenia, progu oceny, słów kluczowych historii szkód, jurysdykcji, wysokości limitu i innych. Reguły są oceniane według priorytetu i mogą wyzwalać akceptację, odrzucenie lub skierowanie do weryfikacji.",
-    "lp.faq.q4": "Czy Velox spełnia wymogi Lloyd's Blueprint Two?",
-    "lp.faq.a4": "Tak. Velox automatycznie generuje Core Data Records (CDR) w wymaganym formacie przy każdym związaniu polisy. Przechowujemy te rekordy przez 7 lat w zaszyfrowanym magazynie, spełniając wymogi RODO i Lloyd's dotyczące przechowywania danych.",
+    "lp.faq.q4": "Czy Velox będzie zgodny z Lloyd's Blueprint Two?",
+    "lp.faq.a4": "To nasz cel. Budujemy Velox tak, by automatycznie generował Core Data Records (CDR) w wymaganym formacie przy każdym związaniu polisy, z szyfrowanym, długoterminowym przechowywaniem zgodnym z RODO i wymogami Lloyd's. To element naszej najbliższej roadmapy — formalny status zgodności potwierdzimy, gdy dopracujemy go wspólnie z partnerami projektowymi.",
     "lp.faq.q5": "Jak dokładna jest ekstrakcja AI?",
     "lp.faq.a5": "94% dokładności pól w naszym zbiorze testowym ponad 5 000 zgłoszeń Lloyd's. Oceny pewności są generowane dla każdej ekstrakcji, dzięki czemu underwriterzy widzą dokładnie, jak pewna jest AI co do każdego pola.",
     "lp.faq.q6": "Czy możemy użyć white-label portalu brokera?",

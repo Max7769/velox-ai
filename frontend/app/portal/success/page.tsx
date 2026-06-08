@@ -68,7 +68,7 @@ function SuccessContent() {
       </main>
 
       <footer className="px-8 py-4 text-center" style={{ borderTop: "1px solid var(--border)" }}>
-        <p className="text-xs text-slate-700">© 2026 Velox AI Ltd · Secure submission portal · SOC 2 Type II certified</p>
+        <p className="text-xs text-slate-700">© 2026 Velox AI Ltd · Secure submission portal · Early access</p>
       </footer>
     </div>
   );

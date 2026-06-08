@@ -6,7 +6,7 @@ import { useTranslation } from "@/lib/i18n";
 import {
   Zap, ArrowRight, Shield, Clock, TrendingUp, CheckCircle,
   FileText, BarChart2, Globe, ChevronRight, ChevronDown,
-  Star, Play, Cpu, Database, Bell, Menu, X, Mail,
+  Play, Cpu, Database, Bell, Menu, X, Mail,
   Brain, Lock, Users, Sparkles, AlertCircle,
 } from "lucide-react";
 
@@ -235,8 +235,6 @@ function FadeIn({ children, delay = 0, className = "" }: { children: React.React
 // Feature tags — untranslated (short labels used as visual chips)
 const FEAT_TAGS = ["Core", "Rules", "Compliance", "Portal", "Audit", "Analytics"];
 
-const brokers = ["Aon UK", "Marsh", "Howden", "WTW", "Nexus Group", "Canopius", "Beazley"];
-
 /* ══════════════════════════════════════════════════════════════════
    Landing page
 ═══════════════════════════════════════════════════════════════════ */
@@ -312,11 +310,6 @@ export default function Home() {
     },
   ];
 
-  const testimonials = [
-    { quote: t("lp.testi.t1.q"), author: t("lp.testi.t1.author"), role: t("lp.testi.t1.role"), initials: "SM", color: "#818cf8" },
-    { quote: t("lp.testi.t2.q"), author: t("lp.testi.t2.author"), role: t("lp.testi.t2.role"), initials: "JO", color: "#10b981" },
-    { quote: t("lp.testi.t3.q"), author: t("lp.testi.t3.author"), role: t("lp.testi.t3.role"), initials: "CH", color: "#f59e0b" },
-  ];
 
   return (
     <main className="min-h-screen overflow-x-hidden" style={{ background: "var(--bg-base)" }}>
@@ -485,20 +478,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Broker logos ───────────────────────────────────────── */}
-      <section className="py-14 px-6" style={{ borderBottom: "1px solid var(--border)" }}>
-        <div className="max-w-5xl mx-auto">
-          <p className="text-center text-xs text-slate-700 uppercase tracking-widest mb-8">
-            {t("lp.brokers")}
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-10 md:gap-14">
-            {brokers.map(b => (
-              <span key={b} className="text-sm font-bold text-slate-700 hover:text-slate-500 transition-colors cursor-default tracking-wide">{b}</span>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── Problem section ───────────────────────────────────── */}
       <section className="py-24 px-6">
         <div className="max-w-5xl mx-auto">
@@ -645,11 +624,11 @@ export default function Home() {
               </div>
               <div className="flex flex-wrap gap-4">
                 {[
-                  { label: "SOC 2 Type II",             color: "#10b981" },
-                  { label: "GDPR · 7-year retention",   color: "#4f6ef7" },
-                  { label: "EU AI Act Art. 6(2)",        color: "#8b5cf6" },
-                  { label: "Lloyd's Blueprint Two CDR",  color: "#f59e0b" },
-                  { label: "256-bit AES encryption",     color: "#10b981" },
+                  { label: "SOC 2 Type II — on roadmap",        color: "#10b981" },
+                  { label: "GDPR-aligned · 7-year retention",   color: "#4f6ef7" },
+                  { label: "Designed for EU AI Act Art. 6(2)",  color: "#8b5cf6" },
+                  { label: "Built around Blueprint Two CDR",    color: "#f59e0b" },
+                  { label: "256-bit AES encryption",            color: "#10b981" },
                 ].map(c => (
                   <div key={c.label} className="flex items-center gap-1.5 text-xs font-medium text-slate-300">
                     <CheckCircle size={11} style={{ color: c.color }} />
@@ -662,38 +641,19 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Testimonials ─────────────────────────────────────── */}
+      {/* ── Early access (honest — no fabricated customers/results) ── */}
       <section className="py-24 px-6" style={{ borderTop: "1px solid var(--border)" }}>
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-3xl mx-auto text-center">
           <FadeIn>
-            <div className="text-center mb-16">
-              <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.testi.tag")}</p>
-              <h2 className="text-3xl font-bold text-white">{t("lp.testi.h2")}</h2>
-            </div>
+            <p className="text-xs text-indigo-400 font-semibold uppercase tracking-widest mb-3">{t("lp.testi.tag")}</p>
+            <h2 className="text-3xl font-bold text-white mb-5">{t("lp.testi.h2")}</h2>
+            <p className="text-sm text-slate-400 leading-relaxed mb-8">{t("lp.testi.body")}</p>
+            <a href="#cta"
+              className="inline-flex items-center gap-2 text-sm font-semibold px-6 py-3 rounded-xl text-white transition-all hover:opacity-90"
+              style={{ background: "var(--brand)" }}>
+              {t("lp.testi.cta")} <ArrowRight size={14} />
+            </a>
           </FadeIn>
-
-          <div className="grid md:grid-cols-3 gap-4">
-            {testimonials.map((t, i) => (
-              <FadeIn key={t.author} delay={i * 100}>
-                <div className="card p-6 flex flex-col h-full">
-                  <div className="flex gap-0.5 mb-4">
-                    {[...Array(5)].map((_, j) => <Star key={j} size={12} className="text-amber-400 fill-amber-400" />)}
-                  </div>
-                  <p className="text-sm text-slate-300 leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</p>
-                  <div className="flex items-center gap-3 pt-4 mt-4" style={{ borderTop: "1px solid var(--border)" }}>
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-                      style={{ background: t.color }}>
-                      {t.initials}
-                    </div>
-                    <div>
-                      <p className="text-xs font-semibold text-white">{t.author}</p>
-                      <p className="text-[10px] text-slate-500">{t.role}</p>
-                    </div>
-                  </div>
-                </div>
-              </FadeIn>
-            ))}
-          </div>
         </div>
       </section>
 
@@ -797,7 +757,7 @@ export default function Home() {
       <FAQ />
 
       {/* ── Email capture CTA ──────────────────────────────── */}
-      <section className="py-24 px-6" style={{ borderTop: "1px solid var(--border)" }}>
+      <section id="cta" className="py-24 px-6" style={{ borderTop: "1px solid var(--border)" }}>
         <div className="max-w-2xl mx-auto text-center">
           <FadeIn>
             <div className="card p-12 rounded-2xl relative overflow-hidden"
@@ -878,9 +838,9 @@ export default function Home() {
               </p>
               <div className="flex items-center gap-3">
                 {[
-                  { label: "SOC 2",    color: "#10b981" },
-                  { label: "GDPR",     color: "#4f6ef7" },
-                  { label: "Lloyd's",  color: "#f59e0b" },
+                  { label: "Early access",   color: "#10b981" },
+                  { label: "GDPR-aligned",   color: "#4f6ef7" },
+                  { label: "Lloyd's-ready",  color: "#f59e0b" },
                 ].map(b => (
                   <span key={b.label} className="flex items-center gap-1 text-[10px] font-semibold px-2 py-1 rounded"
                     style={{ background: `${b.color}12`, color: b.color, border: `1px solid ${b.color}22` }}>

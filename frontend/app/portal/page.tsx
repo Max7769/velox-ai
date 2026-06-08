@@ -166,8 +166,8 @@ export default function PortalPage() {
             {/* Trust signals */}
             <div className="flex items-center justify-center gap-6 pt-1">
               {[
-                { icon: Shield, label: "SOC 2 Type II" },
-                { icon: Lock, label: "256-bit encrypted" },
+                { icon: Shield, label: "Encrypted in transit & at rest" },
+                { icon: Lock, label: "256-bit AES encryption" },
               ].map(({ icon: Icon, label }) => (
                 <div key={label} className="flex items-center gap-1.5 text-xs text-slate-600">
                   <Icon size={12} /> {label}
@@ -179,7 +179,7 @@ export default function PortalPage() {
       </main>
 
       <footer className="px-8 py-4 text-center" style={{ borderTop: "1px solid var(--border)" }}>
-        <p className="text-xs text-slate-700">© 2026 Velox AI Ltd · Secure submission portal · SOC 2 Type II certified</p>
+        <p className="text-xs text-slate-700">© 2026 Velox AI Ltd · Secure submission portal · Early access</p>
       </footer>
     </div>
   );
