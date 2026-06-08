@@ -14,7 +14,7 @@ type Step = {
   done: boolean;
 };
 
-function useOnboardingSteps(): Step[] {
+function useOnboardingSteps(submissionCount: number): Step[] {
   const isSupabase = dbMode() === "supabase";
   const hasAnthropicKey = Boolean(process.env.NEXT_PUBLIC_HAS_ANTHROPIC_KEY);
 
@@ -35,7 +35,7 @@ function useOnboardingSteps(): Step[] {
       desc: "Set ANTHROPIC_API_KEY in .env.local to enable AI-powered document extraction.",
       href: "/dashboard/settings",
       linkLabel: "Settings →",
-      done: false,
+      done: hasAnthropicKey,
     },
     {
       id: "upload",
@@ -44,18 +44,17 @@ function useOnboardingSteps(): Step[] {
       desc: "Drag and drop a PDF or Word submission document to see the AI extraction in action.",
       href: "/dashboard/upload",
       linkLabel: "Upload →",
-      done: false,
+      done: submissionCount > 0,
     },
   ];
 }
 
 export function OnboardingWidget({ submissionCount }: { submissionCount: number }) {
   const [dismissed, setDismissed] = useState(false);
-  const steps = useOnboardingSteps();
+  const steps = useOnboardingSteps(submissionCount);
   const isDemo = dbMode() !== "supabase";
 
-  // Only show in demo mode with < 3 submissions (seed data threshold)
-  if (!isDemo || dismissed || submissionCount >= 3) return null;
+  if (!isDemo || dismissed || steps.every(s => s.done)) return null;
 
   const completedCount = steps.filter(s => s.done).length;
   const pct = Math.round((completedCount / steps.length) * 100);

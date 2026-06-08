@@ -73,11 +73,26 @@ export default function Dashboard() {
   }, {});
   const leaderboard = Object.values(brokerMap).sort((a, b) => b.count - a.count).slice(0, 5);
 
+  const isSameDay = (iso: string) => {
+    const d = parseISO(iso);
+    const now = new Date();
+    return d.getFullYear() === now.getFullYear() && d.getMonth() === now.getMonth() && d.getDate() === now.getDate();
+  };
+  const todayCount = submissions.filter(s => isSameDay(s.created_at)).length;
+
+  const decided = submissions.filter(s => s.decision_at);
+  const avgDecisionMinutes = decided.length
+    ? Math.round(
+        decided.reduce((a, s) => a + (parseISO(s.decision_at!).getTime() - parseISO(s.created_at).getTime()) / 60000, 0)
+        / decided.length
+      )
+    : null;
+
   const metrics = [
-    { label: t("metrics.today"),      value: "24",              delta: "+12%", positive: true,  icon: FileText    },
-    { label: t("metrics.avgTime"),    value: "8.4 min",         delta: "−23%", positive: true,  icon: Clock       },
-    { label: t("metrics.bindRate"),   value: `${bindRate}%`,    delta: "+4pp", positive: true,  icon: CheckCircle },
-    { label: t("metrics.monthlyVol"), value: String(submissions.length || "—"), delta: "+18%", positive: true, icon: TrendingUp },
+    { label: t("metrics.today"),      value: String(todayCount), icon: FileText    },
+    { label: t("metrics.avgTime"),    value: avgDecisionMinutes !== null ? `${avgDecisionMinutes} min` : "—", icon: Clock },
+    { label: t("metrics.bindRate"),   value: `${bindRate}%`, icon: CheckCircle },
+    { label: t("metrics.monthlyVol"), value: String(submissions.length || "—"), icon: TrendingUp },
   ];
 
   if (loading) {
@@ -144,8 +159,6 @@ export default function Dashboard() {
               <m.icon size={14} className="text-slate-600" />
             </div>
             <p className="text-2xl font-bold text-white mb-0.5">{m.value}</p>
-            <span className={`text-xs font-medium ${m.positive ? "text-emerald-500" : "text-red-400"}`}>{m.delta}</span>
-            <span className="text-xs text-slate-600 ml-1">{t("common.vsLastMonth")}</span>
           </div>
         ))}
       </div>
